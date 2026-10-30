@@ -99,7 +99,7 @@
     x.heal = (p, n) => SV.heal(s, p, n, { src: src() }); // "give your leader [defense]+N"
     x.destroy = (t) => SV.destroy(s, t, { by: src() });
     // "Destroy each ..." is simultaneous (CR 10.7.4.2): every leave event sees the whole group.
-    x.destroyAll = (list) => SV.destroyMany(s, list.map((iid) => ({ iid, by: src() })));
+    x.destroyAll = (list) => SV.destroyMany(s, list.map((iid) => ({ iid, by: src(), byAbility: true })));
     x.bury = (t) => { // CR 5.34 (not a destroy)
       const c = s.cards[t];
       if (c.zone === 'field') return SV.leaveField(s, t, 'cemetery', { by: src(), verb: 'bury' });
@@ -234,6 +234,24 @@
       return true;
     };
 
+    // CR 12.18 Fuse, as the `pay` of an activated ability with zone:'hand': discard from hand or
+    // bury from the EX area the specified cards (other than this), then put this into the EX area.
+    // Returns the fused cards; [] means nothing was fused and the effect text does not happen (12.18.3).
+    x.fuse = ({ filter, min = 1, max = 1, prompt }) => {
+      const me = x.me;
+      const P = s.players[x.ctrl];
+      const cand = [...P.hand, ...P.ex].filter((i) => i !== me && filter(i));
+      if (!cand.length) return [];
+      const k = Math.min(max, cand.length);
+      const pick = x.ask({ kind: 'cards', from: cand, seen: cand, min: Math.min(Math.max(min, 1), k), max: k, prompt: prompt || 'Fuse: choose the card(s) to fuse (from your hand they are discarded, from your EX area they are buried).' });
+      for (const i of pick) { if (s.cards[i].zone === 'hand') x.discard(i); else x.bury(i); }
+      if (!x.toEx(me)) return pick;
+      SV.log(s, x.ctrl, 'fuse', { iid: me, fused: pick.slice() });
+      SV.emit(s, { type: 'fused', iid: me, fused: pick.slice(), p: x.ctrl });
+      return pick;
+    };
+    x.canFuse = (filter) => { const P = s.players[x.ctrl]; return [...P.hand, ...P.ex].some((i) => i !== x.me && filter(i)); };
+
     // Play a card without paying its cost ("for free"; CR 10.6 with the cost replaced).
     x.playFree = (iid, o = {}) => SV.playCard(s, x, iid, { from: s.cards[iid].zone, ...o });
 
@@ -279,6 +297,8 @@
   H.self = (s, me, ev) => ev.iid === me;
   H.mine = (s, me, ev) => ev.p === s.cards[me].ctrl;
   H.myTurn = (s, me) => s.active === s.cards[me].ctrl;
+  H.canFuse = (s, me, filter) => { const P = s.players[s.cards[me].owner]; return [...P.hand, ...P.ex].some((i) => i !== me && filter(i)); };
+  H.inCemetery = (s, p, filter) => s.players[p].cemetery.some(filter);
   H.ctrl = (s, me) => (s.cards[me].zone === 'field' ? s.cards[me].ctrl : s.cards[me].owner);
   // Sugar that expands to triggers: SV.card(id, {fanfare, lastWords, onEvolve, onSuperEvolve,
   // strike, followerStrike, leaderStrike, mainStart, endStart, ...rest}).
@@ -318,7 +338,8 @@
   SV.needsScript = function (id) {
     const d = SV.CARDS[id];
     for (const raw of (d.text || '').split('\n')) {
-      if (/^-{3,}$/.test(raw)) break;
+      if (/^-{3,}$/.test(raw)) continue;
+      if (/^You can put up to \d+ of this card into your evolve deck\.$|^Your main deck and evolve deck may only contain/.test(raw)) continue; // deck construction (CR 6.1.2), read by SV.deckProblems
       const l = raw.replace(/\([^)]*\)/g, '').replace(/\s+/g, ' ').trim();
       if (l && !ENGINE_LINE.test(l)) return true;
     }

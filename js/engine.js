@@ -33,7 +33,7 @@
     const kw = {};
     let quick = false, evolveCost = null, serveCost = null;
     for (const raw of (d.text || '').split('\n')) {
-      if (/^-{3,}$/.test(raw)) break; // below the rule line: deck-building notes and reminders (Carrot, Eisdrache)
+      if (/^-{3,}$/.test(raw)) continue; // the ruled line separates ability groups (Dead to Rights, Sheffy); both are read
       const l = raw.replace(/\([^)]*\)/g, '').replace(/\s+/g, ' ').trim();
       if (/^((Ward|Storm|Rush|Bane|Drain|Assail|Intimidate|Aura)\. ?)+$/.test(l)) for (const m of l.matchAll(/(\w+)\./g)) kw[m[1]] = true;
       else if (l === '[quick]') quick = true; // CR 12.3.2 a standalone Quick icon
@@ -320,6 +320,8 @@
     const c = s.cards[target];
     const isLeader = c.zone === 'leader';
     if (!isLeader && (c.zone !== 'field' || !SV.isFollower(s, target))) return 0; // CR 5.14.1.2
+    // Q1537: 0 or less damage is not dealt, so "deals that much plus 1 instead" never applies to it.
+    if (!(amount > 0)) return 0;
     const ev = { target, amount, src: o.src ?? null, kind: o.kind || 'ability', leader: isLeader, p: c.owner };
     for (const x of auraSources(s)) {
       const ax = ABIL(faceId(s, x));
@@ -415,7 +417,12 @@
       if (e.verb === 'destroy') emit(s, { ...ev, type: 'destroyed' }, extra);
     }
   }
-  function destroy(s, iid, o = {}) { return leaveField(s, iid, 'cemetery', { ...o, verb: 'destroy' }); }
+  // "This can't be destroyed by abilities" (flag cantBeDestroyedByAbilities). Rules-handling
+  // destruction at 0 defense is not by an ability; Bane destruction is (CR 11.3.2.1).
+  function destroy(s, iid, o = {}) {
+    if (s.cards[iid].zone === 'field' && SV.chars(s, iid).flags.cantBeDestroyedByAbilities) { log(s, s.cards[iid].ctrl, 'fizzle', { iid, text: "can't be destroyed by abilities", notice: true }); return false; }
+    return leaveField(s, iid, 'cemetery', { ...o, verb: 'destroy' });
+  }
   // CR 11.3 / 11.7: simultaneous destruction by rules handling.
   function destroyMany(s, list) {
     const moved = [];
@@ -423,6 +430,7 @@
       const c = s.cards[e.iid];
       if (c.zone !== 'field') continue;
       if (e.stackEmpty) { const info = snapshot(s, e.iid); move(s, e.iid, 'cemetery'); log(s, info.owner, 'leave', { iid: e.iid, to: 'cemetery', info }); moved.push({ iid: e.iid, to: 'cemetery', info, ctrl: info.ctrl }); continue; }
+      if ((e.byAbility || e.bane) && SV.chars(s, e.iid).flags.cantBeDestroyedByAbilities) continue;
       if (SV.hasStack(s, e.iid) && (c.counters.stack || 0) > 0) { c.counters.stack--; log(s, c.ctrl, 'stackSave', { iid: e.iid, left: c.counters.stack }); continue; }
       const info = snapshot(s, e.iid);
       move(s, e.iid, 'cemetery');
@@ -545,7 +553,7 @@
       for (const i of SV.field(s)) {
         const c = s.cards[i];
         if (SV.isFollower(s, i) && SV.chars(s, i).def <= 0) doomed.push({ iid: i, by: c.lastHitBy ?? null });
-        else if (c.baneMark) doomed.push({ iid: i, by: c.baneMark });
+        else if (c.baneMark) doomed.push({ iid: i, by: c.baneMark, bane: true });
         else if (SV.hasStack(s, i) && !(c.counters.stack > 0)) doomed.push({ iid: i, stackEmpty: true });
       }
       for (const i of SV.field(s)) delete s.cards[i].baneMark;
@@ -768,6 +776,7 @@
     let cost = d.cost || 0;
     const a = ABIL(d.no);
     if (a.selfCost) cost += a.selfCost(s, iid, c.owner) || 0;
+    for (const m of c.mods) if (m.cost && m.on !== false) cost += m.cost; // e.g. Fuse: 'Give this "This costs 1 less to play."' (CR 4.8.3.3)
     for (const x of auraSources(s)) { const ax = ABIL(faceId(s, x)); if (ax.costAura) cost += ax.costAura(s, x, iid, c.owner) || 0; }
     for (const e of s.effects) if (e.costMod && e.on !== false && e.p === c.owner && (!e.filter || SV.COST_FILTERS[e.filter](s, iid, e))) cost += e.costMod;
     if (a.setCost) { const v = a.setCost(s, iid, c.owner); if (v != null) cost = v; }
