@@ -14,7 +14,9 @@ const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; cha
   '.webp': 'image/webp', '.gif': 'image/gif', '.ico': 'image/x-icon', '.mp3': 'audio/mpeg',
   '.ogg': 'audio/ogg', '.wav': 'audio/wav', '.m4a': 'audio/mp4', '.mp4': 'video/mp4',
   '.txt': 'text/plain; charset=utf-8', '.md': 'text/plain; charset=utf-8', '.woff2': 'font/woff2' };
-const FORBIDDEN = /(^|[\\/])(scratch|\.git)([\\/]|$)|(^|[\\/])tokens?[^\\/]*$/i;
+// Secrets by their real names only (tokens.txt, hf_token.md, .hf_token, elevenlabs.token*, .env*):
+// a game asset may be called token.mp3.
+const FORBIDDEN = /(^|[\\/])(scratch|\.git)([\\/]|$)|(^|[\\/])(tokens?\.txt(\.txt)?|hf_token\.md|\.hf_token|elevenlabs\.token[^\\/]*|\.env[^\\/]*)$/i;
 
 createServer(async (req, res) => {
   const path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
