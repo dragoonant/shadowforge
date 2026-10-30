@@ -107,6 +107,15 @@ if (process.argv.includes('--selftest')) {
 const { problems, prompts, ui } = buildAll();
 const show = process.argv.indexOf('--show');
 if (show >= 0) { const id = process.argv[show + 1]; console.log((prompts[id] || ui[id] || {}).prompt || 'no such id'); }
+// --partial: write what is clean (the UI plates, finished cards) while other entries are still being
+// written; the problems are still listed and the exit code still fails.
+if (problems.length && process.argv.includes('--partial')) {
+  const bad = new Set(problems.map((p) => p.split(/[ :]/)[0]));
+  for (const id of Object.keys(prompts)) if (bad.has(id)) delete prompts[id];
+  fs.writeFileSync(OUT, JSON.stringify({ style: STYLE, uiStyle: UI_STYLE, model: MODEL, prompts, ui }, null, 1));
+  console.log(`art-prompts: PARTIAL write (${Object.keys(prompts).length} cards, ${Object.keys(ui).length} UI); ${problems.length} problems remain`);
+  process.exit(1);
+}
 if (problems.length) { console.log('art-prompts: REFUSED to write - ' + problems.length + ' problem(s)\n  ' + problems.slice(0, 60).join('\n  ')); process.exit(1); }
 fs.writeFileSync(OUT, JSON.stringify({ style: STYLE, uiStyle: UI_STYLE, model: MODEL, prompts, ui }, null, 1));
 const lens = Object.values(prompts).map((p) => p.prompt.length);

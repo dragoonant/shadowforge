@@ -153,13 +153,13 @@
         const ax = ABIL(faceId(s, x));
         if (ax.auras) for (const fn of ax.auras) fn(s, x, iid, r);
       }
-      for (const m of c.mods) if (m.on !== false) applyMod(r, m);
+      // Boxed (CR 5.31.2): loses every ability it had when Boxed; abilities given after it are kept (Q1487).
+      for (const m of c.mods) if (m.on !== false) { if (m.flags && m.flags.loseAbilities) { r.kw = {}; r.quick = false; } applyMod(r, m); }
       for (const e of s.effects) if (e.mod && e.on !== false && e.applies && SV.EFFECT_FILTERS[e.applies](s, e, iid)) applyMod(r, e.mod);
       for (const x of auraSources(s)) {
         const ax = ABIL(faceId(s, x));
         if (ax.lateAuras) for (const fn of ax.lateAuras) fn(s, x, iid, r);
       }
-      if (r.flags.loseAbilities) { r.kw = {}; r.quick = false; }
     }
     if (c.mods.some((m) => m.maneuver && m.on !== false)) r.type = 'follower';
     if (r.flags.setAtk != null) r.atk = r.flags.setAtk;
@@ -403,7 +403,7 @@
   // Final card information (CR 10.11, 10.7.4.1.2): what a leaving card looked like on the field.
   function snapshot(s, iid) {
     const r = SV.chars(s, iid);
-    return { name: r.name, id: r.id, cls: r.cls, type: r.type, atk: r.atk, def: r.def, cost: r.cost, traits: r.traits, kw: r.kw, evolved: r.evolved, superEvolved: r.superEvolved, token: r.token, owner: r.owner, ctrl: r.ctrl };
+    return { name: r.name, id: r.id, cls: r.cls, type: r.type, atk: r.atk, def: r.def, cost: r.cost, traits: r.traits, kw: r.kw, evolved: r.evolved, superEvolved: r.superEvolved, token: r.token, owner: r.owner, ctrl: r.ctrl, boxed: !!r.flags.loseAbilities };
   }
   SV.snapshot = snapshot;
 
@@ -537,6 +537,7 @@
         const zoneOk = left ? zone === 'field' || zone === 'any' || zone === c.zone : zone === 'any' || zone === c.zone;
         if (!zoneOk) return;
         if (c.zone === 'field' && SV.chars(s, iid).flags.loseAbilities && !left) return;
+        if (left && ev.info && ev.iid === iid && ev.info.boxed) return; // Q1485: a Boxed card's Last Words don't trigger
         if (t.when && !t.when(s, iid, ev)) return;
         let times = 1;
         if (t.limit) { // CR 10.7.2.2 "[N] per turn"
