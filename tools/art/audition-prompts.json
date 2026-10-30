@@ -1,0 +1,94 @@
+{
+ "styles": {
+  "A": "super-deformed chibi figure with MGSD proportions, about two and a half heads tall, oversized head with big expressive eyes, short stubby limbs, richly detailed costume and textures, classic feature-animation art direction, clean appealing shapes, bright saturated colours, polished soft cel shading, cinematic lighting, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition",
+  "B": "super-deformed chibi figure with MGSD proportions, about two and a half heads tall, oversized head with big glossy anime eyes, short stubby limbs, richly detailed costume and textures, Japanese fantasy card game illustration, crisp anime line art, vivid colours, glossy cel shading with soft glow, dynamic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition",
+  "C": "full-figure Japanese fantasy card game key art, slender anime proportions, detailed expressive anime face, intricately detailed costume, painterly rendered background, dramatic lighting with glowing magical effects, rich colours, high-detail digital painting, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition",
+  "D": "dark-fantasy painterly illustration, realistic heroic proportions, moody atmospheric lighting, rich oil-paint texture, deep shadows with warm highlights, epic composition, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition"
+ },
+ "prompts": {
+  "A-arisa": {
+   "name": "A arisa",
+   "model": "dev",
+   "aspect": "2:3",
+   "megapixels": 1,
+   "prompt": "Arisa, a young elf archer woman with long wavy blonde hair, green eyes, pointed ears and a small red ribbon in her hair, wearing a black corset bodice over a white blouse and short white skirt, brown leather belts and arm bracers and a flowing red cape, drawing a tall wooden longbow, in a sunlit ancient forest with drifting green leaves, super-deformed chibi figure with MGSD proportions, about two and a half heads tall, oversized head with big expressive eyes, short stubby limbs, richly detailed costume and textures, classic feature-animation art direction, clean appealing shapes, bright saturated colours, polished soft cel shading, cinematic lighting, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition"
+  },
+  "A-lishenna": {
+   "name": "A lishenna",
+   "model": "dev",
+   "aspect": "2:3",
+   "megapixels": 1,
+   "prompt": "Lishenna, a cheerful girl with very long pink hair, a black hairband and bright blue eyes, wearing a white frilled blouse with a black bow, a black corset vest, a layered magenta ruffled skirt, black thigh-high stockings and long black gloves, reaching out with a playful smile while two round machine orbs glowing cyan float behind her, above a futuristic city of floating ruins at dusk, super-deformed chibi figure with MGSD proportions, about two and a half heads tall, oversized head with big expressive eyes, short stubby limbs, richly detailed costume and textures, classic feature-animation art direction, clean appealing shapes, bright saturated colours, polished soft cel shading, cinematic lighting, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition"
+  },
+  "A-galmieux": {
+   "name": "A galmieux",
+   "model": "dev",
+   "aspect": "2:3",
+   "megapixels": 1,
+   "prompt": "Galmieux, a fierce young woman with long wild brown hair and red eyes, wearing crimson dragon-scale armour with a golden clawed gauntlet on one arm and a red outfit trimmed with white fur, wreathed in swirling flames, on a volcanic crag under a burning sky, super-deformed chibi figure with MGSD proportions, about two and a half heads tall, oversized head with big expressive eyes, short stubby limbs, richly detailed costume and textures, classic feature-animation art direction, clean appealing shapes, bright saturated colours, polished soft cel shading, cinematic lighting, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition"
+  },
+  "B-arisa": {
+   "name": "B arisa",
+   "model": "dev",
+   "aspect": "2:3",
+   "megapixels": 1,
+   "prompt": "Arisa, a young elf archer woman with long wavy blonde hair, green eyes, pointed ears and a small red ribbon in her hair, wearing a black corset bodice over a white blouse and short white skirt, brown leather belts and arm bracers and a flowing red cape, drawing a tall wooden longbow, in a sunlit ancient forest with drifting green leaves, super-deformed chibi figure with MGSD proportions, about two and a half heads tall, oversized head with big glossy anime eyes, short stubby limbs, richly detailed costume and textures, Japanese fantasy card game illustration, crisp anime line art, vivid colours, glossy cel shading with soft glow, dynamic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition"
+  },
+  "B-lishenna": {
+   "name": "B lishenna",
+   "model": "dev",
+   "aspect": "2:3",
+   "megapixels": 1,
+   "prompt": "Lishenna, a cheerful girl with very long pink hair, a black hairband and bright blue eyes, wearing a white frilled blouse with a black bow, a black corset vest, a layered magenta ruffled skirt, black thigh-high stockings and long black gloves, reaching out with a playful smile while two round machine orbs glowing cyan float behind her, above a futuristic city of floating ruins at dusk, super-deformed chibi figure with MGSD proportions, about two and a half heads tall, oversized head with big glossy anime eyes, short stubby limbs, richly detailed costume and textures, Japanese fantasy card game illustration, crisp anime line art, vivid colours, glossy cel shading with soft glow, dynamic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition"
+  },
+  "B-galmieux": {
+   "name": "B galmieux",
+   "model": "dev",
+   "aspect": "2:3",
+   "megapixels": 1,
+   "prompt": "Galmieux, a fierce young woman with long wild brown hair and red eyes, wearing crimson dragon-scale armour with a golden clawed gauntlet on one arm and a red outfit trimmed with white fur, wreathed in swirling flames, on a volcanic crag under a burning sky, super-deformed chibi figure with MGSD proportions, about two and a half heads tall, oversized head with big glossy anime eyes, short stubby limbs, richly detailed costume and textures, Japanese fantasy card game illustration, crisp anime line art, vivid colours, glossy cel shading with soft glow, dynamic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition"
+  },
+  "C-arisa": {
+   "name": "C arisa",
+   "model": "dev",
+   "aspect": "2:3",
+   "megapixels": 1,
+   "prompt": "Arisa, a young elf archer woman with long wavy blonde hair, green eyes, pointed ears and a small red ribbon in her hair, wearing a black corset bodice over a white blouse and short white skirt, brown leather belts and arm bracers and a flowing red cape, drawing a tall wooden longbow, in a sunlit ancient forest with drifting green leaves, full-figure Japanese fantasy card game key art, slender anime proportions, detailed expressive anime face, intricately detailed costume, painterly rendered background, dramatic lighting with glowing magical effects, rich colours, high-detail digital painting, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition"
+  },
+  "C-lishenna": {
+   "name": "C lishenna",
+   "model": "dev",
+   "aspect": "2:3",
+   "megapixels": 1,
+   "prompt": "Lishenna, a cheerful girl with very long pink hair, a black hairband and bright blue eyes, wearing a white frilled blouse with a black bow, a black corset vest, a layered magenta ruffled skirt, black thigh-high stockings and long black gloves, reaching out with a playful smile while two round machine orbs glowing cyan float behind her, above a futuristic city of floating ruins at dusk, full-figure Japanese fantasy card game key art, slender anime proportions, detailed expressive anime face, intricately detailed costume, painterly rendered background, dramatic lighting with glowing magical effects, rich colours, high-detail digital painting, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition"
+  },
+  "C-galmieux": {
+   "name": "C galmieux",
+   "model": "dev",
+   "aspect": "2:3",
+   "megapixels": 1,
+   "prompt": "Galmieux, a fierce young woman with long wild brown hair and red eyes, wearing crimson dragon-scale armour with a golden clawed gauntlet on one arm and a red outfit trimmed with white fur, wreathed in swirling flames, on a volcanic crag under a burning sky, full-figure Japanese fantasy card game key art, slender anime proportions, detailed expressive anime face, intricately detailed costume, painterly rendered background, dramatic lighting with glowing magical effects, rich colours, high-detail digital painting, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition"
+  },
+  "D-arisa": {
+   "name": "D arisa",
+   "model": "dev",
+   "aspect": "2:3",
+   "megapixels": 1,
+   "prompt": "Arisa, a young elf archer woman with long wavy blonde hair, green eyes, pointed ears and a small red ribbon in her hair, wearing a black corset bodice over a white blouse and short white skirt, brown leather belts and arm bracers and a flowing red cape, drawing a tall wooden longbow, in a sunlit ancient forest with drifting green leaves, dark-fantasy painterly illustration, realistic heroic proportions, moody atmospheric lighting, rich oil-paint texture, deep shadows with warm highlights, epic composition, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition"
+  },
+  "D-lishenna": {
+   "name": "D lishenna",
+   "model": "dev",
+   "aspect": "2:3",
+   "megapixels": 1,
+   "prompt": "Lishenna, a cheerful girl with very long pink hair, a black hairband and bright blue eyes, wearing a white frilled blouse with a black bow, a black corset vest, a layered magenta ruffled skirt, black thigh-high stockings and long black gloves, reaching out with a playful smile while two round machine orbs glowing cyan float behind her, above a futuristic city of floating ruins at dusk, dark-fantasy painterly illustration, realistic heroic proportions, moody atmospheric lighting, rich oil-paint texture, deep shadows with warm highlights, epic composition, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition"
+  },
+  "D-galmieux": {
+   "name": "D galmieux",
+   "model": "dev",
+   "aspect": "2:3",
+   "megapixels": 1,
+   "prompt": "Galmieux, a fierce young woman with long wild brown hair and red eyes, wearing crimson dragon-scale armour with a golden clawed gauntlet on one arm and a red outfit trimmed with white fur, wreathed in swirling flames, on a volcanic crag under a burning sky, dark-fantasy painterly illustration, realistic heroic proportions, moody atmospheric lighting, rich oil-paint texture, deep shadows with warm highlights, epic composition, full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition"
+  }
+ }
+}

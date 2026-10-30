@@ -42,7 +42,8 @@ for (const slug of FEATURED) {
 const slugName = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const decode = (s) => s.replace(/&#0?39;|&#8217;|&rsquo;/g, "'").replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#8220;|&#8221;/g, '"');
 const resolved = [];
-const raw = fs.readFileSync(path.join(ROOT, 'data/raw/tournament-decks.txt'), 'utf8').split(/\r?\n/);
+const lines = (f) => fs.readFileSync(path.join(ROOT, f), 'utf8').split(/\r?\n/);
+const raw = lines('data/raw/tournament-decks.txt');
 let deck = null, sec = null;
 for (const line of raw) {
   if (!line.trim() || line.startsWith('#')) continue;
@@ -75,6 +76,15 @@ for (const line of raw) {
   if (uniq.length !== 1) throw new Error(`${deck.id} ${sec} "${name}": ${uniq.length} matches ${JSON.stringify(hits.map((h) => h.no + ' ' + h.name + ' ' + h.type))}`);
   deck[sec].push([uniq[0], Number(m[1])]);
   want(uniq[0]);
+}
+// Tokens named in card text but not linked from any page (data/raw/extra-tokens.txt).
+for (const name of lines('data/raw/extra-tokens.txt').filter((l) => l.trim() && !l.startsWith('#'))) {
+  // card_kind[]=Token: the search leaves tokens out otherwise. Token numbers are -T<n> or -PR<n>.
+  const html = await get(`${SITE}/cards/searchresults/?card_name=${encodeURIComponent(name)}&card_kind%5B%5D=Token&view=text`,
+    path.join(SCRATCH, 'search', `token-${slugName(name)}.html`));
+  const nos = [...new Set([...html.matchAll(/cardno=([A-Z0-9]+-(?:T|PR)[0-9]+EN)/g)].map((m) => m[1]))].sort();
+  if (!nos.length) throw new Error(`extra token "${name}": not found`);
+  want(nos[0]); // reprints of one token are identical; build-cards folds them
 }
 fs.writeFileSync(path.join(SCRATCH, 'tournament-resolved.json'), JSON.stringify(resolved, null, 1));
 console.log(`resolved ${resolved.length} published decklists`);

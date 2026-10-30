@@ -411,10 +411,13 @@
   // whole group (Last Words of every card in the group, "whenever another follower is destroyed").
   function emitLeave(s, list) {
     const extra = list.map((e) => e.iid);
+    // CR 10.7.4.1.2: a card that left the field is read as it was there (an evolved follower's
+    // Last Words are its evolved face's).
+    const faces = Object.fromEntries(list.map((e) => [e.iid, e.info.id]));
     for (const e of list) {
       const ev = { type: 'leave', iid: e.iid, to: e.to, by: e.by, info: e.info, verb: e.verb || 'leave', p: e.info.owner, ctrl: e.ctrl };
-      emit(s, ev, extra);
-      if (e.verb === 'destroy') emit(s, { ...ev, type: 'destroyed' }, extra);
+      emit(s, ev, extra, faces);
+      if (e.verb === 'destroy') emit(s, { ...ev, type: 'destroyed' }, extra, faces);
     }
   }
   // "This can't be destroyed by abilities" (flag cantBeDestroyedByAbilities). Rules-handling
@@ -476,7 +479,7 @@
   // emit(): every card whose ability is valid in its zone (plus `extra` cards that just left the
   // field, for Last Words and "whenever another ... is destroyed") and listens for this event.
   const TRIG_ZONES = { field: true };
-  function emit(s, ev, extra = []) {
+  function emit(s, ev, extra = [], faces = {}) {
     const seen = new Set();
     const P = s.players;
     const scan = [...P[s.active].field, ...P[1 - s.active].field, ...P[s.active].ex, ...P[1 - s.active].ex,
@@ -486,10 +489,10 @@
       if (seen.has(iid)) continue;
       seen.add(iid);
       const c = s.cards[iid];
-      const id = faceId(s, iid);
+      const left = extra.includes(iid);
+      const id = left && faces[iid] ? faces[iid] : faceId(s, iid);
       const a = ABIL(id);
       if (!a.triggers) continue;
-      const left = extra.includes(iid);
       a.triggers.forEach((t, ti) => {
         const ons = Array.isArray(t.on) ? t.on : [t.on];
         if (!ons.includes(ev.type)) return;

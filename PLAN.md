@@ -60,6 +60,7 @@ whether the leader portrait is a character or an emblem.
 | D12 | 2026-10-29 | **Deploy:** public GitHub Pages, `dragoonant/shadowforge`, served from `main` root, no build step. Dev server port **8241**. Owner: "Let's move" on the defaults. | owner |
 | D13 | 2026-10-29 | **1v1 only.** CR 1.1.1: the rules do not support more than two players. | default |
 | D14 | 2026-10-29 | **Format: Standard.** Deck legality follows the official card list's Standard flag at fetch date; Gloryfinder cards are out of the pool. | default |
+| D16 | 2026-10-29 | **Art style (provisional, owner to confirm): audition row B** of `art/audition.jpg` (rows A-D x Arisa, Lishenna, Galmieux; FLUX.1 dev, name + description): MGSD chibi proportions with a Japanese fantasy card-game anime look, glossy cel shading. Chosen because it keeps the owner's lorecannae pick (MGSD chibi, recognisable characters, D17 there) and reads as Shadowverse; rows C (full-proportion anime key art) and D (painterly) are the alternatives. Official card images are viewed (scratch/ref) only to identify hair, costume and colours; never image inputs. | default (owner away) |
 | D15 | 2026-10-29 | **Every file is an IIFE on `globalThis.SV`.** No build step, no dependencies. | default |
 
 ---

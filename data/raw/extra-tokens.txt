@@ -1,0 +1,7 @@
+# Tokens that pool cards create but whose pages do not link them (found by tools/build-cards.mjs
+# reporting a referenced token missing). Resolved by name through the official search; one per line.
+Wings of Desire
+Great Testimony
+Remnant of Hollowness
+Fangs of Ardent Destruction
+Torrent of Despair
