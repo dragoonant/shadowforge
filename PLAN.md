@@ -294,5 +294,19 @@ window.
 
 ## 11. Status
 
-**2026-10-29.** Owner: "Let's move" — every §1 default accepted, then D5 widened to the Grand
-Showdown 2026 winners (and D6 with it). Build started; see git log.
+**2026-10-29, end of the first session.** Playable locally (`node tools/serve.mjs`,
+http://localhost:8241); **not deployed yet**: the push to `dragoonant/shadowforge` was refused by the
+session's permission check and waits for the owner (HANDOFF.md).
+
+- 15 decks, 348 cards, every card scripted with a behaviour test; 0 defects. `node tools/gate.mjs`
+  green: 414 tests, audit 0 FAIL, check-art clean, replay selftest, random and AI games 0 errors.
+- Two independent reviews (engine vs CR, scripts vs print and rulings) found 4 engine and 14 script
+  bugs; all fixed with regression tests proven to fail on the old code.
+- Interface ported from lorecannae; played in a real browser (vs AI, hot-seat, spectate, deck
+  builder, tutorial) by the UI agent and spot-checked by the lead.
+- Art: 348 card plates + 8 backdrops (D16, provisional: owner to confirm the style from
+  `art/audition.jpg`). Audio: 31 effects + 6 tracks, **not heard by anyone**.
+- AI: Hard beat Normal 13/20, Normal beat Easy 17/20 (`docs/ai.md`).
+
+**2026-10-29 (start).** Owner: "Let's move" — every §1 default accepted, then D5 widened to the Grand
+Showdown 2026 winners (and D6 with it).
