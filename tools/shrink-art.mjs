@@ -13,7 +13,7 @@ const force = process.argv.includes('--force');
 const oi = process.argv.indexOf('--only'); const only = oi < 0 ? null : process.argv[oi + 1].split(',');
 const jobs = [
   { src: 'art/masters', dst: 'art/cards', vf: 'crop=iw:trunc(ih*0.95/2)*2:0:0,scale=560:-2:flags=lanczos', q: '88' },
-  { src: 'art/masters/ui', dst: 'art/ui', vf: 'scale=1600:-2:flags=lanczos', q: '85' },
+  { src: 'art/masters/ui', dst: 'art/ui', vf: 'crop=trunc(iw*0.97/2)*2:trunc(ih*0.93/2)*2:trunc(iw*0.015/2)*2:0,scale=1600:-2:flags=lanczos', q: '85' },
 ];
 let n = 0, kept = 0, bytes = 0;
 for (const j of jobs) {
