@@ -100,7 +100,7 @@ v1.26.1 text on 2026-10-29. Each is a day-one build, not a deviation to carry.
 - Max play points start at 0, +1 each start phase up to 10; play points reset to max (7.2.1–2).
   First player gets 0 EP, second gets 3; each gets 1 super-EP; leader defense set to 20 (6.x).
   First player skips the turn-1 draw. **New:** three numeric resources per seat, EP spendable only
-  as 1 PP inside an evolve cost (12.2), super-EP only from max PP ≥ 7 (first) / 6 (second).
+  as 1 PP inside an evolve cost (12.2), super-EP only once turns passed ≥ 7 (first) / 6 (second) (CR 12.2.4).
   Play-point limit handling (11.9).
 
 ### 4.2 No stack, but one reactive window: Quick (CR 10.6, 12.3)

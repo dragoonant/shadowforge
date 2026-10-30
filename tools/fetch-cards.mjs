@@ -5,14 +5,15 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SCRATCH = path.join(ROOT, 'scratch');
 const SITE = 'https://en.shadowverse-evolve.com';
 const UA = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) shadowforge-fan-project' };
 const FORCE = process.argv.includes('--force');
-// The featured-deck pages that make up the pool (PLAN D5). Order = registration order.
-export const FEATURED = ['bp1920-recommended-decks'];
+
+import { FEATURED } from './fetch-cards-config.mjs';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 async function get(url, file) {
@@ -55,7 +56,7 @@ for (const line of raw) {
   if (!m) throw new Error(`bad line: ${line}`);
   const name = m[2].trim();
   const html = await get(`${SITE}/cards/searchresults/?card_name=${encodeURIComponent(name)}&view=text`,
-    path.join(SCRATCH, 'search', `${slugName(name)}.html`));
+    path.join(SCRATCH, 'search', `${slugName(name)}-${createHash('sha1').update(name).digest('hex').slice(0, 6)}.html`));
   const hits = [];
   for (const li of html.split(/<li[ >]/).slice(1)) {
     const no = (li.match(/cardno=([A-Z0-9-]+?EN)/) || [])[1];
@@ -65,9 +66,12 @@ for (const line of raw) {
     hits.push({ no, name: cells[at + 1], type: cells[at + 2] });
   }
   const regular = (h) => /-(\d+|LD\d+|T\d+)EN$/.test(h.no);
-  const evo = (h) => /^(Evolved|Advanced)/.test(h.type || '');
+  const evo = (h) => /Evolved|Advanced/.test(h.type || '');
   const ok = hits.filter((h) => h.name === name && regular(h) && (sec === 'evolve' ? evo(h) : !evo(h)));
-  const uniq = [...new Set(ok.map((h) => h.no))];
+  // Reprints: same printed name, different numbers. Prefer a print already in the pool, then
+  // booster (BP), starter (SD/SDD/SS), other sets, promo (PR). build-cards.mjs collapses reprints.
+  const rank = (no) => (seen.has(no) ? 0 : /^BP/.test(no) ? 1 : /^(SD|SS)/.test(no) ? 2 : /^PR/.test(no) ? 4 : 3);
+  const uniq = [...new Set(ok.map((h) => h.no))].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b)).slice(0, 1);
   if (uniq.length !== 1) throw new Error(`${deck.id} ${sec} "${name}": ${uniq.length} matches ${JSON.stringify(hits.map((h) => h.no + ' ' + h.name + ' ' + h.type))}`);
   deck[sec].push([uniq[0], Number(m[1])]);
   want(uniq[0]);

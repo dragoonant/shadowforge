@@ -41,7 +41,8 @@ main:
 2 Rola, Inferno Dragoon
 3 Sarissa, Luxflash Spear
 3 Goddess of the Crescent Moon, Tsukuyomi
-3 Mejiro Palmer [Moonlit Devil]
+# article: "Mejiro Palmer [Moonlit Devil]" (the printed name ends in a music note)
+3 Mejiro Palmer [Moonlit Devil ♪]
 1 Stalwart Featherfolk
 2 Jeanne d'Arc
 3 Selena, Sugarkiss Assassin
@@ -69,7 +70,8 @@ main:
 # article: "Iceschillendrig, GIlded Autocrat"
 3 Iceschillendrig, Gilded Autocrat
 2 Odile, Black Swan
-3 Ilganeau, Horror Astray
+# article: "Ilganeau, Horror Astray"
+3 Illganeau, Horror Astray
 3 Mukan, Shadowcrypt Ward
 3 Wretch
 3 Tartarus, the Tormentor

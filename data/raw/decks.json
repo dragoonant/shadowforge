@@ -1,0 +1,1526 @@
+[
+ {
+  "id": "bp1920-694",
+  "name": "Condemned Forestcraft",
+  "cls": "forestcraft",
+  "leader": "SDD01-LD01EN",
+  "main": [
+   [
+    "BP17-001EN",
+    3
+   ],
+   [
+    "BP19-009EN",
+    3
+   ],
+   [
+    "BP11-003EN",
+    3
+   ],
+   [
+    "BP18-019EN",
+    3
+   ],
+   [
+    "BP19-116EN",
+    3
+   ],
+   [
+    "BP19-115EN",
+    3
+   ],
+   [
+    "BP19-011EN",
+    3
+   ],
+   [
+    "BP19-001EN",
+    3
+   ],
+   [
+    "BP19-005EN",
+    3
+   ],
+   [
+    "SP01-001EN",
+    2
+   ],
+   [
+    "BP15-004EN",
+    3
+   ],
+   [
+    "BP19-007EN",
+    3
+   ],
+   [
+    "BP19-003EN",
+    3
+   ],
+   [
+    "BP19-119EN",
+    2
+   ]
+  ],
+  "evolve": [
+   [
+    "BP19-010EN",
+    3
+   ],
+   [
+    "BP19-002EN",
+    3
+   ],
+   [
+    "BP19-006EN",
+    2
+   ],
+   [
+    "BP15-005EN",
+    2
+   ]
+  ],
+  "source": {
+   "kind": "featured",
+   "page": "https://en.shadowverse-evolve.com/decks/bp1920-recommended-decks/",
+   "fetched": "2026-10-29",
+   "decklog": "3YU1H"
+  }
+ },
+ {
+  "id": "bp1920-695",
+  "name": "Condemned Runecraft",
+  "cls": "runecraft",
+  "leader": "SDD03-LD01EN",
+  "main": [
+   [
+    "BP16-119EN",
+    2
+   ],
+   [
+    "BP19-116EN",
+    3
+   ],
+   [
+    "ECP01-019EN",
+    3
+   ],
+   [
+    "BP19-046EN",
+    3
+   ],
+   [
+    "BP19-115EN",
+    3
+   ],
+   [
+    "BP17-110EN",
+    3
+   ],
+   [
+    "BP19-048EN",
+    3
+   ],
+   [
+    "BP19-044EN",
+    2
+   ],
+   [
+    "BP19-120EN",
+    1
+   ],
+   [
+    "BP15-112EN",
+    3
+   ],
+   [
+    "BP19-P11EN",
+    3
+   ],
+   [
+    "BP19-038EN",
+    3
+   ],
+   [
+    "BP17-040EN",
+    2
+   ],
+   [
+    "BP05-103EN",
+    3
+   ],
+   [
+    "BP19-041EN",
+    3
+   ]
+  ],
+  "evolve": [
+   [
+    "ECP01-020EN",
+    2
+   ],
+   [
+    "BP19-047EN",
+    2
+   ],
+   [
+    "BP17-111EN",
+    2
+   ],
+   [
+    "BP19-043EN",
+    2
+   ],
+   [
+    "BP19-039EN",
+    2
+   ]
+  ],
+  "source": {
+   "kind": "featured",
+   "page": "https://en.shadowverse-evolve.com/decks/bp1920-recommended-decks/",
+   "fetched": "2026-10-29",
+   "decklog": "1N7KM"
+  }
+ },
+ {
+  "id": "bp1920-696",
+  "name": "Condemned Dragoncraft",
+  "cls": "dragoncraft",
+  "leader": "SDD04-LD01EN",
+  "main": [
+   [
+    "BP19-066EN",
+    3
+   ],
+   [
+    "BP19-063EN",
+    3
+   ],
+   [
+    "BP08-058EN",
+    3
+   ],
+   [
+    "BP19-116EN",
+    3
+   ],
+   [
+    "BP19-112EN",
+    3
+   ],
+   [
+    "BP19-064EN",
+    3
+   ],
+   [
+    "CP04-055EN",
+    3
+   ],
+   [
+    "SD04-002EN",
+    3
+   ],
+   [
+    "CP04-062EN",
+    2
+   ],
+   [
+    "BP19-060EN",
+    3
+   ],
+   [
+    "BP16-057EN",
+    3
+   ],
+   [
+    "BP19-056EN",
+    3
+   ],
+   [
+    "BP19-057EN",
+    3
+   ],
+   [
+    "BP18-061EN",
+    2
+   ]
+  ],
+  "evolve": [
+   [
+    "BP19-065EN",
+    3
+   ],
+   [
+    "CP04-056EN",
+    2
+   ],
+   [
+    "BP19-061EN",
+    2
+   ],
+   [
+    "BP19-058EN",
+    3
+   ]
+  ],
+  "source": {
+   "kind": "featured",
+   "page": "https://en.shadowverse-evolve.com/decks/bp1920-recommended-decks/",
+   "fetched": "2026-10-29",
+   "decklog": "2FKNT"
+  }
+ },
+ {
+  "id": "bp1920-697",
+  "name": "Cutthroat Dragoncraft",
+  "cls": "dragoncraft",
+  "leader": "SDD04-LD01EN",
+  "main": [
+   [
+    "BP01-159EN",
+    1
+   ],
+   [
+    "BP19-110EN",
+    3
+   ],
+   [
+    "BP06-054EN",
+    1
+   ],
+   [
+    "BP16-119EN",
+    1
+   ],
+   [
+    "BP01-098EN",
+    1
+   ],
+   [
+    "BP08-058EN",
+    1
+   ],
+   [
+    "BP19-112EN",
+    1
+   ],
+   [
+    "BP15-058EN",
+    1
+   ],
+   [
+    "BP15-113EN",
+    1
+   ],
+   [
+    "BP19-064EN",
+    1
+   ],
+   [
+    "BP19-115EN",
+    1
+   ],
+   [
+    "CP04-055EN",
+    1
+   ],
+   [
+    "BP19-073EN",
+    1
+   ],
+   [
+    "BP12-058EN",
+    1
+   ],
+   [
+    "SD04-002EN",
+    1
+   ],
+   [
+    "BP09-073EN",
+    1
+   ],
+   [
+    "CP02-062EN",
+    1
+   ],
+   [
+    "BP06-058EN",
+    1
+   ],
+   [
+    "BP19-120EN",
+    1
+   ],
+   [
+    "BP04-124EN",
+    1
+   ],
+   [
+    "BP19-062EN",
+    1
+   ],
+   [
+    "BP17-055EN",
+    1
+   ],
+   [
+    "BP19-117EN",
+    1
+   ],
+   [
+    "CP04-062EN",
+    1
+   ],
+   [
+    "BP01-076EN",
+    1
+   ],
+   [
+    "BP19-067EN",
+    1
+   ],
+   [
+    "BP15-065EN",
+    1
+   ],
+   [
+    "BP10-056EN",
+    1
+   ],
+   [
+    "BP16-057EN",
+    1
+   ],
+   [
+    "BP10-109EN",
+    1
+   ],
+   [
+    "BP01-089EN",
+    1
+   ],
+   [
+    "BP16-064EN",
+    1
+   ],
+   [
+    "BP03-055EN",
+    1
+   ],
+   [
+    "BP19-113EN",
+    1
+   ],
+   [
+    "BP18-061EN",
+    1
+   ],
+   [
+    "BP19-119EN",
+    1
+   ],
+   [
+    "BP01-080EN",
+    1
+   ],
+   [
+    "BP13-056EN",
+    1
+   ]
+  ],
+  "evolve": [
+   [
+    "BP19-111EN",
+    2
+   ],
+   [
+    "BP15-059EN",
+    1
+   ],
+   [
+    "BP15-114EN",
+    1
+   ],
+   [
+    "BP19-065EN",
+    1
+   ],
+   [
+    "CP04-056EN",
+    1
+   ],
+   [
+    "BP19-118EN",
+    1
+   ],
+   [
+    "BP01-077EN",
+    1
+   ],
+   [
+    "BP19-114EN",
+    1
+   ],
+   [
+    "BP10-110EN",
+    1
+   ]
+  ],
+  "source": {
+   "kind": "featured",
+   "page": "https://en.shadowverse-evolve.com/decks/bp1920-recommended-decks/",
+   "fetched": "2026-10-29",
+   "decklog": "22CTD"
+  }
+ },
+ {
+  "id": "bp1920-698",
+  "name": "Sanguine Abysscraft",
+  "cls": "abysscraft",
+  "leader": "SDD05-LD01EN",
+  "main": [
+   [
+    "BP19-090EN",
+    3
+   ],
+   [
+    "BP19-089EN",
+    3
+   ],
+   [
+    "BP19-086EN",
+    3
+   ],
+   [
+    "BP05-078EN",
+    3
+   ],
+   [
+    "PR-409EN",
+    3
+   ],
+   [
+    "BP15-113EN",
+    3
+   ],
+   [
+    "BP13-073EN",
+    2
+   ],
+   [
+    "BP19-085EN",
+    3
+   ],
+   [
+    "BP15-076EN",
+    2
+   ],
+   [
+    "BP05-069EN",
+    3
+   ],
+   [
+    "BP19-091EN",
+    3
+   ],
+   [
+    "BP10-080EN",
+    3
+   ],
+   [
+    "BP19-075EN",
+    3
+   ],
+   [
+    "BP17-074EN",
+    3
+   ]
+  ],
+  "evolve": [
+   [
+    "BP19-087EN",
+    2
+   ],
+   [
+    "BP15-114EN",
+    2
+   ],
+   [
+    "BP15-077EN",
+    2
+   ],
+   [
+    "BP19-076EN",
+    2
+   ],
+   [
+    "BP17-075EN",
+    2
+   ]
+  ],
+  "source": {
+   "kind": "featured",
+   "page": "https://en.shadowverse-evolve.com/decks/bp1920-recommended-decks/",
+   "fetched": "2026-10-29",
+   "decklog": "3T5Q7"
+  }
+ },
+ {
+  "id": "bp1920-699",
+  "name": "Condemned Havencraft",
+  "cls": "havencraft",
+  "leader": "SDD06-LD01EN",
+  "main": [
+   [
+    "BP18-105EN",
+    3
+   ],
+   [
+    "BP18-120EN",
+    3
+   ],
+   [
+    "BP19-100EN",
+    3
+   ],
+   [
+    "BP18-100EN",
+    3
+   ],
+   [
+    "BP19-102EN",
+    2
+   ],
+   [
+    "BP18-117EN",
+    3
+   ],
+   [
+    "BP18-110EN",
+    3
+   ],
+   [
+    "BP18-097EN",
+    3
+   ],
+   [
+    "BP02-092EN",
+    1
+   ],
+   [
+    "BP18-104EN",
+    3
+   ],
+   [
+    "BP09-115EN",
+    2
+   ],
+   [
+    "BP18-099EN",
+    3
+   ],
+   [
+    "BP19-098EN",
+    3
+   ],
+   [
+    "BP10-109EN",
+    2
+   ],
+   [
+    "BP19-092EN",
+    3
+   ]
+  ],
+  "evolve": [
+   [
+    "BP18-106EN",
+    2
+   ],
+   [
+    "BP19-101EN",
+    2
+   ],
+   [
+    "BP18-118EN",
+    1
+   ],
+   [
+    "BP18-P47EN",
+    2
+   ],
+   [
+    "BP18-098EN",
+    2
+   ],
+   [
+    "BP10-110EN",
+    1
+   ]
+  ],
+  "source": {
+   "kind": "featured",
+   "page": "https://en.shadowverse-evolve.com/decks/bp1920-recommended-decks/",
+   "fetched": "2026-10-29",
+   "decklog": "3JJ83"
+  }
+ },
+ {
+  "id": "bp1920-700",
+  "name": "Hunter Forestcraft",
+  "cls": "forestcraft",
+  "leader": "BP10-LD02EN",
+  "main": [
+   [
+    "BP06-013EN",
+    3
+   ],
+   [
+    "BP04-010EN",
+    2
+   ],
+   [
+    "BP20-009EN",
+    3
+   ],
+   [
+    "BP15-008EN",
+    3
+   ],
+   [
+    "BP05-017EN",
+    1
+   ],
+   [
+    "BP20-012EN",
+    3
+   ],
+   [
+    "BP15-012EN",
+    2
+   ],
+   [
+    "BP20-015EN",
+    3
+   ],
+   [
+    "BP15-014EN",
+    2
+   ],
+   [
+    "BP20-008EN",
+    3
+   ],
+   [
+    "BP05-004EN",
+    3
+   ],
+   [
+    "BP15-001EN",
+    3
+   ],
+   [
+    "BP20-002EN",
+    3
+   ],
+   [
+    "BP20-007EN",
+    3
+   ],
+   [
+    "BP20-001EN",
+    3
+   ]
+  ],
+  "evolve": [
+   [
+    "BP04-011EN",
+    2
+   ],
+   [
+    "BP20-010EN",
+    1
+   ],
+   [
+    "BP15-015EN",
+    2
+   ],
+   [
+    "BP05-005EN",
+    2
+   ],
+   [
+    "BP20-003EN",
+    3
+   ]
+  ],
+  "source": {
+   "kind": "featured",
+   "page": "https://en.shadowverse-evolve.com/decks/bp1920-recommended-decks/",
+   "fetched": "2026-10-29",
+   "decklog": "42FA7"
+  }
+ },
+ {
+  "id": "bp1920-701",
+  "name": "Loot Swordcraft",
+  "cls": "swordcraft",
+  "leader": "BP10-LD05EN",
+  "main": [
+   [
+    "BP19-030EN",
+    3
+   ],
+   [
+    "BP05-029EN",
+    2
+   ],
+   [
+    "BP05-034EN",
+    3
+   ],
+   [
+    "BP15-026EN",
+    3
+   ],
+   [
+    "BP15-028EN",
+    3
+   ],
+   [
+    "BP15-024EN",
+    3
+   ],
+   [
+    "BP20-019EN",
+    3
+   ],
+   [
+    "BP19-028EN",
+    3
+   ],
+   [
+    "BP19-026EN",
+    3
+   ],
+   [
+    "BP20-026EN",
+    3
+   ],
+   [
+    "BP20-033EN",
+    2
+   ],
+   [
+    "BP15-020EN",
+    3
+   ],
+   [
+    "BP20-020EN",
+    3
+   ],
+   [
+    "BP19-019EN",
+    3
+   ]
+  ],
+  "evolve": [
+   [
+    "BP15-029EN",
+    2
+   ],
+   [
+    "BP15-025EN",
+    2
+   ],
+   [
+    "BP19-029EN",
+    2
+   ],
+   [
+    "BP20-021EN",
+    2
+   ],
+   [
+    "BP19-020EN",
+    2
+   ]
+  ],
+  "source": {
+   "kind": "featured",
+   "page": "https://en.shadowverse-evolve.com/decks/bp1920-recommended-decks/",
+   "fetched": "2026-10-29",
+   "decklog": "63P8F"
+  }
+ },
+ {
+  "id": "bp1920-702",
+  "name": "Lishenna Runecraft",
+  "cls": "runecraft",
+  "leader": "BP10-LD07EN",
+  "main": [
+   [
+    "BP08-051EN",
+    3
+   ],
+   [
+    "BP20-050EN",
+    2
+   ],
+   [
+    "BP15-054EN",
+    3
+   ],
+   [
+    "BP05-041EN",
+    2
+   ],
+   [
+    "BP20-045EN",
+    3
+   ],
+   [
+    "BP20-055EN",
+    3
+   ],
+   [
+    "BP20-040EN",
+    3
+   ],
+   [
+    "BP20-037EN",
+    3
+   ],
+   [
+    "BP05-048EN",
+    2
+   ],
+   [
+    "BP20-048EN",
+    2
+   ],
+   [
+    "BP15-045EN",
+    3
+   ],
+   [
+    "BP05-045EN",
+    2
+   ],
+   [
+    "BP15-039EN",
+    3
+   ],
+   [
+    "BP08-050EN",
+    3
+   ],
+   [
+    "BP05-037EN",
+    1
+   ],
+   [
+    "BP20-044EN",
+    2
+   ]
+  ],
+  "evolve": [
+   [
+    "BP20-051EN",
+    2
+   ],
+   [
+    "BP20-041EN",
+    3
+   ],
+   [
+    "BP05-049EN",
+    2
+   ],
+   [
+    "BP15-040EN",
+    3
+   ]
+  ],
+  "source": {
+   "kind": "featured",
+   "page": "https://en.shadowverse-evolve.com/decks/bp1920-recommended-decks/",
+   "fetched": "2026-10-29",
+   "decklog": "5LBCB"
+  }
+ },
+ {
+  "id": "bp1920-705",
+  "name": "Disdain Dragoncraft",
+  "cls": "dragoncraft",
+  "leader": "BP10-LD09EN",
+  "main": [
+   [
+    "BP05-059EN",
+    3
+   ],
+   [
+    "BP15-072EN",
+    3
+   ],
+   [
+    "BP05-058EN",
+    3
+   ],
+   [
+    "BP20-067EN",
+    3
+   ],
+   [
+    "BP20-070EN",
+    3
+   ],
+   [
+    "BP05-063EN",
+    3
+   ],
+   [
+    "BP20-064EN",
+    3
+   ],
+   [
+    "BP20-063EN",
+    3
+   ],
+   [
+    "BP15-066EN",
+    1
+   ],
+   [
+    "BP20-062EN",
+    3
+   ],
+   [
+    "BP20-056EN",
+    3
+   ],
+   [
+    "BP20-057EN",
+    3
+   ],
+   [
+    "BP15-057EN",
+    3
+   ],
+   [
+    "BP05-052EN",
+    3
+   ]
+  ],
+  "evolve": [
+   [
+    "BP20-065EN",
+    3
+   ],
+   [
+    "BP15-067EN",
+    1
+   ],
+   [
+    "BP20-058EN",
+    3
+   ],
+   [
+    "BP05-053EN",
+    3
+   ]
+  ],
+  "source": {
+   "kind": "featured",
+   "page": "https://en.shadowverse-evolve.com/decks/bp1920-recommended-decks/",
+   "fetched": "2026-10-29",
+   "decklog": "2ACRZ"
+  }
+ },
+ {
+  "id": "bp1920-703",
+  "name": "Choice Abysscraft",
+  "cls": "abysscraft",
+  "leader": "BP10-LD11EN",
+  "main": [
+   [
+    "BP11-075EN",
+    3
+   ],
+   [
+    "BP20-086EN",
+    3
+   ],
+   [
+    "BP20-085EN",
+    3
+   ],
+   [
+    "BP20-082EN",
+    3
+   ],
+   [
+    "CP02-075EN",
+    3
+   ],
+   [
+    "BP20-089EN",
+    3
+   ],
+   [
+    "BP20-113EN",
+    2
+   ],
+   [
+    "BP20-074EN",
+    3
+   ],
+   [
+    "BP20-076EN",
+    3
+   ],
+   [
+    "CP03-126EN",
+    2
+   ],
+   [
+    "BP16-077EN",
+    3
+   ],
+   [
+    "BP20-079EN",
+    3
+   ],
+   [
+    "BP10-074EN",
+    3
+   ],
+   [
+    "BP20-081EN",
+    3
+   ]
+  ],
+  "evolve": [
+   [
+    "BP20-075EN",
+    3
+   ],
+   [
+    "BP20-077EN",
+    2
+   ],
+   [
+    "BP20-080EN",
+    3
+   ],
+   [
+    "BP10-075EN",
+    2
+   ]
+  ],
+  "source": {
+   "kind": "featured",
+   "page": "https://en.shadowverse-evolve.com/decks/bp1920-recommended-decks/",
+   "fetched": "2026-10-29",
+   "decklog": "VP6V"
+  }
+ },
+ {
+  "id": "bp1920-704",
+  "name": "Crest Havencraft",
+  "cls": "havencraft",
+  "leader": "BP10-LD14EN",
+  "main": [
+   [
+    "BP20-107EN",
+    3
+   ],
+   [
+    "BP15-101EN",
+    2
+   ],
+   [
+    "BP20-103EN",
+    3
+   ],
+   [
+    "BP19-100EN",
+    3
+   ],
+   [
+    "BP19-112EN",
+    3
+   ],
+   [
+    "BP20-094EN",
+    3
+   ],
+   [
+    "BP20-101EN",
+    3
+   ],
+   [
+    "BP20-100EN",
+    3
+   ],
+   [
+    "BP20-097EN",
+    3
+   ],
+   [
+    "BP20-113EN",
+    2
+   ],
+   [
+    "BP15-108EN",
+    2
+   ],
+   [
+    "BP20-111EN",
+    2
+   ],
+   [
+    "BP20-093EN",
+    3
+   ],
+   [
+    "BP15-094EN",
+    2
+   ],
+   [
+    "BP19-092EN",
+    3
+   ]
+  ],
+  "evolve": [
+   [
+    "BP19-101EN",
+    2
+   ],
+   [
+    "BP20-095EN",
+    2
+   ],
+   [
+    "BP20-102EN",
+    1
+   ],
+   [
+    "BP20-098EN",
+    2
+   ],
+   [
+    "BP20-112EN",
+    1
+   ],
+   [
+    "BP15-095EN",
+    2
+   ]
+  ],
+  "source": {
+   "kind": "featured",
+   "page": "https://en.shadowverse-evolve.com/decks/bp1920-recommended-decks/",
+   "fetched": "2026-10-29",
+   "decklog": "1U27D"
+  }
+ },
+ {
+  "id": "gs26-eu-swordcraft",
+  "name": "Angelic Swordcraft",
+  "cls": "swordcraft",
+  "leader": "CP03-LD08EN",
+  "main": [
+   [
+    "BP09-126EN",
+    3
+   ],
+   [
+    "BP01-159EN",
+    3
+   ],
+   [
+    "BP16-119EN",
+    3
+   ],
+   [
+    "BP10-121EN",
+    3
+   ],
+   [
+    "BP16-113EN",
+    3
+   ],
+   [
+    "BP09-020EN",
+    3
+   ],
+   [
+    "BP14-108EN",
+    3
+   ],
+   [
+    "BP11-018EN",
+    1
+   ],
+   [
+    "BP14-110EN",
+    3
+   ],
+   [
+    "BP07-034EN",
+    2
+   ],
+   [
+    "BP10-114EN",
+    3
+   ],
+   [
+    "BP03-117EN",
+    3
+   ],
+   [
+    "BP12-106EN",
+    3
+   ],
+   [
+    "BP13-107EN",
+    1
+   ],
+   [
+    "BP09-137EN",
+    3
+   ]
+  ],
+  "evolve": [
+   [
+    "BP01-160EN",
+    3
+   ],
+   [
+    "BP14-109EN",
+    2
+   ],
+   [
+    "BP09-127EN",
+    3
+   ],
+   [
+    "BP16-114EN",
+    1
+   ]
+  ],
+  "source": {
+   "kind": "tournament",
+   "event": "Grand Showdown 2026 Europe",
+   "place": "1st",
+   "date": "2026-03 (date not stated)",
+   "player": "Shamiko",
+   "archetype": "Angels",
+   "page": "https://www.tcgplayer.com/content/article/Shadowverse-Evolve-s-Best-Competitive-Decks-The-Grand-Showdown-2026-Winners/1ff7c7a5-1e26-4e58-b841-8a545b4557d8/",
+   "fetched": "2026-10-29"
+  }
+ },
+ {
+  "id": "gs26-ao-havencraft",
+  "name": "Church of Jeanne Havencraft",
+  "cls": "havencraft",
+  "leader": "BP05-LD06EN",
+  "main": [
+   [
+    "SP01-045EN",
+    3
+   ],
+   [
+    "BP13-088EN",
+    3
+   ],
+   [
+    "BP13-091EN",
+    3
+   ],
+   [
+    "BP11-099EN",
+    2
+   ],
+   [
+    "BP12-086EN",
+    2
+   ],
+   [
+    "BP15-097EN",
+    3
+   ],
+   [
+    "CP03-115EN",
+    3
+   ],
+   [
+    "ECP01-053EN",
+    3
+   ],
+   [
+    "BP10-107EN",
+    1
+   ],
+   [
+    "BP01-127EN",
+    2
+   ],
+   [
+    "BP11-086EN",
+    3
+   ],
+   [
+    "BP09-106EN",
+    3
+   ],
+   [
+    "ECP01-051EN",
+    3
+   ],
+   [
+    "ECP01-048EN",
+    3
+   ],
+   [
+    "BP11-096EN",
+    3
+   ]
+  ],
+  "evolve": [
+   [
+    "BP13-092EN",
+    2
+   ],
+   [
+    "BP12-087EN",
+    2
+   ],
+   [
+    "BP09-107EN",
+    2
+   ],
+   [
+    "BP01-128EN",
+    1
+   ],
+   [
+    "BP13-089EN",
+    1
+   ],
+   [
+    "CP01-085EN",
+    2
+   ]
+  ],
+  "source": {
+   "kind": "tournament",
+   "event": "Grand Showdown 2026 Asia & Oceania",
+   "place": "1st",
+   "date": "2026-03 (date not stated)",
+   "player": "YoFuzzy3",
+   "archetype": "Jeanne",
+   "page": "https://www.tcgplayer.com/content/article/Shadowverse-Evolve-s-Best-Competitive-Decks-The-Grand-Showdown-2026-Winners/1ff7c7a5-1e26-4e58-b841-8a545b4557d8/",
+   "fetched": "2026-10-29"
+  }
+ },
+ {
+  "id": "gs26-na-abysscraft",
+  "name": "Departed Wasteland Abysscraft",
+  "cls": "abysscraft",
+  "leader": "BP01-LD10EN",
+  "main": [
+   [
+    "BP09-091EN",
+    2
+   ],
+   [
+    "BP16-080EN",
+    3
+   ],
+   [
+    "BP13-076EN",
+    3
+   ],
+   [
+    "BP16-077EN",
+    3
+   ],
+   [
+    "BP13-077EN",
+    3
+   ],
+   [
+    "BP11-069EN",
+    3
+   ],
+   [
+    "BP03-076EN",
+    2
+   ],
+   [
+    "BP11-071EN",
+    3
+   ],
+   [
+    "BP16-081EN",
+    3
+   ],
+   [
+    "BP11-076EN",
+    3
+   ],
+   [
+    "BP08-072EN",
+    3
+   ],
+   [
+    "BP13-081EN",
+    1
+   ],
+   [
+    "BP11-079EN",
+    2
+   ],
+   [
+    "BP09-105EN",
+    3
+   ],
+   [
+    "BP01-116EN",
+    3
+   ]
+  ],
+  "evolve": [
+   [
+    "BP16-082EN",
+    3
+   ],
+   [
+    "BP11-077EN",
+    3
+   ],
+   [
+    "BP11-070EN",
+    2
+   ],
+   [
+    "BP08-073EN",
+    2
+   ]
+  ],
+  "source": {
+   "kind": "tournament",
+   "event": "Grand Showdown 2026 North & Latin America",
+   "place": "1st",
+   "date": "2026-04-04",
+   "player": "2G",
+   "archetype": "Cemetery",
+   "page": "https://www.tcgplayer.com/content/article/Shadowverse-Evolve-s-Best-Competitive-Decks-The-Grand-Showdown-2026-Winners/1ff7c7a5-1e26-4e58-b841-8a545b4557d8/",
+   "fetched": "2026-10-29"
+  }
+ }
+]

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>shadowforge tests</title>
+<style>body{font:14px system-ui;background:#0e0d14;color:#e3e0f0;padding:16px}.f{color:#ff8a80}.p{color:#8ee0ac}</style></head>
+<body>
+<h1>shadowforge tests</h1><pre id="out">running…</pre>
+<!-- engine -->
+<script src="js/ns.js"></script>
+<script src="data/cards.js"></script>
+<script src="data/decks.js"></script>
+<script src="data/defects.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/abilities.js"></script>
+<!-- /engine -->
+<script src="tests/harness.js"></script>
+<script src="tests/01-rules.js"></script>
+<script>
+  (function () {
+    const r = SV.T.runAll(new URLSearchParams(location.search).get('filter'));
+    document.getElementById('out').innerHTML = r.fails.map((f) => '<span class="f">' + f + '</span>').join('\n') +
+      '\n<span class="p">' + r.pass + ' passed</span>, ' + r.fail + ' failed';
+  })();
+</script>
+</body>
+</html>
