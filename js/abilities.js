@@ -252,6 +252,9 @@
     };
     x.canFuse = (filter) => { const P = s.players[x.ctrl]; return [...P.hand, ...P.ex].some((i) => i !== x.me && filter(i)); };
 
+    // CR 1.2.4 / 5.23: an effect that makes a player win ends the game at once (no Confirmation Timing).
+    x.winGame = (p = x.ctrl) => SV._endGame(s, p, 'effect');
+
     // Play a card without paying its cost ("for free"; CR 10.6 with the cost replaced).
     x.playFree = (iid, o = {}) => SV.playCard(s, x, iid, { from: s.cards[iid].zone, ...o });
 
