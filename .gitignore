@@ -1,0 +1,26 @@
+# Secrets. Ignored in the first commit, before the first tool.
+tokens.txt
+tokens.txt.txt
+hf_token.md
+.hf_token
+elevenlabs.token*
+*.token
+*.token.*
+.env
+.env.*
+
+# Raw research: rules PDFs/text, card-database dumps, decklist scrapes, sandboxes.
+scratch/
+
+# Art and audio masters/archives. The repo carries delivery encodes only.
+art/masters/
+art/archive/
+art/take*/
+audio/masters/
+*.psd
+
+# Traces, replays, sweep sandboxes, OS junk.
+traces/
+node_modules/
+.DS_Store
+Thumbs.db
