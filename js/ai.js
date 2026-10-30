@@ -123,9 +123,20 @@
   }
 
   // Choose an action for `seat`. Synchronous; deterministic for a given state and level.
-  AI.choose = function (s, seat, level = 'normal') {
+  // The search works on a copy whose log keeps only recent entries: every SV.apply deep-copies
+  // the state, and the log grows all game. Scripts that read the log read this turn's entries.
+  const LOG_KEEP = 300;
+  function lite(s) {
+    if (s.log.length <= LOG_KEEP) return s;
+    const t = { ...s, log: s.log.slice(-LOG_KEEP) };
+    if (s.pendingSnap) t.pendingSnap = { ...s.pendingSnap, log: s.pendingSnap.log.slice(-LOG_KEEP) };
+    return t;
+  }
+
+  AI.choose = function (s0, seat, level = 'normal') {
     const w = LEVELS[level] || LEVELS.normal;
-    if (SV.whoActs(s) !== seat) throw new Error('AI.choose: not this seat to act');
+    if (SV.whoActs(s0) !== seat) throw new Error('AI.choose: not this seat to act');
+    const s = lite(s0);
     let rnd = (SV.hashSeed(String(s.logN) + ':' + s.seed) >>> 0) / 4294967296;
     const noise = () => { rnd = (rnd * 9301 + 0.49297) % 1; return (rnd - 0.5) * 2 * w.noise; };
     if (s.ask) {
