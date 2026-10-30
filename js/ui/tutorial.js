@@ -69,6 +69,8 @@
     skip.onclick = function () { SV.tutorial.end(); };
     row.appendChild(ok); row.appendChild(skip);
     b.appendChild(row);
+    U.forgetPeek('coach');                   // each step's bubble opens shown
+    U.peekable(b, step.id, row, { hide: 'Hide', restore: 'Show the tip' });
     b.classList.add('open');
     const a = $(step.anchor);
     const r = a && a.getBoundingClientRect();

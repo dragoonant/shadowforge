@@ -669,8 +669,10 @@ body.drawer-open #log-handle { opacity: 0; pointer-events: none; }
 .card-ref:hover, .card-ref:focus { color: #e6f3ff; border-bottom-color: #e6f3ff; outline: none; }
 
 /* ================= enlargements ================= */
+/* A card the player asked to read sits above EVERY panel (mulligan 58, popover 59, deck builder
+   80): under one, a long-press on a mulligan card opened a reader nobody could see. */
 #preview {
-  position: fixed; z-index: 60; display: none; pointer-events: none;
+  position: fixed; z-index: 105; display: none; pointer-events: none;
   filter: drop-shadow(0 12px 32px rgba(0,0,0,.75));
   transform: scale(.35); opacity: 0;
   transition: transform .13s ease-out, opacity .13s ease-out;
@@ -695,7 +697,7 @@ body.drawer-open #log-handle { opacity: 0; pointer-events: none; }
 .kw-text { color: #d6e4f2; }
 
 #inspector {
-  position: fixed; inset: 0; z-index: 50; display: none; place-items: center;
+  position: fixed; inset: 0; z-index: 110; display: none; place-items: center;
   background: rgba(2,6,14,.78); backdrop-filter: blur(3px);
 }
 #inspector.open { display: grid; }
@@ -837,15 +839,26 @@ body.drawer-open #log-handle { opacity: 0; pointer-events: none; }
 .choice-modal-controls { display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; align-items: center; margin-top: .3rem; }
 .peek-btn { background: transparent; color: var(--muted); border: 1px solid var(--line); padding: .4rem 1rem; font-size: .8rem; box-shadow: none; }
 .peek-btn:hover { color: #fff; border-color: var(--cyan); background: rgba(127,230,255,.06); }
-.choice-peek-restore { display: none; }
-#choice-modal.peek .choice-modal-content { display: none; }
-#choice-modal.peek .choice-peek-restore {
-  position: absolute; top: .5rem; left: 50%; transform: translateX(-50%);
-  display: inline-flex; pointer-events: auto;
+
+/* ================= Hide / Show (U.peekable) ================= */
+/* Every box the game puts over the board can collapse to one moonlight blade and come back
+   (kb/LESSONS-DIGEST §UI). Hidden, the overlay drops its scrim and stops taking clicks, so the
+   board under it is readable and live; only the blade answers. Full-screen overlays put the
+   blade top-centre; the bar and the tutorial bubble collapse in place. */
+.peek-restore { display: none; }
+.peek { background: none !important; backdrop-filter: none !important; border-color: transparent !important; box-shadow: none !important; pointer-events: none !important; }
+.peek > :not(.peek-restore) { display: none !important; }
+.peek > .peek-restore {
+  position: fixed; top: .5rem; left: 50%; transform: translateX(-50%);
+  display: inline-flex; pointer-events: auto; cursor: pointer;
   background: linear-gradient(180deg, #ffffff, #74d8ff); color: #03101f; border: 0;
   clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 10px 100%, 0 50%);
-  padding: .45rem 1.5rem; font-size: .86rem; font-weight: 700;
+  padding: .45rem 1.6rem; font-family: var(--font-display); font-size: .82rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
 }
+#choice-bar.peek { padding: 0; }
+#choice-bar.peek > .peek-restore { position: static; transform: none; }
+/* The tip's pill waits in the top-left corner, clear of any panel it was explaining. */
+#coach.peek > .peek-restore { top: 3.4rem; left: .75rem; transform: none; font-size: .76rem; padding: .35rem .95rem; }
 
 /* ================= curtain / results / help / coach / toast / tooltip ================= */
 #curtain {

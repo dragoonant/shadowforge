@@ -49,6 +49,17 @@ What this project learned on top of lorecannae's `LORCANA-LESSONS.md`. Each line
 - **Shell quoting corrupts JavaScript** written through Python heredocs (`\r?\n`, apostrophes in
   strings). Use the editor for code containing backslashes or quotes.
 
+## UI
+
+- **An enlargement under a modal is invisible on a phone.** The long-press inspector (z 50) opened
+  behind the mulligan panel (z 58) and the deck builder (z 80). Desktop testing missed it because
+  hover previews were never tried inside a modal. The inspector is now at z 110 and the hover preview
+  at z 105. Check long-press inside every modal at phone width.
+- **Hide / Show is a shared helper, not a per-box feature.** Only the choice panel had Hide; the
+  Quick prompt, the targeting bar, the results screen ("Look at the board" closed it for good) and
+  the tutorial bubble did not. `U.peekable` (js/ui/core.js) and one `.peek` CSS block now cover
+  all of them (LESSONS-DIGEST §4.1).
+
 ## Assets
 
 - FLUX.1 dev on the local GPU: about 20 s a card plate, 37 s a 2 MP backdrop; 348 plates in ~2 h,

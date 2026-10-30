@@ -220,17 +220,16 @@
       table.appendChild(col);
     });
     box.appendChild(table);
-    box.appendChild(el('div', 'results-note', 'Every hand and evolve deck is now face up — close this to read the board back.'));
+    box.appendChild(el('div', 'results-note', 'Every hand and evolve deck is now face up — Look at the board to read it back.'));
     const row = el('div', 'results-buttons');
     const re = el('button', 'action-btn', 'Rematch (same decks)');
     re.onclick = function () { node.classList.remove('open'); ui.rematch(); };
     const ng = el('button', 'action-btn', 'New game');
     ng.onclick = function () { node.classList.remove('open'); SV.title.openPicker(); };
-    const lk = el('button', null, 'Look at the board');
-    lk.onclick = function () { node.classList.remove('open'); };
-    row.appendChild(re); row.appendChild(ng); row.appendChild(lk);
+    row.appendChild(re); row.appendChild(ng);
     box.appendChild(row);
     node.appendChild(box);
+    U.peekable(node, 'results#' + s.log.length, row, { hide: 'Look at the board', restore: 'Show the results' });
     node.classList.add('open');
   }
 
@@ -291,7 +290,7 @@
           const seat = ui.humanSeatForConcede();
           if (seat != null) ui.concede(seat);
         }
-        $('results').classList.remove('open');
+        $('results').classList.remove('open', 'peek');
         SV.title.openPicker();
       };
       $('concede-btn').onclick = function () {
@@ -310,12 +309,17 @@
         if (modal && modal.classList.contains('open')) return;   // Esc is the modal's peek
         if (popoverFor != null) { close(); return; }
         if ($('help').classList.contains('open')) { $('help').classList.remove('open'); return; }
+        // Esc hides / shows the Quick prompt or the results, like the choice panel.
+        for (const id of ['window-prompt', 'results']) {
+          const box = $(id);
+          if (box.classList.contains('open')) { U.setPeek(box, !U.isPeeked(box)); return; }
+        }
         if (drawerOpen) setDrawer(false);
       });
       syncControls();
       setDrawer(false);
     },
-    reset: function () { bannerKey = null; finished = false; close(); $('results').classList.remove('open'); setDrawer(false); },
+    reset: function () { bannerKey = null; finished = false; close(); $('results').classList.remove('open', 'peek'); setDrawer(false); },
     render: function (s) {
       maybeBanner(s);
       if (popoverFor != null && (!s.cards[popoverFor] || SV.whoActs(s) !== SV.ui.viewSeat)) close();
