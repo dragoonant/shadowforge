@@ -70,6 +70,9 @@ card('BP16-080EN', {
   blockPlay: (s, me, iid, p) => bool,    // "Your opponent can't play …"
   replaceDamage: (s, me, ev) => ev.amount + 1,   // damage modifiers (CR 5.14.2): ev {target, amount, src, kind, leader, p}
   extraTriggers: (s, me, iid, t, ev) => 0,       // "Abilities you control that … trigger an additional time"
+  replaceLeave: (s, me, ev) => 'banished' | undefined,  // "would be put into the cemetery … banish it instead" (ev {iid, to, verb})
+  chooseAnyNumber: true,      // "If you would choose 1 or more options, choose any number instead" (x.choose honours it)
+  effectTriggers: [{ name, on, when: (s, e, ev) => bool, run(x, ev) }],  // abilities an effect creates for a duration, hosted by x.addTrigger(idx, dur)
   stack: true,                // the amulet has Stack (CR 13.3.2): engine handles counters and leaving
   evolveCost: 1, evolveIf: (s, iid) => bool,    // override / condition for the engine-read evolve line
 });
@@ -126,6 +129,11 @@ Who is "you": `s.cards[me].ctrl` on the field, `.owner` elsewhere (`SV.H.ctrl(s,
   `x.counter(t, 'reversal', +1)`, `x.summon(iid)`, `x.summonToken('Name', n)`, `x.tokenToEx('Name', n)`,
   `x.transform(t, 'Name')`, `x.evolve(t)` (free evolve; not the once-per-turn ability),
   `x.equip(t, 'Name')`, `x.serve(t)`, `x.race(t)`, `x.playFree(iid)`, `x.mayPay({pp})`.
+- **More doors (added during the build):** `x.setDefense(p, v)` ("change a leader's defense to N";
+  a decrease is lost defense), `x.maneuver(t)` (CR 5.32: an amulet with attack/defense is a follower
+  this turn), `x.addTrigger(idx, dur, extra)` (host `effectTriggers[idx]` of this card in s.effects:
+  "For the rest of this turn, whenever …"; its `when(s, e, ev)` receives the effect record `e`, which
+  carries `extra`), `x.winGame(p)`.
 - **Buffs and durations:** `x.buff(t, {atk, def, kw:{Storm:true}, flags:{…}, cost}, dur, text)`;
   `x.give(t, 'Ward', dur)`. `dur` = `x.until.eot()` ("until the end of the turn"),
   `x.until.myNextTurn()`, `x.until.theirNextTurn(p)` ("during their next turn"),

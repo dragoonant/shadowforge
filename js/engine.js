@@ -161,6 +161,7 @@
       }
       if (r.flags.loseAbilities) { r.kw = {}; r.quick = false; }
     }
+    if (c.mods.some((m) => m.maneuver && m.on !== false)) r.type = 'follower';
     if (r.flags.setAtk != null) r.atk = r.flags.setAtk;
     if (r.flags.setDef != null) r.maxDef = r.flags.setDef;
     r.def = r.maxDef - c.dmg;
@@ -210,7 +211,8 @@
   };
 
   // ---------------------------------------------------------------- small readers
-  SV.isFollower = (s, iid) => SV.parsed(def(s, iid)).type === 'follower';
+  // CR 5.32 Maneuver: an amulet with attack and defense is a follower for the rest of the turn.
+  SV.isFollower = (s, iid) => SV.parsed(def(s, iid)).type === 'follower' || s.cards[iid].mods.some((m) => m.maneuver && m.on !== false);
   SV.isAmulet = (s, iid) => SV.parsed(def(s, iid)).type === 'amulet';
   SV.isSpell = (s, iid) => SV.parsed(def(s, iid)).type === 'spell';
   SV.field = (s, p) => (p == null ? [...s.players[s.active].field, ...s.players[1 - s.active].field] : s.players[p].field.slice());
@@ -363,6 +365,20 @@
     return n;
   }
   SV.heal = heal;
+  // "Change a leader's defense to N" (CR 5.27.2): not damage and not a heal; a decrease counts as
+  // lost defense for Sanguine (13.5.2.2).
+  function setDefense(s, p, v, o = {}) {
+    const P = s.players[p];
+    const before = P.defense;
+    if (v === before) return 0;
+    P.defense = v;
+    if (v < before && s.active === p) s.ti.lostDef[p] = true;
+    log(s, p, 'setDefense', { p, from: before, total: v, src: o.src ?? null });
+    if (v < before) emit(s, { type: 'defenseLost', p, amount: before - v, src: o.src ?? null, set: true });
+    else emit(s, { type: 'healed', p, amount: v - before, set: true });
+    return v - before;
+  }
+  SV.setDefense = setDefense;
 
   function engage(s, iid, cause) {
     const c = s.cards[iid];
@@ -402,6 +418,7 @@
     const info = snapshot(s, iid);
     const owner = c.owner;
     const by = o.by ?? null;
+    to = replaceLeaveTo(s, iid, to, o.verb || 'leave');
     move(s, iid, to, o);
     log(s, owner, o.verb || 'leave', { iid, to, by, info });
     emitLeave(s, [{ iid, to, by, info, verb: o.verb, ctrl: info.ctrl }]);
@@ -436,11 +453,18 @@
       if ((e.byAbility || e.bane) && SV.chars(s, e.iid).flags.cantBeDestroyedByAbilities) continue;
       if (SV.hasStack(s, e.iid) && (c.counters.stack || 0) > 0) { c.counters.stack--; log(s, c.ctrl, 'stackSave', { iid: e.iid, left: c.counters.stack }); continue; }
       const info = snapshot(s, e.iid);
-      move(s, e.iid, 'cemetery');
-      log(s, info.owner, 'destroy', { iid: e.iid, by: e.by ?? null, info });
-      moved.push({ iid: e.iid, to: 'cemetery', by: e.by ?? null, info, verb: 'destroy', ctrl: info.ctrl });
+      const to = replaceLeaveTo(s, e.iid, 'cemetery', 'destroy');
+      move(s, e.iid, to);
+      log(s, info.owner, 'destroy', { iid: e.iid, by: e.by ?? null, info, to });
+      moved.push({ iid: e.iid, to, by: e.by ?? null, info, verb: 'destroy', ctrl: info.ctrl });
     }
     emitLeave(s, moved);
+  }
+  // Replacement effects on where a card leaving the field goes ("banish it instead", CR 10.10):
+  // every valid source's replaceLeave(s, me, {iid, to, verb}) may return a new zone.
+  function replaceLeaveTo(s, iid, to, verb) {
+    for (const x of auraSources(s)) { const ax = ABIL(faceId(s, x)); if (ax.replaceLeave) { const r = ax.replaceLeave(s, x, { iid, to, verb }); if (r) to = r; } }
+    return to;
   }
   SV.leaveField = leaveField;
   SV.destroy = destroy;
@@ -485,6 +509,16 @@
     const scan = [...P[s.active].field, ...P[1 - s.active].field, ...P[s.active].ex, ...P[1 - s.active].ex,
       ...P[s.active].cemetery, ...P[1 - s.active].cemetery, ...P[s.active].hand, ...P[1 - s.active].hand, ...extra];
     for (const c of Object.values(s.cards)) if (c.zone === 'equip' || c.zone === 'evolve') scan.push(c.iid);
+    // Automatic abilities created by an effect for a duration ("For the rest of this turn, whenever
+    // ..."): s.effects entries {etrig: {card, idx}, p, src} name an entry in that card's
+    // `effectTriggers` list; they trigger wherever the source card is (CR 10.7.5 delayed triggers).
+    for (const e of s.effects) if (e.etrig && e.on !== false) {
+      const t = (ABIL(e.etrig.card).effectTriggers || [])[e.etrig.idx];
+      if (!t) continue;
+      const ons = Array.isArray(t.on) ? t.on : [t.on];
+      if (!ons.includes(ev.type) || (t.when && !t.when(s, e, ev))) continue;
+      addToBag(s, e.p, e.src, e.etrig.card, 'eff:' + e.etrig.idx, t.name, ev);
+    }
     for (const iid of scan) {
       if (seen.has(iid)) continue;
       seen.add(iid);
@@ -1150,7 +1184,7 @@
     s._via = entry.src;
     log(s, entry.owner, 'ability', { iid: entry.src, name: entry.name, auto: true });
     if (entry.ti === 'drain') return heal(s, entry.owner, entry.ev.amount, { src: entry.src }); // 12.13.2
-    const t = ABIL(entry.cardId).triggers[entry.ti];
+    const t = typeof entry.ti === 'string' && entry.ti.startsWith('eff:') ? ABIL(entry.cardId).effectTriggers[+entry.ti.slice(4)] : ABIL(entry.cardId).triggers[entry.ti];
     x.withSource(entry.src, () => t.run(x, entry.ev), entry.owner);
   }
 

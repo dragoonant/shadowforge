@@ -48,6 +48,9 @@
     // "Choose N" (CR 5.18): options = [{label, can}]; returns the chosen indices in printed order.
     // Options that cannot be performed cannot be chosen (5.18.3.1.2).
     x.choose = (prompt, options, min = 1, max = 1) => {
+      // "If you would choose 1 or more options, choose any number instead" (a passive ability with
+      // `chooseAnyNumber: true` valid for this controller, e.g. a crest in the EX area; Q2451: still at least 1).
+      if (min >= 1 && SV.auraSources(s).some((i) => SV.abil(SV.faceId(s, i)).chooseAnyNumber && SV.H.ctrl(s, i) === x.ctrl)) { max = options.length; prompt += ' (Choose any number.)'; }
       const opts = options.map((o) => ({ label: o.label, enabled: o.can !== false }));
       const nEnabled = opts.filter((o) => o.enabled).length;
       max = Math.min(max, nEnabled); min = Math.min(min, max);
@@ -97,6 +100,12 @@
     x.damage = (t, n, o = {}) => SV.dealDamage(s, t, n, { src: src(), kind: 'ability', ...o });
     x.damageMany = (list, n) => { for (const t of list) SV.dealDamage(s, t, typeof n === 'function' ? n(t) : n, { src: src(), kind: 'ability' }); };
     x.heal = (p, n) => SV.heal(s, p, n, { src: src() }); // "give your leader [defense]+N"
+    x.setDefense = (p, v) => SV.setDefense(s, p, v, { src: src() }); // "change ... leader's defense to N"
+    // CR 5.32 Maneuver: an amulet with printed attack and defense becomes a follower this turn.
+    x.maneuver = (t) => { const d = def(s, t); if (d.atk == null || d.def == null) return false; s.cards[t].mods.push({ maneuver: true, end: { at: 'eot' }, src: x.me }); SV.log(s, x.ctrl, 'maneuver', { iid: t }); return true; };
+    // An automatic ability created for a duration: x.addTrigger(idx, dur) hosts this card's
+    // `effectTriggers[idx]` in s.effects (its when(s, e, ev) gets the effect record e).
+    x.addTrigger = (idx, dur, extra = {}) => x.effect({ etrig: { card: SV.faceId(s, x.me), idx }, ...(dur || {}), ...extra });
     x.destroy = (t) => SV.destroy(s, t, { by: src() });
     // "Destroy each ..." is simultaneous (CR 10.7.4.2): every leave event sees the whole group.
     x.destroyAll = (list) => SV.destroyMany(s, list.map((iid) => ({ iid, by: src(), byAbility: true })));
