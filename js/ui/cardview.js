@@ -34,20 +34,29 @@
     return proto;
   }
 
-  // The card back: drawn, never an official back. A dark field, a silver double frame and a
-  // forge sigil (an anvil-star) in the middle.
+  // The card back: drawn, never an official back. Night blue with a fine diamond lattice, a
+  // cut-corner moonlit frame, a ring of light with tick marks, and a crescent holding a
+  // four-point star (the evolution light) at its heart.
   let backSvg = null;
   function cardBack() {
     if (!backSvg) {
       backSvg = U.svgEl('svg', { viewBox: '0 0 50 70', class: 'art card-back-art', 'aria-hidden': 'true', preserveAspectRatio: 'xMidYMid slice' });
-      backSvg.innerHTML = '<defs><radialGradient id="cb-g" cx="50%" cy="45%" r="70%"><stop offset="0" stop-color="#3a1f4e"/>' +
-        '<stop offset=".6" stop-color="#1a0f26"/><stop offset="1" stop-color="#0a060f"/></radialGradient>' +
-        '<pattern id="cb-p" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 3 H6" stroke="#ffffff" stroke-opacity=".05" stroke-width="1"/></pattern></defs>' +
+      let ticks = '';
+      for (let i = 0; i < 24; i++) {
+        const a = i * Math.PI / 12, r1 = 14.2, r2 = i % 6 === 0 ? 16.4 : 15.3;
+        ticks += 'M' + (25 + Math.cos(a) * r1).toFixed(2) + ' ' + (35 + Math.sin(a) * r1).toFixed(2) + ' L' + (25 + Math.cos(a) * r2).toFixed(2) + ' ' + (35 + Math.sin(a) * r2).toFixed(2) + ' ';
+      }
+      backSvg.innerHTML = '<defs><radialGradient id="cb-g" cx="50%" cy="48%" r="72%"><stop offset="0" stop-color="#1d4274"/>' +
+        '<stop offset=".55" stop-color="#0b1a33"/><stop offset="1" stop-color="#040812"/></radialGradient>' +
+        '<pattern id="cb-p" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0 H5 M0 0 V5" stroke="#bfe6ff" stroke-opacity=".07" stroke-width=".5"/></pattern></defs>' +
         '<rect width="50" height="70" fill="url(#cb-g)"/><rect width="50" height="70" fill="url(#cb-p)"/>' +
-        '<rect x="3" y="3" width="44" height="64" rx="3" fill="none" stroke="#b9c2d6" stroke-opacity=".55" stroke-width=".8"/>' +
-        '<rect x="5.5" y="5.5" width="39" height="59" rx="2" fill="none" stroke="#b9c2d6" stroke-opacity=".25" stroke-width=".5"/>' +
-        '<path d="M25 18 L28.6 30.4 L41 35 L28.6 39.6 L25 52 L21.4 39.6 L9 35 L21.4 30.4 Z" fill="#d8c48a" fill-opacity=".75"/>' +
-        '<circle cx="25" cy="35" r="5" fill="#1a0f26" stroke="#e8d9a8" stroke-width=".8"/><circle cx="25" cy="35" r="2" fill="#ff8a5c"/>';
+        '<path d="M7 3 H43 L47 7 V63 L43 67 H7 L3 63 V7 Z" fill="none" stroke="#a9cdee" stroke-opacity=".6" stroke-width=".8"/>' +
+        '<path d="M8.6 5.4 H41.4 L44.6 8.6 V61.4 L41.4 64.6 H8.6 L5.4 61.4 V8.6 Z" fill="none" stroke="#7fe6ff" stroke-opacity=".25" stroke-width=".5"/>' +
+        '<circle cx="25" cy="35" r="14" fill="none" stroke="#7fe6ff" stroke-opacity=".55" stroke-width=".6"/>' +
+        '<path d="' + ticks + '" stroke="#d9f8ff" stroke-opacity=".5" stroke-width=".45"/>' +
+        '<path d="M27.5 24 A11 11 0 1 0 27.5 46 A8.8 8.8 0 1 1 27.5 24 Z" fill="#e6f4ff" fill-opacity=".88"/>' +
+        '<path d="M28.6 30.2 L29.7 33.9 L33.4 35 L29.7 36.1 L28.6 39.8 L27.5 36.1 L23.8 35 L27.5 33.9 Z" fill="#7fe6ff"/>' +
+        '<path d="M25 8.5 L27 10.5 L25 12.5 L23 10.5 Z M25 57.5 L27 59.5 L25 61.5 L23 59.5 Z" fill="#a9cdee" fill-opacity=".7"/>';
     }
     return backSvg.cloneNode(true);
   }

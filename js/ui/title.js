@@ -1,14 +1,16 @@
-// js/ui/title.js — the entry point (PRESENTATION-REFERENCE A1): title splash -> wipe -> picker
-// (two pre-picked deck slots with dice, mode, opponent skill, Start) -> deck chooser with hover
-// peek -> match. The Start click is the first real gesture, so it also unlocks audio. Nothing
-// here touches game state; SV.ui.start begins a match.
+// js/ui/title.js — the entry point (PRESENTATION-REFERENCE A1), dressed as this game's own scene
+// (PLAN D17, "the evolution rite"): a splash where the wordmark is drawn in light over a turning
+// circle -> the ring wipe -> the rite (modes down the left, the two summoners facing each other
+// as leader medallions, the skill, the blade that begins the duel) -> "choose a leader", a
+// gallery of every deck with hover peek -> match. The Start click is the first real gesture, so
+// it also unlocks audio. Nothing here touches game state; SV.ui.start begins a match.
 (function () {
   'use strict';
   const SV = globalThis.SV;
   const U = SV.U;
   const el = U.el, $ = U.$;
 
-  const HOLD_MS = 3000, WIPE_MS = 900, PEEK_MS = 600;
+  const HOLD_MS = 3200, WIPE_MS = 900, PEEK_MS = 600;
   // Verbatim from NOTICE.md "In-game disclaimer" (same-commit maintenance: change both).
   const DISCLAIMER = 'This is an unofficial, non-commercial fan project and is not affiliated with, endorsed, sponsored or approved by Cygames, Inc. or Bushiroad. Shadowverse: Evolve and its card names and rules text belong to Cygames, Inc. and Bushiroad and are reproduced here for personal play. This game contains no official card images, logos or artwork; all art and sound are original and generated locally. Nothing here is for sale.';
   SV.DISCLAIMER = DISCLAIMER;
@@ -84,6 +86,15 @@
     g.classList.add('deck-cls');
     return g;
   }
+  function leaderName(d) { return SV.CARDS[d.leader] ? SV.CARDS[d.leader].name : '?'; }
+  // A leader's portrait: the leader card's own art plate, or nothing (the caller draws a mark).
+  function portrait(d) {
+    const url = d && SV.artUrl(d.leader);
+    if (!url) return null;
+    const img = document.createElement('img');
+    img.src = url; img.alt = ''; img.draggable = false;
+    return img;
+  }
 
   // ---- the peek -----------------------------------------------------------------------------
   function clearPeek() { const o = document.querySelector('.deck-peek'); if (o) o.remove(); }
@@ -103,7 +114,7 @@
       nm.appendChild(clsDot(d.cls));
       nm.appendChild(document.createTextNode(' ' + d.name));
       head.appendChild(nm);
-      head.appendChild(el('div', 'peek-meta', U.classOf(d.cls).name + ' · leader ' + (SV.CARDS[d.leader] ? SV.CARDS[d.leader].name : '?') + ' · ' + deckCount(d)));
+      head.appendChild(el('div', 'peek-meta', U.classOf(d.cls).name + ' · leader ' + leaderName(d) + ' · ' + deckCount(d)));
       const src = sourceLine(d);
       if (src) head.appendChild(el('div', 'peek-src', src));
       const st = status(d);
@@ -135,66 +146,131 @@
     btn.addEventListener('click', disarm);
   }
 
+  // ---- drawn marks: the wordmark and the turning circle ---------------------------------------
+  // The wordmark is original geometric lettering: each letter a stroke path on a 10 x 14 grid
+  // with cut corners, drawn by light on the splash (stroke-dashoffset). No typeface, no logo.
+  const LETTERS = {
+    S: 'M10 2 L8 0 L2 0 L0 2 L0 5 L2 7 L8 7 L10 9 L10 12 L8 14 L2 14 L0 12',
+    H: 'M0 0 L0 14 M10 0 L10 14 M0 7 L10 7',
+    A: 'M0 14 L0 4 L4 0 L6 0 L10 4 L10 14 M0 8 L10 8',
+    D: 'M0 0 L0 14 L7 14 L10 11 L10 3 L7 0 Z',
+    O: 'M3 0 L7 0 L10 3 L10 11 L7 14 L3 14 L0 11 L0 3 Z M5 5 L7 7 L5 9 L3 7 Z',
+    W: 'M0 0 L0 14 L5 9 L10 14 L10 0',
+    F: 'M10 0 L0 0 L0 14 M0 7 L7 7',
+    R: 'M0 14 L0 0 L8 0 L10 2 L10 5 L8 7 L0 7 M5 7 L10 14',
+    G: 'M10 2 L8 0 L2 0 L0 2 L0 12 L2 14 L8 14 L10 12 L10 8 L5 8',
+    E: 'M10 0 L0 0 L0 14 L10 14 M0 7 L7 7',
+  };
+  let markSeq = 0;
+  function wordmark(small, draw) {
+    const word = 'SHADOWFORGE', step = 15, w = word.length * step - 5;
+    const id = 'wm-grad' + (++markSeq);
+    const svg = U.svgEl('svg', { class: 'wordmark' + (small ? ' wordmark-small' : '') + (draw ? ' is-drawn' : ''), viewBox: '-2 -2 ' + (w + 4) + ' 18', role: 'img', 'aria-label': 'Shadowforge' });
+    let html = '<defs><linearGradient id="' + id + '" x1="0" x2="1"><stop offset="0" stop-color="#bfefff"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#9fdcff"/></linearGradient></defs>';
+    word.split('').forEach(function (ch, i) {
+      html += '<path pathLength="100" style="stroke:url(#' + id + ');animation-delay:' + (i * 90) + 'ms" transform="translate(' + (i * step) + ' 0)" d="' + LETTERS[ch] + '"/>';
+    });
+    svg.innerHTML = html;
+    return svg;
+  }
+  function titleRing() {
+    const svg = U.svgEl('svg', { class: 'title-ring', viewBox: '-500 -500 1000 1000', 'aria-hidden': 'true' });
+    let ticks = '';
+    for (let i = 0; i < 120; i++) {
+      const a = i * Math.PI * 2 / 120, r1 = 452, r2 = i % 10 === 0 ? 482 : 466;
+      ticks += 'M' + (Math.cos(a) * r1).toFixed(1) + ' ' + (Math.sin(a) * r1).toFixed(1) + ' L' + (Math.cos(a) * r2).toFixed(1) + ' ' + (Math.sin(a) * r2).toFixed(1) + ' ';
+    }
+    const tri = function (off, r) {
+      return [0, 1, 2].map(function (i) { const a = -Math.PI / 2 + off + i * Math.PI * 2 / 3; return (Math.cos(a) * r).toFixed(1) + ',' + (Math.sin(a) * r).toFixed(1); }).join(' ');
+    };
+    let gems = '';
+    ['forestcraft', 'swordcraft', 'runecraft', 'dragoncraft', 'abysscraft', 'havencraft'].forEach(function (k, i) {
+      const a = -Math.PI / 2 + i * Math.PI / 3, x = Math.cos(a) * 420, y = Math.sin(a) * 420, s = 12;
+      gems += '<path d="M' + x + ' ' + (y - s) + ' L' + (x + s) + ' ' + y + ' L' + x + ' ' + (y + s) + ' L' + (x - s) + ' ' + y + ' Z" fill="' + U.CLASS[k].dot + '" style="filter:drop-shadow(0 0 6px ' + U.CLASS[k].dot + ')"/>';
+    });
+    svg.innerHTML = '<circle class="tr-ring" r="486"/><circle class="tr-ring is-thin" r="448"/>' +
+      '<g class="tr-spin-rev"><path class="tr-ticks" d="' + ticks + '"/></g>' +
+      '<g class="tr-spin"><polygon class="tr-hex" points="' + tri(0, 420) + '"/><polygon class="tr-hex" points="' + tri(Math.PI / 3, 420) + '"/>' + gems + '</g>' +
+      '<circle class="tr-ring is-thin" r="300"/><circle class="tr-ring is-thin" r="210"/>';
+    return svg;
+  }
+
   // ---- screens ---------------------------------------------------------------------------------
   function screen() { return $('title-screen'); }
   function setBg(name) {
     const url = SV.uiArtUrl(name) || SV.uiArtUrl('title');
     screen().style.backgroundImage = url ? 'url("' + url + '")' : '';
   }
+  function fill(nodes) {
+    const sc = screen();
+    sc.textContent = '';
+    sc.appendChild(titleRing());
+    nodes.forEach(function (n) { sc.appendChild(n); });
+    sc.appendChild(disclaimer());
+  }
 
   function splash() {
     const wrap = el('div', 'title-splash');
-    wrap.appendChild(el('div', 'title-once', 'The arena awaits'));
-    wrap.appendChild(el('h1', 'title-name', 'Shadowforge'));
-    wrap.appendChild(el('div', 'title-flourish'));
-    wrap.appendChild(el('div', 'title-tagline', 'followers, spells and evolution — bring the enemy leader from 20 defense to 0'));
+    wrap.appendChild(el('div', 'title-once', 'Two summoners · one dais'));
+    wrap.appendChild(wordmark(false, true));
+    wrap.appendChild(el('div', 'title-tagline', 'Followers · spells · evolution'));
     wrap.appendChild(el('div', 'title-hint', 'Click to continue'));
     return wrap;
   }
   function disclaimer() { return el('div', 'title-disclaimer', DISCLAIMER); }
 
   const SLOT_LABEL = {
-    ai: ['Your deck', 'Opponent’s deck'], tutorial: ['Your deck', 'Opponent’s deck'],
-    hotseat: ['Player 1’s deck', 'Player 2’s deck'], spectate: ['Bot A’s deck', 'Bot B’s deck'],
+    ai: ['You', 'Opponent'], tutorial: ['You', 'Opponent'],
+    hotseat: ['Player 1', 'Player 2'], spectate: ['Bot A', 'Bot B'],
+  };
+  const MODES = [['ai', 'Vs computer'], ['hotseat', 'Two players'], ['spectate', 'Watch'], ['tutorial', 'Tutorial']];
+  const MODE_HELP = {
+    ai: 'Play against the computer', hotseat: 'Two players take turns on one device',
+    spectate: 'Watch the computer play itself', tutorial: 'A guided game against an easy computer',
   };
 
-  function deckSlot(side, label) {
-    const row = el('div', 'title-field');
-    row.appendChild(el('span', 'title-field-label', label));
-    const line = el('div', 'title-deck-line');
-    const btn = el('button', 'title-deck-btn');
+  // A summoner: the leader medallion (click to choose a deck), the name, and two small controls.
+  function medal(side) {
     const d = deckById(chosen[side]);
-    if (!d) btn.appendChild(el('span', null, 'No deck is ready yet'));
-    else if (secret[side]) { btn.appendChild(el('span', null, '? A random deck')); btn.classList.add('is-hidden-deck'); }
-    else {
-      btn.appendChild(clsDot(d.cls));
-      btn.appendChild(el('span', null, ' ' + d.name));
+    const wrap = el('div', 'medal' + (side === 'b' ? ' is-foe' : ''));
+    const pick = el('button', 'medal-pick');
+    pick.type = 'button';
+    const ring = el('div', 'medal-ring');
+    const face = el('div', 'medal-face');
+    const img = (!d || secret[side]) ? null : portrait(d);
+    if (img) face.appendChild(img);
+    else face.appendChild(el('span', 'medal-secret', d ? '?' : '–'));
+    ring.appendChild(face);
+    if (d && !secret[side]) {
+      const gem = el('span', 'medal-gem');
+      gem.appendChild(U.glyph(d.cls));
+      ring.appendChild(gem);
     }
-    attachPeek(btn, function () { return secret[side] ? null : chosen[side]; });
-    btn.onclick = function () { openChooser(side, function (k) { chosen[side] = k; secret[side] = false; }); };
-    line.appendChild(btn);
-    const dice = el('button', 'title-deck-dice', '⚄');
-    dice.setAttribute('data-tip', 'Roll a random ready deck (kept secret until the game starts)');
-    dice.setAttribute('aria-label', 'Roll a random deck');
+    pick.appendChild(ring);
+    pick.appendChild(el('span', 'medal-who', SLOT_LABEL[mode][side === 'a' ? 0 : 1]));
+    if (!d) pick.appendChild(el('span', 'medal-name', 'No deck is ready yet'));
+    else if (secret[side]) {
+      pick.appendChild(el('span', 'medal-name', 'A random deck'));
+      pick.appendChild(el('span', 'medal-meta', 'Hidden until the duel begins'));
+    } else {
+      pick.appendChild(el('span', 'medal-name', d.name));
+      pick.appendChild(el('span', 'medal-meta', U.classOf(d.cls).name + ' · ' + leaderName(d)));
+    }
+    pick.setAttribute('aria-label', 'Choose ' + SLOT_LABEL[mode][side === 'a' ? 0 : 1].toLowerCase() + ' deck');
+    attachPeek(pick, function () { return secret[side] ? null : chosen[side]; });
+    pick.onclick = function () { openChooser(side, function (k) { chosen[side] = k; secret[side] = false; }); };
+    wrap.appendChild(pick);
+    const ctl = el('div', 'medal-ctl');
+    const choose = el('button', null, 'Choose');
+    choose.type = 'button';
+    choose.onclick = pick.onclick;
+    const dice = el('button', null, 'Random');
+    dice.type = 'button';
+    dice.setAttribute('data-tip', 'Roll a random ready deck (kept secret until the duel begins)');
     dice.onclick = function () { clearPeek(); chosen[side] = randomDeck(chosen[side === 'a' ? 'b' : 'a']); secret[side] = true; rebuild(); };
-    line.appendChild(dice);
-    row.appendChild(line);
-    return row;
-  }
-
-  function select(label, value, options, onChange) {
-    const row = el('label', 'title-field');
-    row.appendChild(el('span', 'title-field-label', label));
-    const s = el('select', 'title-select');
-    options.forEach(function (o) {
-      const op = document.createElement('option');
-      op.value = o[0]; op.textContent = o[1];
-      if (o[0] === value) op.selected = true;
-      s.appendChild(op);
-    });
-    s.onchange = function () { onChange(s.value); };
-    row.appendChild(s);
-    return row;
+    ctl.appendChild(choose); ctl.appendChild(dice);
+    wrap.appendChild(ctl);
+    return wrap;
   }
 
   function tutorialDecks() {
@@ -205,57 +281,87 @@
     return [a, b];
   }
 
-  function picker() {
+  function rite() {
     if (!deckById(chosen.a)) { chosen.a = randomDeck(null); secret.a = true; }
     if (!deckById(chosen.b)) { chosen.b = randomDeck(chosen.a); secret.b = true; }
-    const box = el('div', 'title-picker');
-    box.appendChild(el('h1', 'title-name title-name-small', 'Shadowforge'));
-    box.appendChild(select('Mode', mode, [['ai', 'Play vs the computer'], ['hotseat', 'Two players, one device (hot-seat)'],
-      ['spectate', 'Watch the computer play itself'], ['tutorial', 'Tutorial (guided game vs an easy computer)']], function (v) {
-      mode = v; U.store.set('mode', v); rebuild();
-    }));
+    const box = el('div', 'rite');
+    const head = el('div', 'rite-head');
+    head.appendChild(wordmark(true, false));
+    head.appendChild(el('div', 'title-tagline', MODE_HELP[mode]));
+    box.appendChild(head);
+
+    const modes = el('nav', 'rite-modes');
+    MODES.forEach(function (m) {
+      const b = el('button', 'rite-mode' + (m[0] === mode ? ' is-on' : ''), m[1]);
+      b.type = 'button';
+      b.setAttribute('aria-pressed', m[0] === mode ? 'true' : 'false');
+      b.onclick = function () { mode = m[0]; U.store.set('mode', mode); rebuild(); };
+      modes.appendChild(b);
+    });
+    modes.appendChild(el('div', 'rite-mode-sep'));
+    const db = el('button', 'rite-mode is-link', 'Deck builder');
+    db.type = 'button';
+    db.onclick = function () { SV.deckBuilder.open(); };
+    const help = el('button', 'rite-mode is-link', 'How to play');
+    help.type = 'button';
+    help.onclick = function () { SV.hud.openHelp(); };
+    modes.appendChild(db); modes.appendChild(help);
+    box.appendChild(modes);
+
+    const main = el('div', 'rite-main');
     const ready = readyKeys();
     if (mode !== 'tutorial') {
-      box.appendChild(deckSlot('a', SLOT_LABEL[mode][0]));
-      box.appendChild(deckSlot('b', SLOT_LABEL[mode][1]));
+      const face = el('div', 'faceoff');
+      face.appendChild(medal('a'));
+      const vs = el('div', 'vs-gem');
+      vs.appendChild(el('span', null, 'VS'));
+      face.appendChild(vs);
+      face.appendChild(medal('b'));
+      main.appendChild(face);
     } else {
-      box.appendChild(el('div', 'title-note', 'The tutorial uses two fixed decks and an Easy opponent. Coach bubbles explain each idea the first time it comes up; you can skip them at any time.'));
+      main.appendChild(el('div', 'rite-tutorial', 'The tutorial uses two fixed decks and an Easy opponent. Coach bubbles explain each idea the first time it comes up; you can skip them at any time.'));
     }
     if (mode === 'ai' || mode === 'spectate') {
-      box.appendChild(select(mode === 'spectate' ? 'Bot skill' : 'Opponent skill', level,
-        [['easy', 'Easy'], ['normal', 'Normal'], ['hard', 'Hard']], function (v) { level = v; U.store.set('level', v); }));
+      const row = el('div', 'rite-skill');
+      row.appendChild(el('span', 'rite-skill-label', mode === 'spectate' ? 'Bot skill' : 'Opponent skill'));
+      const seg = el('div', 'seg');
+      seg.setAttribute('role', 'group');
+      [['easy', 'Easy'], ['normal', 'Normal'], ['hard', 'Hard']].forEach(function (o) {
+        const b = el('button', o[0] === level ? 'is-on' : '', o[1]);
+        b.type = 'button';
+        b.setAttribute('aria-pressed', o[0] === level ? 'true' : 'false');
+        b.onclick = function () { level = o[0]; U.store.set('level', level); rebuild(); };
+        seg.appendChild(b);
+      });
+      row.appendChild(seg);
+      main.appendChild(row);
     }
-    if (!ready.length) {
-      box.appendChild(el('div', 'title-note is-warn', 'No deck is ready yet: the card scripts for every deck are still being written. Open the deck chooser to see what each deck is waiting for.'));
-    }
-    if (U.flags.lenient) box.appendChild(el('div', 'title-note is-warn', 'Lenient mode (?lenient=1, dev only): unscripted cards do nothing when played.'));
-    const start = el('button', 'title-start action-btn', mode === 'tutorial' ? 'Start the tutorial' : 'Start');
+    const start = el('button', 'title-start action-btn', mode === 'tutorial' ? 'Begin the tutorial' : 'Begin the duel');
+    start.type = 'button';
     const canStart = mode === 'tutorial' ? !!tutorialDecks() : (deckById(chosen.a) && deckById(chosen.b));
     start.disabled = !canStart;
     start.onclick = function () { begin(); };
-    box.appendChild(start);
-    const row = el('div', 'title-row');
-    const db = el('button', 'title-select-btn', 'Deck builder');
-    db.onclick = function () { SV.deckBuilder.open(); };
-    const help = el('button', 'title-select-btn', 'How to play');
-    help.onclick = function () { SV.hud.openHelp(); };
-    row.appendChild(db); row.appendChild(help);
-    box.appendChild(row);
+    main.appendChild(start);
+    const notes = el('div', 'rite-notes');
+    if (!ready.length) {
+      notes.appendChild(el('div', 'title-note is-warn', 'No deck is ready yet: the card scripts for every deck are still being written. Open the deck chooser to see what each deck is waiting for.'));
+    }
+    if (U.flags.lenient) notes.appendChild(el('div', 'title-note is-warn', 'Lenient mode (?lenient=1, dev only): unscripted cards do nothing when played.'));
+    if (notes.childNodes.length) main.appendChild(notes);
+    box.appendChild(main);
     return box;
   }
   function rebuild() {
-    const sc = screen();
-    sc.textContent = '';
-    sc.appendChild(picker());
-    sc.appendChild(disclaimer());
+    clearPeek();
+    fill([rite()]);
   }
   SV.title = SV.title || {};
   SV.title.rebuild = rebuild;
 
+  // Choose a leader: every deck as a portrait tile, grouped by where the list comes from.
   function openChooser(side, done) {
-    const sc = screen();
     const box = el('div', 'title-picker deck-chooser');
-    box.appendChild(el('h1', 'title-name title-name-small', 'Choose ' + SLOT_LABEL[mode][side === 'a' ? 0 : 1].toLowerCase()));
+    box.appendChild(el('h1', 'title-name title-name-small', 'Choose a leader · ' + SLOT_LABEL[mode][side === 'a' ? 0 : 1]));
     function closeIt(k) { clearPeek(); if (k) done(k); rebuild(); }
     const decks = playable();
     const groups = [
@@ -273,11 +379,17 @@
         const d = deckById(k);
         const st = status(d);
         const b = el('button', 'deck-choice' + (k === chosen[side] && !secret[side] ? ' is-chosen' : '') + (st.ok ? '' : ' is-unready'));
+        b.type = 'button';
+        const face = el('span', 'deck-face');
+        face.style.setProperty('--cls', U.classOf(d.cls).dot);
+        const img = portrait(d);
+        if (img) face.appendChild(img);
+        b.appendChild(face);
         const top = el('span', 'deck-choice-name');
         top.appendChild(clsDot(d.cls));
         top.appendChild(document.createTextNode(' ' + d.name));
         b.appendChild(top);
-        b.appendChild(el('span', 'deck-choice-meta', U.classOf(d.cls).name + ' · leader ' + (SV.CARDS[d.leader] ? SV.CARDS[d.leader].name : '?') + ' · ' + deckCount(d)));
+        b.appendChild(el('span', 'deck-choice-meta', U.classOf(d.cls).name + ' · leader ' + leaderName(d) + ' · ' + deckCount(d)));
         const src = sourceLine(d);
         if (src) b.appendChild(el('span', 'deck-choice-meta', src));
         if (st.why) b.appendChild(el('span', 'deck-choice-meta ' + (st.ok ? 'is-note' : 'is-warn'), st.why));
@@ -292,24 +404,28 @@
     if (hidden) box.appendChild(el('div', 'title-note', hidden + ' deck' + (hidden === 1 ? ' is' : 's are') + ' not listed: ' + (hidden === 1 ? 'it contains' : 'they contain') + ' a card that does not play as printed yet (data/defects.js).'));
     const row = el('div', 'deck-chooser-actions');
     const rnd = el('button', 'title-select-btn', 'Surprise me');
+    rnd.type = 'button';
     rnd.onclick = function () { clearPeek(); chosen[side] = randomDeck(null); secret[side] = true; rebuild(); };
     const back = el('button', 'title-select-btn', 'Back');
+    back.type = 'button';
     back.onclick = function () { closeIt(null); };
     row.appendChild(rnd); row.appendChild(back);
     box.appendChild(row);
+    const sc = screen();
     sc.textContent = '';
+    sc.appendChild(titleRing());
     sc.appendChild(box);
   }
 
-  // The scene change: a forge iris. A dark disc with a molten rim closes over the screen from
-  // the centre, the screen is swapped while it covers everything, then it opens again. Lives on
-  // <body> so emptying the title screen cannot take it down.
+  // The scene change: a ring of light. A night disc with a bright rim swells from the centre
+  // while the rim turns, the screen is swapped while it covers everything, then it closes. Lives
+  // on <body> so emptying the title screen cannot take it down.
   function wipe(then) {
     const iris = el('div', 'title-wipe');
     const rim = el('div', 'title-wipe-rim');
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < 24; i++) {
       const sp = el('span', 'wipe-spark');
-      sp.style.setProperty('--a', (i * 22.5) + 'deg');
+      sp.style.setProperty('--a', (i * 15) + 'deg');
       sp.style.animationDelay = (i % 4) * 40 + 'ms';
       rim.appendChild(sp);
     }
@@ -346,6 +462,7 @@
     // Secret picks are spent: the next picker re-rolls rather than repeating them.
     if (secret.a) chosen.a = null;
     if (secret.b) chosen.b = null;
+    clearPeek();
     wipe(function () {
       const sc = screen();
       sc.className = '';
@@ -360,9 +477,7 @@
     phase = 'splash';
     sc.className = 'open is-splash';
     setBg('title');
-    sc.textContent = '';
-    sc.appendChild(splash());
-    sc.appendChild(disclaimer());
+    fill([splash()]);
     holdTimer = setTimeout(toPicker, HOLD_MS);
     sc.addEventListener('click', function () { if (phase === 'splash') toPicker(); });
     document.addEventListener('keydown', function (e) { if (phase === 'splash') { e.preventDefault(); toPicker(); } });

@@ -61,6 +61,7 @@ whether the leader portrait is a character or an emblem.
 | D13 | 2026-10-29 | **1v1 only.** CR 1.1.1: the rules do not support more than two players. | default |
 | D14 | 2026-10-29 | **Format: Standard.** Deck legality follows the official card list's Standard flag at fetch date; Gloryfinder cards are out of the pool. | default |
 | D16 | 2026-10-29 | **Art style (provisional, owner to confirm): audition row B** of `art/audition.jpg` (rows A-D x Arisa, Lishenna, Galmieux; FLUX.1 dev, name + description): MGSD chibi proportions with a Japanese fantasy card-game anime look, glossy cel shading. Chosen because it keeps the owner's lorecannae pick (MGSD chibi, recognisable characters, D17 there) and reads as Shadowverse; rows C (full-proportion anime key art) and D (painterly) are the alternatives. Official card images are viewed (scratch/ref) only to identify hair, costume and colours; never image inputs. | default (owner away) |
+| D17 | 2026-10-30 | **Presentation concept: "the evolution rite"** (default, owner to confirm from `docs/look/audition.jpg`; concepts B "academy duel" and C "tournament table" are the alternatives). Owner, 2026-10-30: "The look and feel is too much like Lorecannae. I wanted it to be unique look and feel for each game"; Xross Forge is the model (tabletop-kb README rule 21). Two summoners duel on a floating stone dais under the moon: midnight indigo, moonlit silver, white-cyan evolution light; your side cyan, the opponent's rose; cut corners, hairlines and corner brackets instead of rounded frames; an engineered sans tracked wide instead of a book serif; original geometric wordmark; leader defense as a crystal; evolving as the signature effect (a turning circle of light, a flash, rays for super). Structure unchanged (layout, modules, rules). Gate: `tools/check-look.mjs` plus the side-by-side sheet `docs/look/compare.jpg`. | default (owner away; asked 2026-10-30) |
 | D15 | 2026-10-29 | **Every file is an IIFE on `globalThis.SV`.** No build step, no dependencies. | default |
 
 ---
@@ -172,8 +173,10 @@ EP / super-EP trackers. Drags: hand or EX → field (play), follower → leader 
 button that says what is being responded to. Music tiers keyed to the lowest leader defense.
 
 ### 4.12 Theme
-Replace the storybook theme: dark-fantasy card-arena. Palette from the six classes (verdant,
-crimson, violet, amber, obsidian, gold) plus neutral silver; the active class tints the HUD.
+**Superseded by D17 (2026-10-30).** The first theme here only named a palette ("dark-fantasy
+card-arena"), so the interface shipped as lorecannae re-coloured and the owner rejected it. The look
+is now its own concept, "the evolution rite" (D17); the six class colours live in gems (cost, the
+dais circle, leader portraits), not in frames.
 
 ---
 
@@ -293,6 +296,13 @@ window.
 - **GPU contention and unheard audio**, as before. Budget the lock; ask the owner to listen.
 
 ## 11. Status
+
+**2026-10-30, re-skin.** Owner: the look is too much like lorecannae; make it unique (Xross Forge is
+the example), plan approved with "Go". Concept audition sent (`docs/look/audition.jpg`); concept A,
+"the evolution rite", built as the default (D17) while the owner decides: new stylesheet, drawn
+dais board, card frame and back, defense crystal, point gems, menu with leader medallions,
+leader gallery, ring wipe and turn banner, evolve rite effect, re-rendered backdrops and re-voiced
+evolve / turn / menu sounds. Rules and layout untouched; `node tools/gate.mjs` adds `check-look`.
 
 **2026-10-29, end of the first session.** **Deployed for playtesting** at
 https://dragoonant.github.io/shadowforge/ (owner: "Push to pages for playtesting"; GitHub Pages from

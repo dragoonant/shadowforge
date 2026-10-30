@@ -516,7 +516,12 @@
     node.appendChild(holder);
     const def = el('div', 'leader-def');
     const shield = el('span', 'leader-def-shield');
-    shield.innerHTML = U.glyphSVG('defense');
+    // The defense crystal: an elongated hexagon with a light top facet and a dark base facet;
+    // the number sits in the band between. The crack path is drawn only while a hit lands.
+    shield.innerHTML = '<svg viewBox="0 0 40 48" aria-hidden="true"><path class="cr-body" d="M20 1 L37 11 L37 37 L20 47 L3 37 L3 11 Z"/>' +
+      '<path class="cr-hi" d="M20 1 L37 11 L20 16 L3 11 Z"/><path class="cr-lo" d="M3 37 L20 32 L37 37 L20 47 Z"/>' +
+      '<path class="cr-edge" d="M20 1 L37 11 L37 37 L20 47 L3 37 L3 11 Z M3 11 L20 16 L37 11 M3 37 L20 32 L37 37"/>' +
+      '<path class="cr-crack" d="M15 5 L19 14 L13 21 L20 29 L16 38 L19 44 M19 14 L25 17 M20 29 L27 31"/></svg>';
     def.appendChild(shield);
     def.appendChild(el('span', 'leader-def-num', String(P.defense)));
     def.appendChild(el('span', 'leader-def-label', 'defense'));

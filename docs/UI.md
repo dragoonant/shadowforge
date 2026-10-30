@@ -1,8 +1,12 @@
 # The browser interface
 
-lorecannae's interface, ported (PLAN D3, §4.11–4.12): same architecture, same feel, re-zoned for
-Shadowverse: Evolve and re-themed as a dark-fantasy card arena. The why of each piece is in
-`kb/PRESENTATION-REFERENCE.md`; this file says where things are and what differs.
+lorecannae's interface architecture, ported (PLAN D3, §4.11) and re-zoned for Shadowverse: Evolve,
+with this game's own look (PLAN D17, "the evolution rite"): a floating stone dais under the moon,
+midnight indigo and moonlit silver with white-cyan evolution light, your side cyan and the
+opponent's rose, cut corners and corner brackets, a wide-tracked engineered sans. The structure is
+shared with the series; the skin is not (`tools/check-look.mjs` fails on the old skin's fonts,
+colours and rounded frames; `docs/look/` holds the side-by-side sheet). The why of each structural
+piece is in `kb/PRESENTATION-REFERENCE.md`; this file says where things are and what differs.
 
 ## Files
 
@@ -15,14 +19,14 @@ Shadowverse: Evolve and re-themed as a dark-fantasy card arena. The why of each 
 | `data/audio-manifest.js` | `SV.AUDIO = {sfx: {id: {src, gain}}, music: {id: {src, gain, loop}}}` — empty until the audio run |
 | `js/ui/core.js` | DOM helpers, class palette, the original glyphs for the printed `[tokens]`, settings, URL flags, the one tooltip |
 | `js/ui/cardview.js` | `SV.renderCard` (board / hand / preview), procedural art, glossary, `SV.canSee` |
-| `js/ui/boardart.js` | the drawn arena; one geometry table places every zone |
+| `js/ui/boardart.js` | the drawn dais (sockets, obelisks, the turning circle of light); one geometry table places every zone |
 | `js/ui/preview.js` | hover preview, inspector, zone browser, spotlight |
 | `js/ui/logtext.js`, `logpanel.js` | a phrase for every log type; the drawer |
 | `js/ui/targeting.js` | every Ask kind; the attack / evolve arrow |
 | `js/ui/sound.js`, `anim.js` | log-driven sound and animation (`anim.plan` is pure) |
 | `js/ui/hud.js` | banner, action popover, hot-seat curtain, results, help |
 | `js/ui/game.js` | modes, the one apply funnel, bot loop, board render, drag manager, Quick window prompt |
-| `js/ui/title.js`, `deckbuilder.js`, `tutorial.js` | entry screens, deck builder, guided game |
+| `js/ui/title.js`, `deckbuilder.js`, `tutorial.js` | splash (drawn wordmark), the rite menu (leader medallions), the leader gallery, ring wipe; deck builder; guided game |
 | `js/ui/main.js` | boot: a missing engine function or manifest throws |
 | `js/ui/dev-fixture.js` | dev quick start (`?fixture`) |
 

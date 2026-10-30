@@ -28,14 +28,17 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 // ---------------------------------------------------------------- the list
 const NEG = 'music, melody, voice, speech, talking, singing, crowd, reverb wash, hiss, static noise, distortion';
 const NEG_MUSICAL = 'voice, speech, talking, lyrics, crowd, hiss, static noise, distortion, drums';
-// [id, prompt, seconds, targetCrest, negative?, opts?]
+// Choir-bearing cues (evolution rite, 2026-10-30): a wordless choir is wanted, words are not.
+const NEG_CHOIR = 'speech, talking, lyrics, words, crowd, hiss, static noise, distortion, drums, gunshot';
+// [id, prompt, seconds, targetCrest, negative?, opts?]  opts: len (scoring target, s), loop, pad (extra
+// seconds requested from the model; default 0.5, 0 for cues with a fixed length brief)
 const SFX = [
   ['card-draw', 'a single playing card slid quickly off the top of a deck, crisp dry paper swish and snap, close up', 1, 8, NEG, { len: 0.45 }],
   ['card-play', 'a stiff playing card slapped down firmly onto a stone table with a deep magical thrum, close up, dry', 1.5, 8, NEG, { len: 0.6 }],
   ['spell', 'a quick arcane spell cast, crackling energy gathering and a sharp bright magical release, short', 1.5, 5],
   ['amulet', 'a heavy enchanted stone talisman set down with a resonant low hum and a soft glow chime', 1.5, 6],
-  ['evolve', 'a dramatic magical transformation, swirling rising energy surge ending in a bright powerful burst and crystal shimmer', 2.5, 4],
-  ['super-evolve', 'an enormous magical power surge, roaring rising energy, thunderous crack and a radiant shimmering explosion', 3, 4],
+  ['evolve', 'a rising crystalline shimmer with a soft wordless choir swell, ending in a bright clear bell strike at the peak, magical transformation in white light, clean and airy', 1.2, 4, NEG_CHOIR, { len: 1.2, pad: 0 }],
+  ['super-evolve', 'a big rising crystalline shimmer with a layered wordless choir swell, a deep resonant boom at the peak and cascading bright bells after it, grand magical transformation', 2, 4, NEG_CHOIR, { len: 2, pad: 0 }],
   ['attack', 'a fast sword slash whoosh with a heavy swing, close up, dry', 1, 8, NEG, { len: 0.5 }],
   ['clash', 'two blades clashing hard with a ringing metallic impact, single heavy clang, close up', 1.5, 9],
   ['damage', 'a heavy dull punch impact thud with a short crunch, close up, dry', 1, 10, NEG, { len: 0.45 }],
@@ -53,7 +56,7 @@ const SFX = [
   ['evo-point', 'a bright crystal gem charged with energy, rising glassy ping and hum, short', 1.5, 5],
   ['shuffle', 'a deck of playing cards being riffle shuffled and bridged, crisp paper fluttering, close up', 2, 5],
   ['mulligan', 'a few playing cards swept back into a deck and tapped square on a table, short paper rustle', 1.5, 6],
-  ['turn-start', 'a deep resonant gong-like bell announcing a new turn, magical shimmer tail', 2, 5, NEG_MUSICAL],
+  ['turn-start', 'a single clear glass bell chime with a gentle airy whoosh, bright, clean and short', 0.8, 5, NEG_MUSICAL, { len: 0.8, pad: 0 }],
   ['discard', 'a playing card tossed onto a pile of cards, light paper flick and soft slide, close up', 1, 7, NEG, { len: 0.4 }],
   ['click', 'a single short soft wooden button click, ui sound, dry, very short', 1, 12, NEG, { len: 0.1 }],
   ['hover', 'a tiny soft high tick, very short and subtle ui sound, dry', 1, 10, NEG, { len: 0.08 }],
@@ -63,9 +66,12 @@ const SFX = [
   ['ambience', 'calm ancient arena ambience at night, soft wind over stone, distant fire crackle, faint magical hum', 20, 3, 'music, melody, voice, speech, talking, singing, traffic, hiss', { loop: true }],
 ];
 // One byte-identical musical brief across every track (LESSONS-DIGEST §6), then a short per-track mood.
+// Exception: the menu theme carries its own nocturnal brief (evolution-rite re-skin, 2026-10-30); the
+// battle tracks keep BRIEF until they are re-voiced together.
+const NIGHT_BRIEF = 'calm nocturnal fantasy theme, harp, celesta, soft strings and a distant wordless choir pad, slow tempo, mysterious and moonlit, gentle and spacious, Japanese game soundtrack style, cinematic, instrumental';
 const BRIEF = 'epic dark fantasy orchestral score for a magical card battle, strings, brass, choir-like synth pads, harp, taiko and orchestral percussion, sweeping and dramatic, Japanese game soundtrack style, cinematic, instrumental';
 const MUSIC = [
-  { id: 'menu', mood: 'majestic inviting main theme, noble and mysterious, a sense of grand adventure', duration: 60, bpm: 90, key: 'D minor', timesig: '4', loop: true },
+  { id: 'menu', brief: NIGHT_BRIEF, mood: 'quiet starlit main theme under a full moon, dreamy and serene, softly shimmering', duration: 75, bpm: 72, key: 'D minor', timesig: '4', loop: true },
   { id: 'battle-1', mood: 'poised and strategic, steady pulse, restrained tension', duration: 90, bpm: 100, key: 'A minor', timesig: '4', loop: true },
   { id: 'battle-2', mood: 'rising tension, driving rhythm, building momentum, heroic and dangerous', duration: 90, bpm: 120, key: 'E minor', timesig: '4', loop: true },
   { id: 'battle-3', mood: 'climactic final clash, full orchestra, pounding drums, urgent and overwhelming', duration: 90, bpm: 140, key: 'D minor', timesig: '4', loop: true },
@@ -74,11 +80,11 @@ const MUSIC = [
 ];
 const ITEMS = [
   ...SFX.map(([id, prompt, seconds, crest, negative, opts]) => ({ kind: 'sfx', id, prompt, seconds, crest, negative: negative || NEG, ...(opts || {}) })),
-  ...MUSIC.map(m => ({ kind: 'music', ...m, prompt: BRIEF + ', ' + m.mood })),
+  ...MUSIC.map(m => ({ kind: 'music', ...m, prompt: (m.brief || BRIEF) + ', ' + m.mood })),
 ];
 function seedOf(id) { let h = 2166136261; for (const ch of 'audio:' + id) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return (h >>> 0) % 2147483647; }
 function params(it) {
-  if (it.kind === 'sfx') return { mode: 'sfx', prompt: it.prompt, negative: it.negative, seconds: Math.max(1, it.seconds + (it.loop ? 0 : 0.5)), steps: 50, guidance: 5, batch: Math.min(4, Math.max(1, batchArg)), seed: seedOf(it.id) };
+  if (it.kind === 'sfx') return { mode: 'sfx', prompt: it.prompt, negative: it.negative, seconds: Math.max(1, it.seconds + (it.loop ? 0 : (it.pad ?? 0.5))), steps: 50, guidance: 5, batch: Math.min(4, Math.max(1, batchArg)), seed: seedOf(it.id) };
   return { mode: 'music', prompt: it.prompt, lyrics: '[Instrumental]', duration: it.duration + (it.loop ? 4 : 2), steps: 8, bpm: it.bpm, key: it.key, timesig: it.timesig, language: 'en', batch: 2, seed: seedOf(it.id) };
 }
 

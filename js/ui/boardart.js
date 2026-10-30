@@ -1,9 +1,10 @@
 // js/ui/boardart.js — the play surface, DRAWN rather than photographed (PRESENTATION-REFERENCE
-// A2), dressed as a dark-fantasy card arena: an obsidian slab inside a forged silver rule, a
-// rune circle across the middle, every zone framed with angular forged corners, the leader in
-// a pointed arch. ONE geometry table in a fixed 2048x1280 board space is used twice: to draw
-// every slot and to place every DOM zone by percentage, so a drawn outline and the hitbox
-// inside it are the same numbers by construction.
+// A2), dressed as this game's own scene (PLAN D17, "the evolution rite"): a floating stone dais
+// under the night sky, cut at the corners, its edge catching the moonlight; a slowly turning
+// circle of light across the middle with the six class gems on its points; every zone a socket
+// with cut corners and two bright notches; each leader in a gabled obelisk. ONE geometry table in
+// a fixed 2048x1280 board space is used twice: to draw every slot and to place every DOM zone by
+// percentage, so a drawn outline and the hitbox inside it are the same numbers by construction.
 //
 // Per side, centre line outward:   leader | field (5)          | deck | evolve deck
 //                                  leader | EX area (5) | cemetery | banished | points
@@ -37,50 +38,48 @@
   const pct = function (v, total) { return (v / total * 100) + '%'; };
   const svgEl = U.svgEl;
 
-  // A forged corner: an angular bracket with a notch, drawn for the top-left corner and
-  // mirrored into the other three. Hardware, not filigree.
-  function corner(len) {
-    return 'M ' + len + ' 2 L 14 2 L 2 14 L 2 ' + len + ' M ' + (len * 0.55) + ' 9 L 18 9 L 9 18 L 9 ' + (len * 0.55);
+  // A rectangle with its four corners cut at 45 degrees: the one shape of this board.
+  function cutPath(x, y, w, h, c) {
+    return 'M' + (x + c) + ' ' + y + ' H' + (x + w - c) + ' L' + (x + w) + ' ' + (y + c) + ' V' + (y + h - c) +
+      ' L' + (x + w - c) + ' ' + (y + h) + ' H' + (x + c) + ' L' + x + ' ' + (y + h - c) + ' V' + (y + c) + ' Z';
   }
-  function frame(rect, cls, radius) {
+  // A socket: the cut shape filled with night, a glowing line, a faint inner line, and two
+  // bright notches centred on the long edges.
+  function socket(rect, cls) {
     const g = svgEl('g', { class: 'bz ' + cls });
-    const r = radius == null ? 14 : radius;
-    g.appendChild(svgEl('rect', { x: rect.x, y: rect.y, width: rect.w, height: rect.h, rx: r, ry: r, class: 'bz-fill' }));
-    g.appendChild(svgEl('rect', { x: rect.x + 1, y: rect.y + 1, width: rect.w - 2, height: rect.h - 2, rx: r, ry: r, class: 'bz-line' }));
-    g.appendChild(svgEl('rect', { x: rect.x + 8, y: rect.y + 8, width: rect.w - 16, height: rect.h - 16,
-      rx: Math.max(3, r - 7), ry: Math.max(3, r - 7), class: 'bz-inner' }));
-    const len = Math.min(64, rect.w / 3.2, rect.h / 3.2);
-    [[1, 1], [-1, 1], [1, -1], [-1, -1]].forEach(function (sg) {
-      const cx = sg[0] > 0 ? rect.x - 4 : rect.x + rect.w + 4;
-      const cy = sg[1] > 0 ? rect.y - 4 : rect.y + rect.h + 4;
-      g.appendChild(svgEl('path', { class: 'bz-corner', d: corner(len),
-        transform: 'translate(' + cx + ' ' + cy + ') scale(' + sg[0] + ' ' + sg[1] + ')' }));
-    });
+    const c = Math.min(22, rect.w / 7, rect.h / 7);
+    g.appendChild(svgEl('path', { d: cutPath(rect.x, rect.y, rect.w, rect.h, c), class: 'bz-fill' }));
+    g.appendChild(svgEl('path', { d: cutPath(rect.x + 1, rect.y + 1, rect.w - 2, rect.h - 2, c), class: 'bz-line' }));
+    g.appendChild(svgEl('path', { d: cutPath(rect.x + 9, rect.y + 9, rect.w - 18, rect.h - 18, Math.max(4, c - 6)), class: 'bz-inner' }));
+    const n = Math.min(46, rect.w / 5), mx = rect.x + rect.w / 2;
+    g.appendChild(svgEl('path', { class: 'bz-notch', d: 'M' + (mx - n / 2) + ' ' + (rect.y - 3) + ' H' + (mx + n / 2) + ' M' + (mx - n / 2) + ' ' + (rect.y + rect.h + 3) + ' H' + (mx + n / 2) }));
     return g;
   }
-  // The leader's niche: a pointed arch (the side's "throne"), opening toward the centre line.
-  function arch(rect, side) {
-    const g = svgEl('g', { class: 'bz bz-slot bz-arch' });
-    const x = rect.x, y = rect.y, w = rect.w, h = rect.h, peak = 70;
-    const d = 'M' + x + ' ' + (y + h) + ' V' + (y + peak) + ' Q' + x + ' ' + (y + 18) + ' ' + (x + w / 2) + ' ' + y +
-      ' Q' + (x + w) + ' ' + (y + 18) + ' ' + (x + w) + ' ' + (y + peak) + ' V' + (y + h) + ' Z';
-    g.appendChild(svgEl('path', { d: d, class: 'bz-fill' }));
-    g.appendChild(svgEl('path', { d: d, class: 'bz-line' }));
-    const i = 9;
-    const d2 = 'M' + (x + i) + ' ' + (y + h - i) + ' V' + (y + peak + 4) + ' Q' + (x + i) + ' ' + (y + 26) + ' ' + (x + w / 2) + ' ' + (y + i + 2) +
-      ' Q' + (x + w - i) + ' ' + (y + 26) + ' ' + (x + w - i) + ' ' + (y + peak + 4) + ' V' + (y + h - i) + ' Z';
-    g.appendChild(svgEl('path', { d: d2, class: 'bz-inner' }));
+  // The leader's obelisk: a gable pointing toward the centre line, cut corners at the base.
+  function obelisk(rect, side) {
+    const g = svgEl('g', { class: 'bz bz-slot bz-obelisk' });
+    const x = rect.x, y = rect.y, w = rect.w, h = rect.h, peak = 64, c = 20;
+    const shape = function (i) {
+      return 'M' + (x + i) + ' ' + (y + peak + i * 0.4) + ' L' + (x + w / 2) + ' ' + (y + i * 1.2) + ' L' + (x + w - i) + ' ' + (y + peak + i * 0.4) +
+        ' V' + (y + h - c - i * 0.4) + ' L' + (x + w - c - i * 0.4) + ' ' + (y + h - i) + ' H' + (x + c + i * 0.4) + ' L' + (x + i) + ' ' + (y + h - c - i * 0.4) + ' Z';
+    };
+    g.appendChild(svgEl('path', { d: shape(0), class: 'bz-fill' }));
+    g.appendChild(svgEl('path', { d: shape(1), class: 'bz-line' }));
+    g.appendChild(svgEl('path', { d: shape(10), class: 'bz-inner' }));
+    // a small diamond at the gable's peak
+    const px = x + w / 2, py = y + 34;
+    g.appendChild(svgEl('path', { class: 'bz-notch', d: 'M' + px + ' ' + (py - 9) + ' L' + (px + 9) + ' ' + py + ' L' + px + ' ' + (py + 9) + ' L' + (px - 9) + ' ' + py + ' Z', fill: 'none' }));
     if (side === 'theirs') g.setAttribute('transform', 'rotate(180 ' + (x + w / 2) + ' ' + (y + h / 2) + ')');
     return g;
   }
 
-  function artLayer(rect, id, radius) {
+  function artLayer(d, id) {
     const g = svgEl('g', { class: 'bz-artlayer' });
     const clipId = 'bz-clip-' + id;
     const cp = svgEl('clipPath', { id: clipId });
-    cp.appendChild(svgEl('rect', { x: rect.x, y: rect.y, width: rect.w, height: rect.h, rx: radius, ry: radius }));
+    cp.appendChild(svgEl('path', { d: d.path }));
     g.appendChild(cp);
-    g.appendChild(svgEl('image', { id: id, x: rect.x, y: rect.y, width: rect.w, height: rect.h,
+    g.appendChild(svgEl('image', { id: id, x: d.x, y: d.y, width: d.w, height: d.h,
       preserveAspectRatio: 'xMidYMid slice', 'clip-path': 'url(#' + clipId + ')', class: 'bz-zone-art' }));
     return g;
   }
@@ -101,17 +100,12 @@
 
   function defs() {
     const d = svgEl('defs', {});
-    // Obsidian grain: a tile of faint hairline cracks and specks. A pattern costs a few nodes
+    // Stars over the stone: a tile of points at a few sizes. A pattern costs a few nodes
     // whatever size the board renders at.
-    const p = svgEl('pattern', { id: 'bz-grain', width: 240, height: 240, patternUnits: 'userSpaceOnUse' });
-    const rnd = U.rand('board-grain');
-    for (let i = 0; i < 14; i++) {
-      let x = rnd() * 240, y = rnd() * 240, path = 'M' + x.toFixed(1) + ' ' + y.toFixed(1);
-      for (let k = 0; k < 3; k++) { x += (rnd() - 0.5) * 50; y += (rnd() - 0.5) * 50; path += ' L' + x.toFixed(1) + ' ' + y.toFixed(1); }
-      p.appendChild(svgEl('path', { d: path, class: 'bz-crack' }));
-    }
-    for (let i = 0; i < 30; i++) {
-      p.appendChild(svgEl('circle', { cx: (rnd() * 240).toFixed(1), cy: (rnd() * 240).toFixed(1), r: (0.5 + rnd() * 1.3).toFixed(2), class: 'bz-speck', opacity: (0.15 + rnd() * 0.4).toFixed(2) }));
+    const p = svgEl('pattern', { id: 'bz-stars', width: 260, height: 260, patternUnits: 'userSpaceOnUse' });
+    const rnd = U.rand('board-stars');
+    for (let i = 0; i < 26; i++) {
+      p.appendChild(svgEl('circle', { cx: (rnd() * 260).toFixed(1), cy: (rnd() * 260).toFixed(1), r: (0.5 + rnd() * 1.4).toFixed(2), class: 'bz-star', opacity: (0.08 + rnd() * 0.35).toFixed(2) }));
     }
     d.appendChild(p);
     [['bz-glow', 12], ['bz-glow-soft', 5]].forEach(function (g) {
@@ -123,43 +117,54 @@
       f.appendChild(m);
       d.appendChild(f);
     });
-    grad(d, 'bz-slab', 'radialGradient', { cx: '50%', cy: '50%', r: '78%' },
-      [['0%', '#221a2c'], ['55%', '#140f1c'], ['100%', '#07050b']]);
-    grad(d, 'bz-iron', 'linearGradient', { x1: '0', y1: '0', x2: '1', y2: '1' },
-      [['0%', '#2a2430'], ['50%', '#120e17'], ['100%', '#2a2430']]);
-    grad(d, 'bz-silver', 'linearGradient', { x1: '0', y1: '0', x2: '1', y2: '1' },
-      [['0%', '#f4f1ea'], ['35%', '#b9b2a4'], ['70%', '#6d6659'], ['100%', '#d9d2c2']]);
-    grad(d, 'bz-zone', 'radialGradient', { cx: '50%', cy: '50%', r: '70%' },
-      [['0%', '#2a2034', 0.42], ['100%', '#0b0810', 0.62]]);
-    grad(d, 'bz-ember-a', 'radialGradient', { cx: '50%', cy: '50%', r: '50%' },
-      [['0%', '#b5482c', 0.22], ['100%', '#b5482c', 0]]);
-    grad(d, 'bz-ember-b', 'radialGradient', { cx: '50%', cy: '50%', r: '50%' },
-      [['0%', '#6a4cc8', 0.2], ['100%', '#6a4cc8', 0]]);
+    grad(d, 'bz-night', 'radialGradient', { cx: '50%', cy: '50%', r: '75%' },
+      [['0%', '#173356'], ['55%', '#0b1a31'], ['100%', '#040a15']]);
+    grad(d, 'bz-moon-edge', 'linearGradient', { x1: '0', y1: '0', x2: '1', y2: '1' },
+      [['0%', '#f2f9ff'], ['30%', '#7f9cbc'], ['55%', '#2c4566'], ['80%', '#9fbbd8'], ['100%', '#eef7ff']]);
+    grad(d, 'bz-socket', 'radialGradient', { cx: '50%', cy: '50%', r: '70%' },
+      [['0%', '#12294a', 0.45], ['100%', '#030914', 0.7]]);
+    grad(d, 'bz-moonglow', 'radialGradient', { cx: '50%', cy: '50%', r: '50%' },
+      [['0%', '#9fd4ff', 0.2], ['100%', '#9fd4ff', 0]]);
+    grad(d, 'bz-roseglow', 'radialGradient', { cx: '50%', cy: '50%', r: '50%' },
+      [['0%', '#ff6f91', 0.12], ['100%', '#ff6f91', 0]]);
     grad(d, 'bz-seam', 'linearGradient', { x1: '0', y1: '0', x2: '1', y2: '0' },
-      [['0%', '#d7c08a', 0], ['20%', '#d7c08a', 0.75], ['50%', '#fff4d6', 1], ['80%', '#a99ad8', 0.75], ['100%', '#a99ad8', 0]]);
+      [['0%', '#7fe6ff', 0], ['22%', '#7fe6ff', 0.7], ['50%', '#ffffff', 1], ['78%', '#ff8fab', 0.7], ['100%', '#ff8fab', 0]]);
     return d;
   }
 
-  // The rune circle across the middle of the table: two rings, tick marks and a sigil. It is
-  // the arena; the two fields sit inside its upper and lower arcs.
-  function runeCircle() {
-    const g = svgEl('g', { class: 'bz-rune' });
+  // The circle of light across the middle of the dais: two rings, tick marks, a hexagram whose
+  // six points carry the six class gems, turning slowly. The two fields sit inside its arcs.
+  function riteCircle() {
+    const g = svgEl('g', { class: 'bz-rite' });
     const cx = W / 2, cy = H / 2;
-    g.appendChild(svgEl('circle', { cx: cx, cy: cy, r: 420, class: 'bz-rune-ring' }));
-    g.appendChild(svgEl('circle', { cx: cx, cy: cy, r: 388, class: 'bz-rune-ring is-thin' }));
+    g.appendChild(svgEl('circle', { cx: cx, cy: cy, r: 440, fill: 'url(#bz-moonglow)' }));
+    g.appendChild(svgEl('circle', { cx: cx, cy: cy, r: 430, class: 'bz-ring' }));
+    g.appendChild(svgEl('circle', { cx: cx, cy: cy, r: 400, class: 'bz-ring is-thin' }));
+    const outer = svgEl('g', { class: 'bz-spin-rev' });
     let ticks = '';
-    for (let i = 0; i < 72; i++) {
-      const a = i * Math.PI * 2 / 72, r1 = 392, r2 = i % 6 === 0 ? 418 : 406;
+    for (let i = 0; i < 96; i++) {
+      const a = i * Math.PI * 2 / 96, r1 = 404, r2 = i % 8 === 0 ? 428 : 414;
       ticks += 'M' + (cx + Math.cos(a) * r1).toFixed(1) + ' ' + (cy + Math.sin(a) * r1).toFixed(1) + ' L' + (cx + Math.cos(a) * r2).toFixed(1) + ' ' + (cy + Math.sin(a) * r2).toFixed(1) + ' ';
     }
-    g.appendChild(svgEl('path', { d: ticks, class: 'bz-rune-ticks' }));
-    const spin = svgEl('g', { class: 'bz-rune-spin' });
-    let star = '';
-    for (let i = 0; i < 7; i++) {
-      const a = -Math.PI / 2 + i * Math.PI * 2 * 3 / 7;
-      star += (i ? ' L' : 'M') + (cx + Math.cos(a) * 360).toFixed(1) + ' ' + (cy + Math.sin(a) * 360).toFixed(1);
-    }
-    spin.appendChild(svgEl('path', { d: star + ' Z', class: 'bz-rune-star' }));
+    outer.appendChild(svgEl('path', { d: ticks, class: 'bz-ticks' }));
+    g.appendChild(outer);
+    const spin = svgEl('g', { class: 'bz-spin' });
+    const R = 372;
+    const tri = function (off) {
+      let s = '';
+      for (let i = 0; i < 3; i++) {
+        const a = -Math.PI / 2 + off + i * Math.PI * 2 / 3;
+        s += (i ? ' L' : 'M') + (cx + Math.cos(a) * R).toFixed(1) + ' ' + (cy + Math.sin(a) * R).toFixed(1);
+      }
+      return s + ' Z';
+    };
+    spin.appendChild(svgEl('path', { d: tri(0) + ' ' + tri(Math.PI / 3), class: 'bz-hex' }));
+    spin.appendChild(svgEl('circle', { cx: cx, cy: cy, r: R * 0.5, class: 'bz-ring is-thin' }));
+    ['forestcraft', 'swordcraft', 'runecraft', 'dragoncraft', 'abysscraft', 'havencraft'].forEach(function (k, i) {
+      const a = -Math.PI / 2 + i * Math.PI / 3, x = cx + Math.cos(a) * R, y = cy + Math.sin(a) * R, s = 13;
+      spin.appendChild(svgEl('path', { class: 'bz-gem', fill: U.CLASS[k].dot, filter: 'url(#bz-glow-soft)',
+        d: 'M' + x + ' ' + (y - s) + ' L' + (x + s) + ' ' + y + ' L' + x + ' ' + (y + s) + ' L' + (x - s) + ' ' + y + ' Z' }));
+    });
     g.appendChild(spin);
     return g;
   }
@@ -167,55 +172,51 @@
   function build() {
     const svg = svgEl('svg', { id: 'board-svg', viewBox: '0 0 ' + W + ' ' + H, 'aria-hidden': 'true', focusable: 'false' });
     svg.appendChild(defs());
-    svg.appendChild(svgEl('rect', { x: 0, y: 0, width: W, height: H, rx: 30, class: 'bz-table' }));
-    svg.appendChild(svgEl('rect', { x: 10, y: 10, width: W - 20, height: H - 20, rx: 24, class: 'bz-rule' }));
-    const P = 24;
-    svg.appendChild(svgEl('rect', { x: P, y: P, width: W - P * 2, height: H - P * 2, rx: 16, class: 'bz-panel' }));
-    // The painted scene, very low: a place, not a picture competing with cards.
-    svg.appendChild(artLayer({ x: P, y: P, w: W - P * 2, h: H - P * 2 }, 'board-art', 16));
-    svg.appendChild(svgEl('ellipse', { cx: 1500, cy: 330, rx: 640, ry: 340, fill: 'url(#bz-ember-b)' }));
-    svg.appendChild(svgEl('ellipse', { cx: 560, cy: 950, rx: 640, ry: 360, fill: 'url(#bz-ember-a)' }));
-    svg.appendChild(svgEl('rect', { x: P, y: P, width: W - P * 2, height: H - P * 2, rx: 16, class: 'bz-grain-fill' }));
-    svg.appendChild(svgEl('rect', { x: P, y: P, width: W - P * 2, height: H - P * 2, rx: 16, class: 'bz-rule-inner' }));
-    svg.appendChild(runeCircle());
-    [[1, 1], [-1, 1], [1, -1], [-1, -1]].forEach(function (sg) {
-      svg.appendChild(svgEl('path', { class: 'bz-corner bz-cover-corner', d: corner(120),
-        transform: 'translate(' + (sg[0] > 0 ? P - 8 : W - P + 8) + ' ' + (sg[1] > 0 ? P - 8 : H - P + 8) + ') scale(' + sg[0] + ' ' + sg[1] + ')' }));
-    });
-    // The centre line: a forged bar with a sigil where the halves meet, warm at your end and
-    // cool at theirs, so it reads as the middle of the table.
+    const C = 64, P = 14;
+    const slab = cutPath(0, 0, W, H, C);
+    const inner = cutPath(P, P, W - P * 2, H - P * 2, C - 6);
+    svg.appendChild(svgEl('path', { d: slab, class: 'bz-slab' }));
+    // The painted sky, very low: a place, not a picture competing with cards.
+    svg.appendChild(artLayer({ path: inner, x: P, y: P, w: W - P * 2, h: H - P * 2 }, 'board-art'));
+    svg.appendChild(svgEl('ellipse', { cx: 600, cy: 960, rx: 700, ry: 360, fill: 'url(#bz-moonglow)' }));
+    svg.appendChild(svgEl('ellipse', { cx: 1450, cy: 320, rx: 700, ry: 360, fill: 'url(#bz-roseglow)' }));
+    svg.appendChild(svgEl('path', { d: inner, class: 'bz-starfill' }));
+    svg.appendChild(svgEl('path', { d: slab, class: 'bz-edge' }));
+    svg.appendChild(svgEl('path', { d: inner, class: 'bz-edge-inner' }));
+    svg.appendChild(riteCircle());
+    // The centre line: a drawn line of light, cyan at your end and rose at theirs, with an
+    // open diamond where the halves meet.
     const seam = svgEl('g', { class: 'bz-seam-g' });
-    seam.appendChild(svgEl('rect', { x: 200, y: H / 2 - 2, width: W - 400, height: 4, rx: 2, fill: 'url(#bz-seam)' }));
-    seam.appendChild(svgEl('path', { class: 'bz-seam-sigil', d: 'M' + (W / 2) + ' ' + (H / 2 - 30) + ' L' + (W / 2 + 22) + ' ' + (H / 2) + ' L' + (W / 2) + ' ' + (H / 2 + 30) + ' L' + (W / 2 - 22) + ' ' + (H / 2) + ' Z', filter: 'url(#bz-glow-soft)' }));
-    seam.appendChild(svgEl('circle', { cx: W / 2, cy: H / 2, r: 7, class: 'bz-seam-core' }));
+    seam.appendChild(svgEl('rect', { x: 160, y: H / 2 - 1.5, width: W - 320, height: 3, fill: 'url(#bz-seam)', class: 'bz-seam-line' }));
+    seam.appendChild(svgEl('path', { class: 'bz-seam-sigil', filter: 'url(#bz-glow-soft)', d: 'M' + (W / 2) + ' ' + (H / 2 - 26) + ' L' + (W / 2 + 26) + ' ' + (H / 2) + ' L' + (W / 2) + ' ' + (H / 2 + 26) + ' L' + (W / 2 - 26) + ' ' + (H / 2) + ' Z' }));
+    seam.appendChild(svgEl('circle', { cx: W / 2, cy: H / 2, r: 5, class: 'bz-seam-core' }));
     svg.appendChild(seam);
 
     [['mine', MINE], ['theirs', THEIRS]].forEach(function (pair) {
       const side = pair[0], R = pair[1];
       const g = svgEl('g', { class: 'bz-row bz-row-' + side });
-      g.appendChild(artLayer(R.field, 'field-art-' + side, 14));
-      g.appendChild(frame(R.field, 'bz-slot bz-field', 14));
-      g.appendChild(frame(R.ex, 'bz-slot bz-ex', 12));
-      g.appendChild(frame(R.deck, 'bz-slot', 12));
-      g.appendChild(frame(R.evo, 'bz-slot bz-evo', 12));
-      g.appendChild(frame(R.cemetery, 'bz-slot', 12));
-      g.appendChild(frame(R.banished, 'bz-slot bz-banished', 12));
-      g.appendChild(frame(R.points, 'bz-slot bz-points', 12));
-      g.appendChild(arch(R.leader, side));
+      const f = R.field;
+      g.appendChild(artLayer({ path: cutPath(f.x, f.y, f.w, f.h, 22), x: f.x, y: f.y, w: f.w, h: f.h }, 'field-art-' + side));
+      g.appendChild(socket(R.field, 'bz-slot bz-field'));
+      g.appendChild(socket(R.ex, 'bz-slot bz-ex'));
+      g.appendChild(socket(R.deck, 'bz-slot'));
+      g.appendChild(socket(R.evo, 'bz-slot bz-evo'));
+      g.appendChild(socket(R.cemetery, 'bz-slot'));
+      g.appendChild(socket(R.banished, 'bz-slot bz-banished'));
+      g.appendChild(socket(R.points, 'bz-slot bz-points'));
+      g.appendChild(obelisk(R.leader, side));
       // Watermarks in the lanes (visible while a lane is empty), upright for the viewer.
-      [['field', 60], ['ex', 44]].forEach(function (z) {
+      [['field', 56], ['ex', 40]].forEach(function (z) {
         const r = R[z[0]];
         const t = label(LABELS[z[0]], r.x + r.w / 2, r.y + r.h / 2 + z[1] * 0.35, 'bz-watermark');
         t.style.fontSize = z[1] + 'px';
         g.appendChild(t);
       });
-      // Pile captions ride in the gap between the rows (a card covers the slot).
+      // Pile captions ride in the gap between the rows (a card covers the slot), so no two
+      // captions share a line.
       ['deck', 'evo', 'cemetery', 'banished'].forEach(function (k) {
         const r = R[k];
-        const inner = k === 'deck' || k === 'evo';
-        // Inner piles caption on the centre-line side, outer piles in the gap between the rows,
-        // so no two captions share a line.
-        const y = side === 'mine' ? r.y - 6 : r.y + r.h + 19;
+        const y = side === 'mine' ? r.y - 8 : r.y + r.h + 21;
         g.appendChild(label(LABELS[k], r.x + r.w / 2, y, 'bz-caption'));
       });
       svg.appendChild(g);
@@ -234,6 +235,7 @@
   const ZONES = ['leader', 'field', 'deck', 'evo', 'ex', 'cemetery', 'banished', 'points'];
   SV.boardArt = {
     ZONES: ZONES,
+    cutPath: cutPath,
     init: function (mat) {
       if (mat.querySelector('#board-svg')) return;
       mat.insertBefore(build(), mat.firstChild);

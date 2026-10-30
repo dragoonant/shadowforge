@@ -12,6 +12,7 @@ const steps = [
   ['stamp-assets', ['tools/stamp-assets.mjs', '--check']],
   ['audit', ['tools/audit-cards.mjs']],
   ['check-art', ['tools/check-art.mjs']],
+  ['check-look', ['tools/check-look.mjs']],
   ['replay selftest', ['tools/replay-report.mjs', '--selftest']],
   ['sim random', ['tools/sim.mjs', '--games', '30', '--policy', 'random']],
   ['sim ai', ['tools/sim.mjs', '--games', '10']],

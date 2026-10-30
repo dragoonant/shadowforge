@@ -67,7 +67,7 @@
       },
       "evolve": {
         "src": "audio/sfx/evolve.mp3",
-        "gain": 0.811
+        "gain": 0.925
       },
       "fanfare": {
         "src": "audio/sfx/fanfare.mp3",
@@ -111,7 +111,7 @@
       },
       "super-evolve": {
         "src": "audio/sfx/super-evolve.mp3",
-        "gain": 0.718
+        "gain": 0.827
       },
       "token": {
         "src": "audio/sfx/token.mp3",
@@ -119,7 +119,7 @@
       },
       "turn-start": {
         "src": "audio/sfx/turn-start.mp3",
-        "gain": 0.802
+        "gain": 1
       },
       "victory-sting": {
         "src": "audio/sfx/victory-sting.mp3",
@@ -153,7 +153,7 @@
       },
       "menu": {
         "src": "audio/music/menu.mp3",
-        "gain": 0.611,
+        "gain": 1,
         "loop": true
       },
       "victory": {

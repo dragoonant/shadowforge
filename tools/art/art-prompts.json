@@ -2446,56 +2446,56 @@
    "model": "dev",
    "aspect": "16:9",
    "megapixels": 2,
-   "prompt": "a vast twilight sky over a floating island of ancient ruins, two great beams of light, one violet and one golden, spiralling upward and crossing high above, at dusk with the first stars, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
+   "prompt": "a vast circular stone dais floating above a sea of moonlit clouds, glowing concentric rings of pale cyan light etched into its smooth surface, an enormous full moon low on the horizon, a deep starry sky, at night in cool silver moonlight, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, a cool night palette of midnight indigo, deep teal, moonlit silver and pale cyan-white light, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
   },
   "deck-chooser": {
    "name": "deck-chooser",
    "model": "dev",
    "aspect": "16:9",
    "megapixels": 2,
-   "prompt": "a grand arcane hall of tall arched windows and marble columns, floating motes of many-coloured light drifting through the air, in warm lantern light, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
+   "prompt": "an open-air gallery of tall pale stone pillars under the night sky, large faceted gemstone crystals floating in a wide ring above a round stone floor, each crystal glowing a different colour: green, amber, blue, orange, crimson and white, at night under a deep starry sky in cool moonlight, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, a cool night palette of midnight indigo, deep teal, moonlit silver and pale cyan-white light, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
   },
   "board-1": {
    "name": "board-1",
    "model": "dev",
    "aspect": "16:9",
    "megapixels": 2,
-   "prompt": "an ancient forest arena of mossy standing stones around a broad open clearing of soft grass, at night under silver moonlight and drifting fireflies, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
+   "prompt": "a calm sea of moonlit clouds stretching to the far horizon, a wide smooth open expanse of soft cloud tops, at night under a bright full moon and scattered stars, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, a cool night palette of midnight indigo, deep teal, moonlit silver and pale cyan-white light, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
   },
   "board-2": {
    "name": "board-2",
    "model": "dev",
    "aspect": "16:9",
    "megapixels": 2,
-   "prompt": "a ruined sky-colosseum of pale stone arches around a wide smooth arena floor, under a sunset sky of orange and violet clouds, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
+   "prompt": "green and teal aurora curtains rippling over snowy mountain peaks above a wide frozen plain of smooth pale ice, on a clear cold night under the stars, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, a cool night palette of midnight indigo, deep teal, moonlit silver and pale cyan-white light, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
   },
   "board-3": {
    "name": "board-3",
    "model": "dev",
    "aspect": "16:9",
    "megapixels": 2,
-   "prompt": "a crystal cavern with glowing violet gem clusters along the walls around a smooth still floor, lit by soft inner crystal light, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
+   "prompt": "a perfectly still mirror lake reflecting a vast starry nebula of teal and indigo, a wide calm surface of dark water, at night in deep silence, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, a cool night palette of midnight indigo, deep teal, moonlit silver and pale cyan-white light, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
   },
   "board-4": {
    "name": "board-4",
    "model": "dev",
    "aspect": "16:9",
    "megapixels": 2,
-   "prompt": "a volcanic plateau of dark basalt around a wide flat floor, rivers of glowing lava far away at the edges, under a smouldering red sky, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
+   "prompt": "quiet ruins of pale weathered stone around a wide open flagstone floor, small chunks of stone hovering weightlessly in the air above the ruins, low silver mist drifting across the ground, at night in soft silver moonlight, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, a cool night palette of midnight indigo, deep teal, moonlit silver and pale cyan-white light, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
   },
   "victory": {
    "name": "victory",
    "model": "dev",
    "aspect": "16:9",
    "megapixels": 2,
-   "prompt": "a triumphant golden sunrise over a sea of clouds, beams of light and sparkling motes rising into the sky, in the early morning, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
+   "prompt": "a circular stone dais with a vertical beam of pure white-cyan light shooting straight up from its centre into the starry sky, glowing motes of light spiralling upward around the beam, at night under a deep starry sky, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, a cool night palette of midnight indigo, deep teal, moonlit silver and pale cyan-white light, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
   },
   "defeat": {
    "name": "defeat",
    "model": "dev",
    "aspect": "16:9",
    "megapixels": 2,
-   "prompt": "a lonely rain-swept battlefield of broken stone pillars under heavy grey clouds, the last embers fading into drifting fog, at dusk, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
+   "prompt": "a cracked and darkened circular stone dais with deep fissures and broken edges, grey mist drifting across it, a dim moon half covered by a thick bank of heavy dark storm clouds, on a cold gloomy overcast night, dim and desaturated, an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges, a cool night palette of midnight indigo, deep teal, moonlit silver and pale cyan-white light, Japanese fantasy card game background painting, crisp anime line art, vivid colours, glossy cel shading with soft glow, dramatic lighting and sparkling effects, full-bleed scene edge to edge, purely pictorial, wordless and untitled, wide panoramic landscape composition"
   }
  }
 }

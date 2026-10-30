@@ -117,10 +117,11 @@
     abysscraft: '<path d="M10.6 1.4 A7 7 0 1 0 14.8 11 A5.6 5.6 0 0 1 10.6 1.4 Z" fill="currentColor"/><path d="M5.2 9.6 L6.2 12.6 L7.2 9.8 Z" fill="rgba(0,0,0,.5)"/>',
     havencraft: '<path d="M8 .4 L9.2 6.8 L15.6 8 L9.2 9.2 L8 15.6 L6.8 9.2 L.4 8 L6.8 6.8 Z" fill="currentColor"/><circle cx="8" cy="8" r="2.2" fill="none" stroke="currentColor" stroke-width="1.2"/>',
     neutral: '<path d="M8 1 L14.6 8 L8 15 L1.4 8 Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 5 L11 8 L8 11 L5 8 Z" fill="currentColor"/>',
-    // UI-only marks (not printed tokens): the play point, the evolution point, the super star.
-    pp: '<path d="M8 1 L13.6 4.6 L13.6 11.4 L8 15 L2.4 11.4 L2.4 4.6 Z" fill="currentColor"/>',
-    ep: '<circle cx="8" cy="8" r="6.4" fill="currentColor"/><path d="M4.8 9 L8 5.4 L11.2 9 M5.8 11.8 L8 9.4 L10.2 11.8" fill="none" stroke="rgba(0,0,0,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
-    sep: '<path d="M8 .6 L10 5.6 L15.4 6 L11.2 9.4 L12.6 14.8 L8 11.8 L3.4 14.8 L4.8 9.4 L.6 6 L6 5.6 Z" fill="currentColor"/>',
+    // UI-only marks (not printed tokens): the play point (a crystal shard), the evolution point
+    // (an orb of light with a rising chevron), the super-evolution point (an eight-point star).
+    pp: '<path d="M8 .6 L13 8 L8 15.4 L3 8 Z" fill="currentColor"/><path d="M8 .6 L8 15.4 M3 8 L13 8" stroke="rgba(0,0,0,.28)" stroke-width=".8"/>',
+    ep: '<circle cx="8" cy="8" r="6.6" fill="currentColor"/><circle cx="8" cy="8" r="4.2" fill="none" stroke="rgba(0,0,0,.3)" stroke-width=".9"/><path d="M5.2 9.4 L8 6.4 L10.8 9.4" fill="none" stroke="rgba(0,0,0,.55)" stroke-width="1.5" stroke-linecap="square"/>',
+    sep: '<path d="M8 .2 L9.3 6.7 L15.8 8 L9.3 9.3 L8 15.8 L6.7 9.3 L.2 8 L6.7 6.7 Z" fill="currentColor"/><path d="M8 3.4 L9.2 6.8 L12.6 8 L9.2 9.2 L8 12.6 L6.8 9.2 L3.4 8 L6.8 6.8 Z" fill="currentColor" transform="rotate(45 8 8)" opacity=".7"/>',
   };
   G.q = G.quick;
   const GLYPH_NAME = { fanfare: 'Fanfare', lastwords: 'Last Words', act: 'Act (activated ability)', engage: 'Engage', evolve: 'Evolve',
@@ -164,16 +165,17 @@
     if (at < text.length) node.appendChild(document.createTextNode(text.slice(at)));
   };
 
-  // The play-point cost: a faceted jewel in the card's class colour with a silver rim. A
-  // hexagonal gem of our own; the printed card frame is never imitated.
+  // The play-point cost: a diamond shard in the card's class colour with a moonlit rim, lit from
+  // the upper left. A shape of our own; the printed card frame is never imitated.
   U.costGem = function (cost, cls, extraCls) {
     const wrap = U.el('span', 'cost-gem' + (extraCls ? ' ' + extraCls : ''));
     const c = U.classOf(cls).dot;
     const gid = 'gm' + Math.random().toString(36).slice(2, 8);
-    wrap.innerHTML = '<svg viewBox="0 0 40 40" aria-hidden="true"><defs><radialGradient id="' + gid + '" cx="38%" cy="30%" r="72%">' +
-      '<stop offset="0" stop-color="#ffffff" stop-opacity=".8"/><stop offset=".3" stop-color="' + c + '"/>' +
-      '<stop offset="1" stop-color="#0a0710"/></radialGradient></defs>' +
-      '<path class="gem-rim" d="M20 2.6 L35.4 11.8 L35.4 28.2 L20 37.4 L4.6 28.2 L4.6 11.8 Z"/><path d="M20 6 L32.5 13.5 L32.5 26.5 L20 34 L7.5 26.5 L7.5 13.5 Z" fill="url(#' + gid + ')"/></svg>';
+    wrap.innerHTML = '<svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0" stop-color="#ffffff" stop-opacity=".85"/><stop offset=".35" stop-color="' + c + '"/>' +
+      '<stop offset="1" stop-color="#030812"/></linearGradient></defs>' +
+      '<path class="gem-rim" d="M20 1.5 L38.5 20 L20 38.5 L1.5 20 Z"/><path d="M20 5 L35 20 L20 35 L5 20 Z" fill="url(#' + gid + ')"/>' +
+      '<path d="M20 5 L20 35 M5 20 L35 20" stroke="rgba(255,255,255,.18)" stroke-width="1"/></svg>';
     wrap.appendChild(U.el('span', 'cost-num', cost == null ? '–' : String(cost)));
     return wrap;
   };

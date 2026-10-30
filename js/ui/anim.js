@@ -11,8 +11,9 @@
 // land on one impact beat. An attack that opens a Quick window is drawn in two halves: the
 // declaration (engage + the red arrow, which stays up while the window is open), then the
 // clash once the window closes. Ability damage is a bolt in the source's class colour; a leader
-// hit shakes the arch and floats a big number; a follower leaving dissolves into embers that
-// fly to where it went; evolving is a burst of light; a leader at 0 shatters.
+// hit shakes the obelisk, cracks its defense crystal and floats a big number; a follower leaving
+// breaks into shards that fly to where it went; evolving is the rite (a turning circle of light,
+// a flash, and rays for a super-evolve); a leader at 0 shatters.
 (function () {
   'use strict';
   const SV = globalThis.SV;
@@ -39,7 +40,7 @@
   function clsColor(prev, next, iid) {
     const c = iid != null ? cardOf(prev, next, iid) : null;
     const d = c && SV.CARDS[c.id];
-    return d ? U.classOf(d.cls).text : '#ffd9a0';
+    return d ? U.classOf(d.cls).text : '#bfefff';
   }
   function wasOnField(prev, iid) { const c = prev.cards[iid]; return !!(c && c.zone === 'field'); }
   function isHit(l) { return l.type === 'damage' && (l.kind === 'attack' || l.kind === 'combat'); }
@@ -207,13 +208,61 @@
     job.unhide.push(node);
     later(ms(420), function () { node.classList.remove('fx-hit'); });
   }
+  // A hit on a leader cracks its defense crystal for a moment (styles: .leader-def.fx-crack).
+  function crack(node) {
+    const zoneNode = node && (node.classList.contains('leader-zone') ? node : node.closest('.leader-zone'));
+    const def = zoneNode && zoneNode.querySelector('.leader-def');
+    if (!def) return;
+    def.classList.remove('fx-crack'); void def.offsetWidth; def.classList.add('fx-crack');
+    later(ms(950), function () { def.classList.remove('fx-crack'); });
+  }
+  // The evolution rite: a circle of light (rings, ticks, a hexagram) opens under the follower and
+  // turns; a white flash lands; super-evolving adds rays from the screen edges.
+  function rite(node, sup) {
+    const c = centre(node);
+    const size = Math.max(c.w, c.h) * (sup ? 2.6 : 2.1);
+    const svg = U.svgEl('svg', { class: 'fx-rite' + (sup ? ' is-super' : ''), viewBox: '-50 -50 100 100' });
+    let ticks = '';
+    for (let i = 0; i < 48; i++) {
+      const a = i * Math.PI / 24, r1 = 41, r2 = i % 4 === 0 ? 47 : 44;
+      ticks += 'M' + (Math.cos(a) * r1).toFixed(2) + ' ' + (Math.sin(a) * r1).toFixed(2) + ' L' + (Math.cos(a) * r2).toFixed(2) + ' ' + (Math.sin(a) * r2).toFixed(2) + ' ';
+    }
+    const tri = function (off) {
+      return [0, 1, 2].map(function (i) { const a = -Math.PI / 2 + off + i * Math.PI * 2 / 3; return (Math.cos(a) * 36).toFixed(2) + ',' + (Math.sin(a) * 36).toFixed(2); }).join(' ');
+    };
+    svg.innerHTML = '<circle r="48"/><circle r="40"/><path class="rt-ticks" d="' + ticks + '"/>' +
+      '<polygon points="' + tri(0) + '"/><polygon points="' + tri(Math.PI / 3) + '"/><circle r="18"/>';
+    svg.style.left = (c.x - size / 2) + 'px'; svg.style.top = (c.y - size / 2) + 'px';
+    svg.style.width = size + 'px'; svg.style.height = size + 'px';
+    svg.style.setProperty('--dur', ms(sup ? 1100 : 900) + 'ms');
+    layer().appendChild(svg);
+    job.trash.push(svg);
+    later(ms(sup ? 1150 : 950), function () { svg.remove(); });
+    const fx = (c.x / window.innerWidth * 100).toFixed(1) + '%', fy = (c.y / window.innerHeight * 100).toFixed(1) + '%';
+    later(ms(sup ? 380 : 300), function () {
+      const f = el('div', 'fx-flash' + (sup ? ' is-super' : ''));
+      f.style.setProperty('--x', fx); f.style.setProperty('--y', fy);
+      f.style.setProperty('--dur', ms(sup ? 560 : 420) + 'ms');
+      layer().appendChild(f);
+      job.trash.push(f);
+      later(ms(sup ? 600 : 460), function () { f.remove(); });
+    });
+    if (sup) {
+      const r = el('div', 'fx-rays');
+      r.style.setProperty('--x', fx); r.style.setProperty('--y', fy);
+      r.style.setProperty('--dur', ms(1100) + 'ms');
+      layer().appendChild(r);
+      job.trash.push(r);
+      later(ms(1150), function () { r.remove(); });
+    }
+  }
   function burst(node, color, cls, scale) {
     const c = centre(node);
     const size = Math.max(c.w, c.h) * (scale || 1.5);
     const s = el('div', 'fx-impact ' + (cls || ''));
     s.style.left = (c.x - size / 2) + 'px'; s.style.top = (c.y - size / 2) + 'px';
     s.style.width = size + 'px'; s.style.height = size + 'px';
-    s.style.setProperty('--fx', color || '#ffd9a0');
+    s.style.setProperty('--fx', color || '#bfefff');
     s.style.setProperty('--dur', ms(D.impact) + 'ms');
     layer().appendChild(s);
     job.trash.push(s);
@@ -222,7 +271,7 @@
   // Embers: n particles from (x, y) flung by (spread) with a drift. opts: {colors, spread, up, size, dur}.
   function embers(x, y, n, opts) {
     opts = opts || {};
-    const cols = opts.colors || ['#ffb27a', '#fff1d6'];
+    const cols = opts.colors || ['#bfefff', '#ffffff'];
     const spread = opts.spread || 60, up = opts.up || 0, size = opts.size || 8, dur = opts.dur || 800;
     for (let i = 0; i < n; i++) {
       const shard = i % 3 === 0;
@@ -275,12 +324,12 @@
       const sz = i ? size : size * 1.3;
       n.style.left = (c.x - sz / 2) + 'px'; n.style.top = (c.y - sz / 2) + 'px';
       n.style.width = sz + 'px'; n.style.height = sz + 'px';
-      n.style.setProperty('--fx', color || '#ffd9a0');
+      n.style.setProperty('--fx', color || '#bfefff');
       n.style.setProperty('--dur', ms(D.impact + 160) + 'ms');
       layer().appendChild(n);
       job.trash.push(n);
     });
-    embers(c.x, c.y, 14, { colors: ['#fff1d6', '#ffb27a', color || '#ffd9a0'], spread: size * 0.7, size: 8, dur: 700 });
+    embers(c.x, c.y, 14, { colors: ['#ffffff', '#bfefff', color || '#bfefff'], spread: size * 0.7, size: 8, dur: 700 });
     later(ms(D.impact + 200), function () { ring.remove(); star.remove(); });
   }
   // The quarter-turn: the slot widens and the card turns, exactly as the redraw will show it,
@@ -297,7 +346,8 @@
     shake(node);
     if (hit.leader) {
       sfx('leaderHit');
-      burst(node, '#ff5a4a', 'fx-leaderhit', 1.1);
+      burst(node, '#ff4d6d', 'fx-leaderhit', 1.1);
+      if (hit.amount > 0) crack(node);
       floatText(node, hit.amount > 0 ? '−' + hit.amount : '0', 'is-leader');
     } else if (hit.amount > 0) floatText(node, '−' + hit.amount, '');
     else floatText(node, '0', 'is-zero');
@@ -341,7 +391,7 @@
       later(ms(D.lunge), function () {
         // ONE impact beat: both sides' damage lands together (simultaneous, CR 8.4.9.1).
         sfx('hit');
-        clashFx(to, '#ffd9a0');
+        clashFx(to, '#bfefff');
         step.hits.forEach(function (h) { hitLand(h, next); });
         SV.arrow.clear();
         clone.style.transition = 'transform ' + ms(D.recoil) + 'ms cubic-bezier(.2,.7,.4,1)';
@@ -385,8 +435,9 @@
     col.style.setProperty('--dur', ms(D.evolve) + 'ms');
     layer().appendChild(col);
     job.trash.push(col);
-    burst(node, step.sup ? '#ffe58a' : '#c9b4ff', 'fx-magic', 1.7);
-    embers(c.x, c.y, 18, { colors: step.sup ? ['#ffe58a', '#ffffff', '#ffb27a'] : ['#c9b4ff', '#ffffff', '#86e0ff'], spread: c.w, up: 50, size: 9, dur: 900 });
+    rite(node, step.sup);
+    burst(node, step.sup ? '#ffb3c6' : '#bff4ff', 'fx-magic', 1.7);
+    embers(c.x, c.y, step.sup ? 26 : 18, { colors: step.sup ? ['#ffffff', '#7fe6ff', '#ff8fab'] : ['#ffffff', '#7fe6ff', '#bff4ff'], spread: c.w, up: 50, size: 9, dur: 900 });
     floatText(node, step.sup ? 'Super-evolve!' : 'Evolve!', 'is-evolve');
     later(ms(D.evolve), function () { col.remove(); cb(); });
   }
@@ -438,7 +489,7 @@
       node.classList.add(banish ? 'fx-banish' : 'fx-crumble');
       node.style.setProperty('--dur', ms(D.leaveFly * 0.7) + 'ms');
       job.unhide.push(node);
-      const cols = banish ? ['#ffffff', '#d8e6ff', '#b7c6ff'] : ['#ff8a4a', '#ffd27a', '#7a2a1a', '#3a1a12'];
+      const cols = banish ? ['#ffffff', '#d8e6ff', '#b7c6ff'] : ['#9fb6cc', '#5f7894', '#2a3c55', '#e6f3ff'];
       for (let k = 0; k < 4; k++) {
         later(ms(k * 110), function () {
           embers(r.left + Math.random() * r.width, r.top + Math.random() * r.height, 6, { colors: cols, spread: r.width * 0.5, up: banish ? 60 : 20, size: 8, dur: 900 });
@@ -449,7 +500,7 @@
         if (!dest) { later(ms(300), cb); return; }
         const a = { x: r.left + r.width / 2, y: r.top + r.height / 2 }, b = centre(dest);
         const orb = el('div', 'fx-orb is-ember');
-        orb.style.setProperty('--fx', banish ? '#dfe8ff' : '#ff8a4a');
+        orb.style.setProperty('--fx', banish ? '#dfe8ff' : '#7fa6d6');
         flyer(orb, a, b, 60, ms(D.leaveFly * 0.55), cols.slice(0, 2), function () {
           dest.classList.remove('fx-received'); void dest.offsetWidth; dest.classList.add('fx-received');
           cb();
@@ -476,7 +527,8 @@
     // A defense set lower (CR 5.27.2) is not damage, but it reads as a loss.
     const up = step.amount >= 0;
     floatText(node, (up ? '+' : '−') + Math.abs(step.amount), up ? 'is-heal' : 'is-leader');
-    burst(node, up ? '#8ee0ac' : '#ff5a4a', up ? 'fx-heal' : 'fx-leaderhit', 1.1);
+    burst(node, up ? '#8ef0c0' : '#ff4d6d', up ? 'fx-heal' : 'fx-leaderhit', 1.1);
+    if (!up) crack(node);
     sfx(up ? 'heal' : 'leaderHit');
     patchLeader(step.p, next);
     later(ms(D.impact), cb);
@@ -506,7 +558,7 @@
         for (let k = 0; k < 5; k++) {
           later(Math.round(boom * k / 6), function () {
             embers(g.x + (Math.random() - 0.5) * g.w, g.y + (Math.random() - 0.5) * g.h, 22,
-              { colors: ['#ffffff', '#ffd27a', '#ff6a4a', '#9aa6c4'], spread: Math.min(260, g.h * 0.6), up: -20, size: 11, dur: 1300 });
+              { colors: ['#ffffff', '#7fe6ff', '#ff6f91', '#9aa6c4'], spread: Math.min(260, g.h * 0.6), up: -20, size: 11, dur: 1300 });
           });
         }
       });

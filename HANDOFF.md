@@ -19,9 +19,14 @@ What was built on 2026-10-29 (one session, about 4 hours):
   and Vanguard rules those cards need are implemented (PLAN D5, D6).
 - **Modes:** vs the computer (Easy / Normal / Hard), hot-seat, computer vs computer, a tutorial, and a
   deck builder that enforces the deck-construction rules.
-- **Presentation:** lorecannae's interface carried over and re-zoned (leader defense, field and EX area
-  of 5, evolve deck, play / evolution / super-evolution points, drag to play, attack and evolve, the
-  opponent's Quick window), re-themed as a dark-fantasy arena.
+- **Presentation (re-skinned 2026-10-30, PLAN D17):** lorecannae's interface structure, re-zoned for
+  Evolve (leader defense, field and EX area of 5, evolve deck, play / evolution / super-evolution
+  points, drag to play, attack and evolve, the opponent's Quick window), with this game's own look,
+  "the evolution rite": a floating stone dais under the moon, cyan for you and rose for the
+  opponent, cut corners and corner brackets, a drawn wordmark, leader medallions on the menu, a
+  leader gallery, a defense crystal, and a turning circle of light when a follower evolves. The
+  first skin was lorecannae re-coloured and the owner rejected it; `tools/check-look.mjs` keeps
+  it from coming back. Side-by-side: `docs/look/compare.jpg`.
 - **Art:** 348 original card plates and 8 backdrops rendered on this PC (FLUX.1 dev), in a style picked
   from a four-style audition (row B of `art/audition.jpg`: chibi figures with an anime card-game look).
   Every plate was reviewed; 19 were re-rendered (revealing costumes, neon signs with fake lettering).
@@ -31,6 +36,8 @@ What was built on 2026-10-29 (one session, about 4 hours):
 
 **Questions for you (in priority order):**
 
+0. **Look:** keep concept A, "the evolution rite" (built), or switch to B "academy duel" or C
+   "tournament table"? All three are on `docs/look/audition.jpg`.
 1. **Art style:** keep row B, or switch to C (full-proportion anime) or D (painterly)? A switch is one
    constant and a ~2-hour re-render (`tools/art/style.mjs`).
 2. **Listen** to the sound at http://localhost:8241/sounds.html and name the clips to redo.

@@ -55,3 +55,12 @@ What this project learned on top of lorecannae's `LORCANA-LESSONS.md`. Each line
   rendered in 10-minute slices under the shared GPU lock.
 - Backdrops still sign their corners; crop 7% off the bottom and 1.5% off the sides on delivery.
 - Audio Studio made 31 effects and 6 tracks in under 4 minutes.
+
+## Presentation (owner, 2026-10-30)
+
+- **"The look and feel is too much like Lorecannae."** PLAN §4.12 set only a palette ("dark-fantasy
+  card-arena"), so the interface shipped as lorecannae re-coloured: the same menu dialog, filigree
+  frames, star card backs, serif type and board frame. Every game gets its own presentation concept
+  drawn from its own world; the template gives structure, never the skin. Xross Forge (an esports
+  broadcast for a streamer card game) is the model. Canonical rule: `dragoonant/tabletop-kb`
+  README rule 21.
