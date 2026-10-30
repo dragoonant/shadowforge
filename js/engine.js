@@ -99,18 +99,31 @@
       }
       SV.shuffleInPlace(s, P.deck); // CR 6.2.1.4
     }
-    // CR 6.2.1.6 a random player decides; this engine lets the caller fix `first` (default random).
-    s.first = opts.first === 0 || opts.first === 1 ? opts.first : SV.rngInt(s, 2);
-    s.active = s.first;
     s.ti = freshTurnInfo();
-    log(s, s.first, 'start', { first: s.first });
-    for (let p = 0; p < 2; p++) for (let i = 0; i < 4; i++) drawCard(s, p, true); // CR 6.2.1.7
-    s.phase = 'mulligan';
-    s.queue.push({ k: 'mulligan', p: s.first, answers: [] }, { k: 'mulligan', p: 1 - s.first, answers: [] },
-      { k: 'setupPoints', answers: [] }, { k: 'beginTurn', p: s.first, answers: [] });
+    // CR 6.2.1.6: a randomly picked player decides who goes first. A caller may fix `first`
+    // (tests, replays of fixed seats); otherwise the picked player is asked.
+    if (opts.first === 0 || opts.first === 1) deal(s, opts.first);
+    else {
+      const chooser = SV.rngInt(s, 2);
+      s.first = chooser; s.active = chooser;
+      s.phase = 'mulligan';
+      s.queue.push({ k: 'chooseFirst', p: chooser, answers: [] });
+    }
     settle(s);
     return s;
   };
+  function deal(s, first) {
+    s.first = first; s.active = first;
+    log(s, first, 'start', { first });
+    for (let p = 0; p < 2; p++) for (let i = 0; i < 4; i++) drawCard(s, p, true); // CR 6.2.1.7
+    s.phase = 'mulligan';
+    s.queue.push({ k: 'mulligan', p: first, answers: [] }, { k: 'mulligan', p: 1 - first, answers: [] },
+      { k: 'setupPoints', answers: [] }, { k: 'beginTurn', p: first, answers: [] });
+  }
+  function jobChooseFirst(s, job, x) {
+    const v = x.ask({ kind: 'mode', who: job.p, src: null, prompt: 'You were picked at random to decide the turn order (the second player starts with 3 evolution points).', options: [{ label: 'Go first', enabled: true }, { label: 'Go second', enabled: true }] });
+    deal(s, v === 0 ? job.p : 1 - job.p);
+  }
 
   function resolveDeck(d) {
     if (typeof d === 'string') {
@@ -276,7 +289,8 @@
       c.enteredTurn = null; c.evolvedTurn = null; c.gaveDrive = false; c.ctrl = c.owner;
       if (s.ti) for (const k of Object.keys(s.ti.once)) if (k.includes(`:${iid}:`)) delete s.ti.once[k];
     }
-    if (from === 'ex' && to !== 'field' && to !== 'resolution') { c.mods = []; c.counters = {}; }
+    if ((from === 'ex' || from === 'resolution') && to !== 'field' && to !== 'resolution') { c.mods = []; c.counters = {}; } // CR 4.1.4
+    if (from === 'field' && to !== 'field' && s.ti) for (const k of Object.keys(s.ti.trig)) if (k.startsWith(iid + ':')) delete s.ti.trig[k];
     const d = SV.CARDS[c.id];
     if (d.token && !tokenMayExist(d, to)) { c.zone = 'gone'; log(s, c.owner, 'eliminate', { iid }); return from; }
     if (d.advanced && !['field', 'ex', 'resolution', 'evoDeck'].includes(to)) { placeIn(s, iid, 'evoDeck', { faceup: true }); return from; }
@@ -647,6 +661,7 @@
   function execJob(s, job) {
     const x = SV.makeCtx(s, job);
     switch (job.k) {
+      case 'chooseFirst': return jobChooseFirst(s, job, x);
       case 'mulligan': return jobMulligan(s, job, x);
       case 'setupPoints': return jobSetupPoints(s);
       case 'beginTurn': return jobBeginTurn(s, job);
@@ -821,6 +836,18 @@
     for (const e of s.effects) if (e.costMod && e.on !== false && e.p === c.owner && (!e.filter || SV.COST_FILTERS[e.filter](s, iid, e))) cost += e.costMod;
     if (a.setCost) { const v = a.setCost(s, iid, c.owner); if (v != null) cost = v; }
     return Math.max(0, cost); // CR 1.3.2.2.1
+  };
+  // Net of every cost change on this card now (costToPlay before clamping minus its printed cost).
+  SV.costDelta = function (s, iid) {
+    const printed = baseDef(s, iid).cost || 0;
+    const p = s.cards[iid].owner;
+    let cost = printed;
+    const a = ABIL(baseDef(s, iid).no);
+    if (a.selfCost) cost += a.selfCost(s, iid, p) || 0;
+    for (const m of s.cards[iid].mods) if (m.cost && m.on !== false) cost += m.cost;
+    for (const x of auraSources(s)) { const ax = ABIL(faceId(s, x)); if (ax.costAura) cost += ax.costAura(s, x, iid, p) || 0; }
+    for (const e of s.effects) if (e.costMod && e.on !== false && e.p === p && (!e.filter || SV.COST_FILTERS[e.filter](s, iid, e))) cost += e.costMod;
+    return cost - printed;
   };
   SV.COST_FILTERS = {
     any: () => true,

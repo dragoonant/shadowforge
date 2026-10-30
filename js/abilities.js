@@ -180,14 +180,28 @@
       const p = o.ctrl == null ? x.ctrl : o.ctrl;
       const P = s.players[p];
       if (P.field.length >= P.fieldLimit) { SV.log(s, p, 'noRoom', { iid: t, zone: 'field' }); return false; } // CR 4.4.4.2
+      const engaged = !!o.engaged || wardEngaged(SV.def(t, s), p);
       const from = SV.move(s, t, 'field', { ctrl: p });
       SV.log(s, p, 'summon', { iid: t, from });
-      SV.enterField(s, t, { from, engaged: !!o.engaged });
+      SV.enterField(s, t, { from, engaged });
       return true;
     };
+    // CR 12.8.2 (i): whenever a Ward follower would be put onto the field reserved, its controller may
+    // put it in engaged instead (asked, never assumed).
+    function wardEngaged(d, p) {
+      if (SV.parsed(d).type !== 'follower' || !SV.parsed(d).kw.Ward) return false;
+      return x.ask({ kind: 'yesno', who: p, prompt: `${d.name} has Ward. Put it onto the field engaged, so enemy attacks must target it?`, yes: 'Engaged', no: 'Reserved' });
+    }
     x.summonToken = (name, n = 1, o = {}) => {
       const out = [];
-      for (let k = 0; k < n; k++) { const t = SV.createToken(s, o.p == null ? x.ctrl : o.p, name, 'field', o); if (t) out.push(t); }
+      const p = o.p == null ? x.ctrl : o.p;
+      const d = SV.CARDS[SV.TOKENS[name]];
+      for (let k = 0; k < n; k++) {
+        const P = s.players[p];
+        const engaged = !!o.engaged || (P.field.length < P.fieldLimit && wardEngaged(d, p));
+        const t = SV.createToken(s, p, name, 'field', { ...o, engaged });
+        if (t) out.push(t);
+      }
       return out;
     };
     x.tokenToEx = (name, n = 1, p = x.ctrl) => {
@@ -252,7 +266,7 @@
       const me = x.me;
       const P = s.players[x.ctrl];
       const cand = [...P.hand, ...P.ex].filter((i) => i !== me && filter(i));
-      if (!cand.length) return [];
+      if (!cand.length || P.ex.length >= P.exLimit) return [];
       const k = Math.min(max, cand.length);
       const pick = x.ask({ kind: 'cards', from: cand, seen: cand, min: Math.min(Math.max(min, 1), k), max: k, prompt: prompt || 'Fuse: choose the card(s) to fuse (from your hand they are discarded, from your EX area they are buried).' });
       for (const i of pick) { if (s.cards[i].zone === 'hand') x.discard(i); else x.bury(i); }
@@ -267,7 +281,12 @@
     x.winGame = (p = x.ctrl) => SV._endGame(s, p, 'effect');
 
     // Play a card without paying its cost ("for free"; CR 10.6 with the cost replaced).
-    x.playFree = (iid, o = {}) => SV.playCard(s, x, iid, { from: s.cards[iid].zone, ...o });
+    // o.zeroCost: "this costs 0 to play" / "play it for 0 play points": the cost is set to 0, then cost
+    // increases and decreases still apply (CR 10.10.2.4; Q1927/Q1928); the player pays what remains.
+    x.playFree = (iid, o = {}) => {
+      if (o.zeroCost) { const extra = Math.max(0, SV.costDelta(s, iid)); if (extra) SV.pay(s, s.cards[iid].owner, { pp: extra }); }
+      return SV.playCard(s, x, iid, { from: s.cards[iid].zone, ...o });
+    };
 
     // "Search your deck for [filter], [verb] it, then shuffle" (CR 5.8). Returns the found cards.
     x.search = ({ p = x.ctrl, filter = () => true, max = 1, min = 0, prompt, reveal = true, sumCostMax }) => {
@@ -315,7 +334,9 @@
   H.self = (s, me, ev) => ev.iid === me;
   H.mine = (s, me, ev) => ev.p === s.cards[me].ctrl;
   H.myTurn = (s, me) => s.active === s.cards[me].ctrl;
-  H.canFuse = (s, me, filter) => { const P = s.players[s.cards[me].owner]; return [...P.hand, ...P.ex].some((i) => i !== me && filter(i)); };
+  // Fuse's cost puts this card into the EX area: with the EX area full the cost can't be paid (CR 10.4.2.2,
+  // 12.18.2, 4.8.3.2). Fusing from the EX area itself frees no room until the cost is paid, so a full EX area refuses.
+  H.canFuse = (s, me, filter) => { const P = s.players[s.cards[me].owner]; return P.ex.length < P.exLimit && [...P.hand, ...P.ex].some((i) => i !== me && filter(i)); };
   H.inCemetery = (s, p, filter) => s.players[p].cemetery.some(filter);
   H.ctrl = (s, me) => (s.cards[me].zone === 'field' ? s.cards[me].ctrl : s.cards[me].owner);
   // Sugar that expands to triggers: SV.card(id, {fanfare, lastWords, onEvolve, onSuperEvolve,

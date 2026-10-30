@@ -281,4 +281,14 @@
     ok(s.window && s.window.who === 0, 'window open for the defender');
     ok(T.legal(s, { type: 'activate', iid: temple, idx: 0 }), 'the Quick ability is offered in the window');
   });
+
+  test('CR 6.2.1.6 a randomly picked player chooses to go first or second', () => {
+    let s = SV.newGame({ decks: decks(), seed: 7 });
+    eq(s.ask.kind, 'mode'); eq(s.ask.options.map((o) => o.label), ['Go first', 'Go second']);
+    const chooser = s.ask.who;
+    eq(s.players[0].hand.length, 0, 'hands are dealt after the choice');
+    s = T.answer(s, 1);
+    eq(s.first, 1 - chooser); eq(s.players[0].hand.length, 4);
+    eq(s.ask.kind, 'mulligan'); eq(s.ask.who, 1 - chooser);
+  });
 })();

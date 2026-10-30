@@ -181,3 +181,11 @@ One behaviour test per scripted card in `tests/cards-<group>.js`, named
 `T.act`/`T.play`/`T.answer`/`T.attack`/`T.endTurn`, assert the side effect (zones, defense,
 counters, hand size), not that a function was called. A test that only proves "no throw" is not a
 test. `node tools/test.mjs --quiet --filter BP16` runs a subset.
+
+## Added after the reviews
+
+- `x.playFree(iid, { zeroCost: true })` for "This costs 0 to play" / "play it for 0 play points":
+  cost increases still apply and are paid (CR 10.10.2.4; Q1927/Q1928). Plain `x.playFree(iid)` is a
+  play with no cost at all.
+- `x.summon` / `x.summonToken` ask the Ward question themselves (CR 12.8.2 (i)); don't ask it in scripts.
+- `SV.H.canFuse` refuses when the EX area is full (the Fuse cost puts the card there).
