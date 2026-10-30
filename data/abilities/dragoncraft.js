@@ -88,13 +88,14 @@
       const playable = (i) => {
         const d = cdef(x.s, i), t = SV.parsed(d).type;
         if (!d.traits.includes('Omen') || (d.cost || 0) > 2) return false;
+        if (P.pp < Math.max(0, SV.costDelta(x.s, i))) return false; // "for 0 play points": cost increases are still paid (Q1927/Q1928)
         if (t === 'follower' || t === 'amulet') return P.field.length < P.fieldLimit; // CR 10.6.2.6
         if (t !== 'spell') return false;
         const a = SV.abil(d.no);
         return !a.canPlay || a.canPlay(x.s, i); // CR 10.6.2.3.3
       };
       const t = x.selectOne(x.cemetery().filter(playable), 'Galmieux: select an Omen card that costs 2 or less in your cemetery to play for 0 play points.', { aura: false });
-      if (t) x.playFree(t);
+      if (t) x.playFree(t, { zeroCost: true });
     },
     triggers: [{
       name: 'Ability damage: deal 3', on: 'damaged', when: abilityDamagedOnMyTurn,
@@ -240,6 +241,14 @@
   // [act] [cost00]: Summon a Dragon token. Activate only once per turn.
   card('BP13-056EN', {
     // CR 2.1.2: "Dragon" = a card whose name contains Dragon (the Dragon token, Devoted Dragon, Genesis Dragon …).
+    // Read as a NAME, not a trait (review item): (a) no card in SV.CARDS has a "Dragon" trait (only
+    // Dragonheart and Dragonewt; the Dragon tokens are Wyrmkin), so a trait reading would match nothing;
+    // (b) in this pool's text a trait is always followed by "follower"/"card" ("a Departed follower",
+    // "Wasteland followers"), while a bare capitalised word in "Each X on your field" is a card name:
+    // "Each Megalorca on your field" (BP19-067EN), "an Elana's Prayer on your field", "a Soulstrike in
+    // your cemetery"; (c) this card's own [act] summons a token named "Dragon", and Q1715 calls the
+    // follower that gets Storm "a Dragon". Bold-italic formatting isn't kept in data/cards.js.
+    // Contains (not exact) is kept as before: CR 2.1.2 allows it by context and no Q&A narrows it.
     auras: [(s, me, t, r) => {
       if (s.cards[t].zone === 'field' && s.cards[t].ctrl === s.cards[me].ctrl && SV.isFollower(s, t) && SV.nameHas(s, t, 'Dragon')) { r.kw.Storm = true; r.kw.Drain = true; }
     }],

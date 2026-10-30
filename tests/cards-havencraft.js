@@ -82,6 +82,7 @@
     s = T.act(s, { type: 'evolve', iid: j });
     eq(s.ask.min, 0); eq(s.ask.from, [st], 'only the havencraft follower that costs 2 or less');
     s = T.answer(s, [st]);
+    s = T.answerWhile(s, /has Ward/, false); // CR 12.8.2 (i): summon asks the Ward question
     s = T.answer(s, false); // Stalwart's own Fanfare cost: decline
     eq(T.zone(s, st), 'field');
     s = T.act(s, { type: 'attack', iid: j, target: s.players[1].leader });
@@ -599,5 +600,33 @@
     let s2 = T.game({ p0: { ex: [CR_SUPPLICANT, CR_CONGREGANT, CR_HIMEKA] } });
     s2 = endTurn(s2);
     eq(s2.players[0].defense, 21);
+  });
+
+  test('review: 5 BP18-P47EN Votary (evolved): a defense change that raised your leader counts as gaining defense; a lowering one does not', () => {
+    const mk = () => T.game({ p0: { field: ['BP18-110EN'], evoDeck: ['BP18-P47EN'], defense: 15 }, p1: { field: [AP] } });
+    let s = mk();
+    SV.setDefense(s, 0, 18); // "change your leader's defense to 18" earlier this turn (engine door, logged as setDefense)
+    s = T.act(s, { type: 'evolve', iid: s.players[0].field[0] });
+    s = T.answer(s, [s.players[1].field[0]]);
+    eq(s.players[1].defense, 18, 'raised: 2 to the enemy leader');
+    let s2 = mk();
+    SV.setDefense(s2, 0, 10);
+    s2 = T.act(s2, { type: 'evolve', iid: s2.players[0].field[0] });
+    s2 = T.answer(s2, [s2.players[1].field[0]]);
+    eq(s2.players[1].defense, 20, 'lowered: no leader damage');
+  });
+
+  test('review: x.playFree zeroCost: Filene (BP15-058EN) makes the Erralde "costs 0" play of Executor cost 1 (Q1927/Q1928)', () => {
+    let s = T.game({ active: 1, p0: { hand: [EXECUTOR], field: [ERRALDE] }, p1: { hand: ['BP15-058EN'], maxPP: 7 } });
+    s = T.play(s, s.players[1].hand[0]); // Overflow: during p0's next turn any card p0 plays costs 1 more
+    s = T.endTurn(s);
+    eq(s.active, 0); const pp = s.players[0].pp;
+    const ex = T.find(s, 0, EXECUTOR, 'hand');
+    const broke = SV.clone(s); broke.players[0].pp = 0;
+    ok(!T.legal(broke, { type: 'activate', iid: ex, idx: 0 }), 'the +1 must be payable');
+    s = T.act(s, { type: 'activate', iid: ex, idx: 0 });
+    s = T.answer(s, [T.find(s, 0, ERRALDE)]);
+    s = drain(s);
+    eq(T.zone(s, ex), 'field'); eq(s.players[0].pp, pp - 1, 'paid the cost increase');
   });
 })();

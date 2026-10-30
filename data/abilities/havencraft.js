@@ -17,7 +17,9 @@
   const enemyFollower = (x, prompt) => x.selectOne(x.followers(x.opp), prompt);
   const onMyField = (s, p, name) => SV.field(s, p).some((i) => SV.nameHas(s, i, name));
   // "if your leader has gained [defense] this turn": the engine logs every increase (heal door).
-  const gainedThisTurn = (s, p) => s.log.some((e) => e.type === 'heal' && e.turn === s.turn && e.p === p);
+  // "Your leader has gained [defense] this turn": a heal ([defense]+N, Drain), or a "change its defense
+  // to N" (x.setDefense, logged as {type:'setDefense', from, total}) that raised it.
+  const gainedThisTurn = (s, p) => s.log.some((e) => e.turn === s.turn && e.p === p && (e.type === 'heal' || (e.type === 'setDefense' && e.total > e.from)));
   // Final information of a card that left the field (CR 10.11), from its leave log entry.
   const lastInfo = (s, iid) => { for (let k = s.log.length - 1; k >= 0; k--) if (s.log[k].iid === iid && s.log[k].info) return s.log[k].info; return null; };
   const playBlocked = (s, iid, p) => SV.auraSources(s).some((src) => { const a = SV.abil(SV.faceId(s, src)); return a.blockPlay && a.blockPlay(s, src, iid, p); });
@@ -445,21 +447,22 @@
   // "When playing this, [engage] an Erralde, Troth Convict on your field: This costs 0 to play."
   // CR 10.4.7.3: an option taken when playing the card. Offered as its own action on the card in
   // your hand or EX area: engage a reserved Erralde (the cost), then play this without paying play
-  // points. The ordinary play stays available.
+  // points (cost increases are still paid: x.playFree zeroCost, Q1927/Q1928). The ordinary play stays available.
   const reservedErraldes = (s, p) => s.players[p].field.filter((i) => !s.cards[i].engaged && SV.nameHas(s, i, 'Erralde, Troth Convict'));
   const erraldePlay = (zone) => ({
     text: 'Engage an Erralde, Troth Convict on your field: play this for 0',
     zone,
     can: (s, me) => {
       const p = s.cards[me].owner, P = s.players[p];
-      return reservedErraldes(s, p).length > 0 && P.field.length < P.fieldLimit && !playBlocked(s, me, p);
+      // "Costs 0" still pays cost increases (Q1927/Q1928): the player must have that many play points.
+      return reservedErraldes(s, p).length > 0 && P.field.length < P.fieldLimit && !playBlocked(s, me, p) && P.pp >= Math.max(0, SV.costDelta(s, me));
     },
     why: (s, me) => (reservedErraldes(s, s.cards[me].owner).length ? "This can't be played right now." : 'You need a reserved Erralde, Troth Convict on your field.'),
     pay(x) {
       const e = x.selectOne(reservedErraldes(x.s, x.ctrl), 'Choose an Erralde, Troth Convict on your field to engage.');
       x.engage(e);
     },
-    run(x) { x.playFree(x.me); },
+    run(x) { x.playFree(x.me, { zeroCost: true }); }, // "costs 0": cost increases still apply (Q1927/Q1928)
   });
 
   // BP19-098EN Executor of the Oath

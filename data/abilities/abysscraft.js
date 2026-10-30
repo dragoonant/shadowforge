@@ -66,7 +66,8 @@
   // Select an enemy follower on the field and give it [attack]-2/[defense]-2.
   const ICE = 'Iceschillendrig, Gilded Autocrat';
   card('BP11-075EN', {
-    canPlay: (s, iid) => SV.followers(s, 1 - s.cards[iid].owner).length > 0,
+    canPlay: (s, iid) => selEnemies(s, s.cards[iid].owner).length > 0, // CR 10.6.2.3.3; Aura followers can't be selected (CR 12.15)
+    cantPlayWhy: () => 'There is no enemy follower you can select.',
     spell(x) {
       const t = x.selectOne(x.followers(x.opp), 'Dead to Rights: select an enemy follower to give -2/-2.');
       if (t) x.buff(t, { atk: -2, def: -2 });
@@ -74,8 +75,9 @@
     activated: [{
       text: 'Banish this and an Iceschillendrig from your cemetery: engage an enemy follower',
       zone: 'cemetery', // Q1535: only from the cemetery
-      can: (s, me) => H.inCemetery(s, s.cards[me].owner, (i) => SV.CARDS[s.cards[i].id].name === ICE),
-      why: () => 'You need an Iceschillendrig, Gilded Autocrat in your cemetery.',
+      // Also needs a selectable enemy follower for the effect (CR 10.6.2.3.3, Aura CR 12.15).
+      can: (s, me) => H.inCemetery(s, s.cards[me].owner, (i) => SV.CARDS[s.cards[i].id].name === ICE) && selEnemies(s, s.cards[me].owner).length > 0,
+      why: (s, me) => (H.inCemetery(s, s.cards[me].owner, (i) => SV.CARDS[s.cards[i].id].name === ICE) ? 'There is no enemy follower you can select.' : 'You need an Iceschillendrig, Gilded Autocrat in your cemetery.'),
       pay(x) {
         const ice = x.selectOne(x.cemetery().filter((i) => x.name(i) === ICE), 'Choose an Iceschillendrig to banish.', { aura: false });
         x.banish(x.me); x.banish(ice);
@@ -263,12 +265,17 @@
       can: (s, me) => trainPayers(s, me).reduce((n, i) => n + costOf(s, i), 0) >= 5,
       why: () => 'You need reserved followers that cost a total of 5 or more on your field.',
       pay(x) {
-        // The player picks the followers one at a time until the total reaches 5 (every order gets there:
-        // can() checked that all of them together cost 5 or more).
+        // "Any number of followers that cost a total of 5 or more": the player picks one at a time; until
+        // the total reaches 5 a pick is required (every order gets there: can() checked that all of them
+        // together cost 5 or more), after that each further pick is optional (any number, not "exactly
+        // until 5").
         let total = 0;
         const picked = [];
-        while (total < 5) {
-          const t = x.selectOne(trainPayers(x.s, x.me).filter((i) => !picked.includes(i)), `Magitrain: choose a follower to engage (total cost so far ${total}; 5 or more needed).`, { aura: false });
+        for (;;) {
+          const left = trainPayers(x.s, x.me).filter((i) => !picked.includes(i));
+          const t = total < 5
+            ? x.selectOne(left, `Magitrain: choose a follower to engage (total cost so far ${total}; 5 or more needed).`, { aura: false })
+            : x.selectOne(left, `Magitrain: you may engage another follower (total cost so far ${total}).`, { aura: false, optional: true });
           if (!t) break;
           picked.push(t); total += costOf(x.s, t);
         }
@@ -347,8 +354,9 @@
     activated: [{
       text: 'Engage, bury another follower: deal 2 damage to an enemy follower',
       cost: { engage: true },
-      can: (s, me) => SV.followers(s, s.cards[me].ctrl).some((i) => i !== me),
-      why: () => 'You have no other follower to bury.',
+      // CR 10.6.2.3.3: the effect must select an enemy follower, so one must be selectable (not Aura, CR 12.15).
+      can: (s, me) => SV.followers(s, s.cards[me].ctrl).some((i) => i !== me) && selEnemies(s, s.cards[me].ctrl).length > 0,
+      why: (s, me) => (SV.followers(s, s.cards[me].ctrl).some((i) => i !== me) ? 'There is no enemy follower you can select.' : 'You have no other follower to bury.'),
       pay(x) {
         const t = x.selectOne(x.followers(x.ctrl).filter((i) => i !== x.me), 'Cerberus: choose another follower on your field to bury.', { aura: false });
         if (t) x.bury(t);
@@ -752,6 +760,9 @@
     activated: [{
       text: 'Engage, bury this: give a follower on your field Rush or Assail',
       cost: { pp: 1, engage: true },
+      // Both options select a follower on your field (CR 10.6.2.3.3): with none, no option can be chosen.
+      can: (s, me) => SV.followers(s, s.cards[me].ctrl).some((i) => i !== me), // not itself (buried as the cost, even if Maneuvered)
+      why: () => 'You have no follower on your field to give Rush or Assail.',
       pay(x) { x.bury(x.me); },
       run(x) {
         const has = x.followers(x.ctrl).length > 0;

@@ -77,6 +77,7 @@
     s = T.play(s, s.players[0].hand[0]);
     eq(names(s, s.ask.from), ['Bellringer Angel']);
     s = T.answer(s, s.ask.from);
+    s = T.answerWhile(s, /has Ward/, false); // CR 12.8.2 (i): summon asks the Ward question
     eq(T.zone(s, T.find(s, 0, BELL)), 'field'); eq(s.players[0].deck.length, 3);
   });
 
@@ -430,6 +431,7 @@
     s = T.play(s, z);
     eq(s.ask.min, 0);
     s = T.answer(s, s.ask.from);
+    s = T.answerWhile(s, /has Ward/, false); // CR 12.8.2 (i): summon asks the Ward question
     eq(T.zone(s, z), 'cemetery'); eq(names(s, s.players[0].field), ['Zerael, Regent of Transmigration']);
     eq(s.players[1].field.length, 0, "Transmigration's Fanfare"); eq(s.players[0].deck.length, 9);
   });

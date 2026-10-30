@@ -665,4 +665,41 @@
     s = T.answer(s, [1]);
     eq(s.players[1].defense, 19); eq(T.def(s, s.players[1].field[0]), 2);
   });
+
+  // ---------------------------------------------------------------- review fixes
+  const AURA = 'BP19-114EN'; // Zerael, Regent of Transmigration: Ward. Aura.
+  const ICE5 = 'BP11-069EN'; // Iceschillendrig, Gilded Autocrat, cost 5
+
+  test('review: 1 BP11-T02EN Magitrain: any number of followers, not stopping at 5 (two cost-5 Iceschillendrigs both engage)', () => {
+    let s = T.game({ p0: { field: ['BP11-T02EN', ICE5, ICE5] } });
+    const [m, i1, i2] = s.players[0].field;
+    s = T.act(s, { type: 'activate', iid: m, idx: 0 });
+    s = T.answer(s, [i1]);
+    ok(s.ask && s.ask.kind === 'cards', 'offered another follower after reaching 5'); eq(s.ask.min, 0, 'optional once the total is 5'); eq(s.ask.from, [i2]);
+    s = T.answer(s, [i2]);
+    eq([s.cards[i1].engaged, s.cards[i2].engaged], [true, true]); ok(SV.isFollower(s, m), 'maneuvered');
+  });
+
+  test('review: 2 BP16-077EN Cerberus: the act needs a selectable enemy follower (Aura does not count)', () => {
+    const s = T.game({ p0: { field: ['BP16-077EN', AP] }, p1: { field: [AURA] } });
+    ok(!T.legal(s, { type: 'activate', iid: s.players[0].field[0], idx: 0 }), 'only an Aura follower');
+    const s2 = T.game({ p0: { field: ['BP16-077EN', AP] } });
+    ok(!T.legal(s2, { type: 'activate', iid: s2.players[0].field[0], idx: 0 }), 'no enemy follower');
+    const s3 = T.game({ p0: { field: ['BP16-077EN', AP] }, p1: { field: [AURA, AP] } });
+    ok(T.legal(s3, { type: 'activate', iid: s3.players[0].field[0], idx: 0 }));
+  });
+
+  test('review: 3 BP11-075EN Dead to Rights: spell and cemetery act need a selectable enemy follower (Aura does not count)', () => {
+    const s = T.game({ p0: { hand: ['BP11-075EN'] }, p1: { field: [AURA] } });
+    ok(!T.legal(s, { type: 'play', iid: s.players[0].hand[0] }), 'spell: only an Aura follower');
+    const s2 = T.game({ p0: { cemetery: ['BP11-075EN', ICE5] }, p1: { field: [AURA] } });
+    ok(!T.legal(s2, { type: 'activate', iid: T.find(s2, 0, 'BP11-075EN'), idx: 0 }), 'act: only an Aura follower');
+    const s3 = T.game({ p0: { cemetery: ['BP11-075EN', ICE5] } });
+    ok(!T.legal(s3, { type: 'activate', iid: T.find(s3, 0, 'BP11-075EN'), idx: 0 }), 'act: no enemy follower');
+  });
+
+  test('review: 4 BP20-086EN Castle of Entwining: the act needs a follower on your field', () => {
+    const s = T.game({ p0: { field: ['BP20-086EN'] }, p1: { field: [AP] } });
+    ok(!T.legal(s, { type: 'activate', iid: s.players[0].field[0], idx: 0 }));
+  });
 })();
