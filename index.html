@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shadowforge</title>
+<link rel="stylesheet" href="styles.css?v=662112a05f">
+</head>
+<body>
+<!-- The board is the whole window. Everything that is not the board is a title screen, the
+     log drawer (an overlay on the right edge) or a centred panel. -->
+<div id="app">
+  <div id="board">
+    <!-- Their hand, face down: the near quarter of each card back, upside down. -->
+    <div id="enemy-hand-bar"><div id="enemy-hand"></div><span id="enemy-hand-count"></span></div>
+    <!-- js/ui/boardart.js draws the arena and places each zone on its drawn slot from one
+         geometry table; the DOM carries no label text of its own. -->
+    <div id="mat">
+      <div id="enemy-leader" class="mat-zone leader-zone"></div>
+      <div id="enemy-field" class="mat-zone field-zone"></div>
+      <div id="enemy-deck" class="mat-zone pile-slot"></div>
+      <div id="enemy-evo" class="mat-zone pile-slot evo-slot"></div>
+      <div id="enemy-ex" class="mat-zone ex-zone"></div>
+      <div id="enemy-cemetery" class="mat-zone pile-slot"></div>
+      <div id="enemy-banished" class="mat-zone pile-slot"></div>
+      <div id="enemy-points" class="mat-zone points-zone"></div>
+      <div id="my-leader" class="mat-zone leader-zone"></div>
+      <div id="my-field" class="mat-zone field-zone"></div>
+      <div id="my-deck" class="mat-zone pile-slot"></div>
+      <div id="my-evo" class="mat-zone pile-slot evo-slot"></div>
+      <div id="my-ex" class="mat-zone ex-zone"></div>
+      <div id="my-cemetery" class="mat-zone pile-slot"></div>
+      <div id="my-banished" class="mat-zone pile-slot"></div>
+      <div id="my-points" class="mat-zone points-zone"></div>
+    </div>
+    <!-- Board-highlight choice controls (the cards being chosen are the board's own). -->
+    <div id="choice-bar"></div>
+    <div id="hand-bar"><div id="hand"></div></div>
+    <!-- Turn actions with no card to hang on: End turn / No response (and why disabled). -->
+    <div id="turn-bar"></div>
+    <div id="rotate-hint">Turn your phone sideways for a bigger table. Tap any card to read it.</div>
+  </div>
+  <button id="log-handle" type="button">Log</button>
+  <div id="side">
+    <div id="side-head"><span id="side-title">Log &amp; settings</span><button id="side-close" type="button">&times;</button></div>
+    <div id="side-controls">
+      <button id="mute-btn" type="button"></button>
+      <label class="vol"><span>Volume</span><input id="volume" type="range" min="0" max="100" step="5"></label>
+      <button id="anim-btn" type="button"></button>
+      <button id="help-btn" type="button">How to play</button>
+      <button id="new-game-btn" type="button">New game</button>
+      <button id="concede-btn" type="button">Concede</button>
+      <button id="report-btn" type="button">Save bug report</button>
+    </div>
+    <div id="prompt" class="prompt"></div>
+    <div id="recent-wrap"><div class="side-title">Recently played</div><div id="recent"></div></div>
+    <div class="side-title">Log <span class="side-note">newest first</span></div>
+    <div id="log"></div>
+  </div>
+</div>
+<div id="window-prompt"></div>
+<div id="choice-modal"></div>
+<div id="action-popover"></div>
+<div id="turn-banner" aria-live="polite"></div>
+<div id="curtain"></div>
+<div id="results"></div>
+<div id="help"></div>
+<div id="coach"></div>
+<div id="title-screen"></div>
+
+<!-- engine -->
+<script src="js/ns.js?v=144a07037f"></script>
+<script src="data/cards.js?v=a242423b43"></script>
+<script src="data/decks.js?v=9eef5b8788"></script>
+<script src="data/defects.js?v=7906e45059"></script>
+<script src="js/engine.js?v=8c1bc93531"></script>
+<script src="js/abilities.js?v=3978194886"></script>
+<script src="data/abilities/forestcraft.js?v=da8d8e2492"></script>
+<script src="data/abilities/swordcraft.js?v=5913288b75"></script>
+<script src="data/abilities/runecraft.js?v=9c0ae47b64"></script>
+<script src="data/abilities/dragoncraft.js?v=dd391bcee6"></script>
+<script src="data/abilities/abysscraft.js?v=8cd0dc3c41"></script>
+<script src="data/abilities/havencraft.js?v=7c4f22e87e"></script>
+<script src="data/abilities/neutral.js?v=dba1a5a8ed"></script>
+<script src="data/abilities/universe.js?v=9363961840"></script>
+<script src="js/ai.js?v=8364674266"></script>
+<!-- /engine -->
+<!-- Asset manifests (the asset pipeline writes these). Declared even while empty: a missing
+     MODULE throws at boot; a missing entry falls back per card / sound. -->
+<script src="data/art-manifest.js?v=fe20f2fee2"></script>
+<script src="data/audio-manifest.js?v=a373e19174"></script>
+<!-- UI, in dependency order. Everything under js/ui/ is view layer. -->
+<script src="js/ui/core.js?v=a1e1306a91"></script>
+<!-- Dev-only quick start (js/ui/dev-fixture.js), never on the default path. -->
+<script>if (/[?&]fixture\b/.test(location.search)) document.write('<script src="js/ui/dev-fixture.js?v=745029b487"><\/script>');</script>
+<script src="js/ui/cardview.js?v=77fc3b4f76"></script>
+<script src="js/ui/boardart.js?v=e7f5579a41"></script>
+<script src="js/ui/preview.js?v=7066b923ad"></script>
+<script src="js/ui/logtext.js?v=87dec60c81"></script>
+<script src="js/ui/logpanel.js?v=3605ae9c5d"></script>
+<script src="js/ui/targeting.js?v=88d1f3f82d"></script>
+<script src="js/ui/sound.js?v=2eca617d68"></script>
+<script src="js/ui/anim.js?v=2fc9fa3313"></script>
+<script src="js/ui/hud.js?v=b80bb71081"></script>
+<script src="js/ui/tutorial.js?v=f803695469"></script>
+<script src="js/ui/game.js?v=c60aed6b15"></script>
+<script src="js/ui/deckbuilder.js?v=a05477d33e"></script>
+<script src="js/ui/title.js?v=475d27871e"></script>
+<script src="js/ui/main.js?v=84a1b26761"></script>
+</body>
+</html>

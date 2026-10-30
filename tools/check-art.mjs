@@ -14,7 +14,8 @@ const audioMan = path.join(ROOT, 'data/audio-manifest.js');
 if (fs.existsSync(audioMan)) await import(pathToFileURL(audioMan).href);
 const { CARDS, ART, AUDIO } = globalThis.SV;
 const bad = [];
-const UI_EXPECTED = ['title', 'board-forest', 'board-courtyard', 'board-cavern', 'board-harbour', 'deck-chooser', 'victory', 'defeat'];
+const { UI } = await import(pathToFileURL(path.join(ROOT, 'tools/art/ui.mjs')).href);
+const UI_EXPECTED = Object.keys(UI); // the plates tools/art/ui.mjs declares
 function head(f, n) { const b = Buffer.alloc(n); const fd = fs.openSync(f, 'r'); fs.readSync(fd, b, 0, n, 0); fs.closeSync(fd); return b; }
 function checkFile(label, rel, kind, minB, maxB) {
   if (typeof rel !== 'string' || rel.startsWith('/') || rel.includes('\\')) return bad.push(label + ': bad path ' + rel);

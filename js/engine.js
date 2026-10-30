@@ -583,7 +583,12 @@
       s.ask = {
         kind: 'bag', who: p, src: null,
         prompt: 'Several of your automatic abilities are waiting. Choose which one to play first.',
-        options: mine.map((e) => ({ id: e.id, src: e.src, name: e.name })),
+        // Two abilities with the same name on one card (two Fanfares) get "(1)"/"(2)" in printed order.
+        options: mine.map((e) => {
+          const same = mine.filter((o) => o.src === e.src && o.name === e.name && o.ti !== e.ti);
+          const nth = same.length ? [...new Set(mine.filter((o) => o.src === e.src && o.name === e.name).map((o) => o.ti))].indexOf(e.ti) + 1 : 0;
+          return { id: e.id, src: e.src, name: nth ? `${e.name} (${nth})` : e.name, ti: e.ti };
+        }),
       };
       s.pendingSnap = SV.clone({ ...s, ask: null });
       s.pendingJob = { k: 'bagPick', answers: [] };
