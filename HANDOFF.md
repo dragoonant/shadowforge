@@ -36,8 +36,6 @@ What was built on 2026-10-29 (one session, about 4 hours):
 
 **Questions for you (in priority order):**
 
-0. **Look:** keep concept A, "the evolution rite" (built), or switch to B "academy duel" or C
-   "tournament table"? All three are on `docs/look/audition.jpg`.
 1. **Art style:** keep row B, or switch to C (full-proportion anime) or D (painterly)? A switch is one
    constant and a ~2-hour re-render (`tools/art/style.mjs`).
 2. **Listen** to the sound at http://localhost:8241/sounds.html and name the clips to redo.

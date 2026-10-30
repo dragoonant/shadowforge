@@ -7,7 +7,7 @@ Lorecannae ... unique look and feel for each game"). The rule behind it is table
 
 | File | What it shows |
 |---|---|
-| `audition.jpg` | The three concepts offered (A the evolution rite, B academy duel, C tournament table), under lorecannae, Xross Forge and the rejected first skin. A was built as the default; the owner may pick another. |
+| `audition.jpg` | The three concepts offered (A the evolution rite, B academy duel, C tournament table), under lorecannae, Xross Forge and the rejected first skin. The owner kept A (2026-10-30). |
 | `compare.jpg` | The gate's visual half: title and board for lorecannae, Xross Forge, the first skin and the current skin. Nothing in the last row may read as a row above it. |
 
 ## The concept, as rules
