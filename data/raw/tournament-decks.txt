@@ -1,0 +1,84 @@
+# Competitive decklists published by name, resolved to card numbers by tools/fetch-cards.mjs
+# through the official card search. Source: TCGplayer, "Shadowverse: Evolve's Best Competitive
+# Decks: The Grand Showdown 2026 Winners", Drew Knapp, 2026-04-13 (docs/sources.md).
+# Format: a "deck|" header line (id|name|archetype|player|event|placement|date), then sections
+# "leader:", "main:", "evolve:" with "<qty> <printed name>" lines. Names are as published,
+# except where a comment says the article's spelling was corrected to the printed name.
+
+deck|gs26-eu-swordcraft|Angelic Swordcraft|Angels|Shamiko|Grand Showdown 2026 Europe|1st|2026-03 (date not stated)
+leader:
+1 Aichi Sendou
+main:
+3 Paradise Vanguard
+3 Bellringer Angel
+3 Leah, Bellringer Angel
+3 Corruption Guardian
+3 Olivia, Heroic Dark Angel
+3 Spartacus
+3 Glistering Angel
+1 Nahtnaught, Cursed Queen
+3 Angel's Blessing
+2 Elegance in Action
+3 Fallen Shot
+3 Winged Inversion
+3 Seraphic Blade
+1 Planetary Fracture
+3 Fount of Angels
+evolve:
+3 Bellringer Angel
+2 Glistering Angel
+3 Paradise Vanguard
+1 Olivia, Heroic Dark Angel
+
+deck|gs26-ao-havencraft|Church of Jeanne Havencraft|Jeanne|YoFuzzy3|Grand Showdown 2026 Asia & Oceania|1st|2026-03 (date not stated)
+leader:
+1 Zoe, Golden Princess
+main:
+3 Alice, Golden Afternoon
+3 Jeanne, Despair's Maiden
+3 Lunerian Paladin
+2 Revolver Eagle
+2 Rola, Inferno Dragoon
+3 Sarissa, Luxflash Spear
+3 Goddess of the Crescent Moon, Tsukuyomi
+3 Mejiro Palmer [Moonlit Devil]
+1 Stalwart Featherfolk
+2 Jeanne d'Arc
+3 Selena, Sugarkiss Assassin
+3 Jeanne, Beacon of Salvation
+3 Mejiro Ardan [Hopeful Petals Dancing in the Night]
+3 Mejiro Ramonu
+3 Haven Fire
+evolve:
+2 Lunerian Paladin
+2 Rola, Inferno Dragoon
+2 Jeanne, Beacon of Salvation
+1 Jeanne d'Arc
+1 Jeanne, Despair's Maiden
+2 Carrot
+
+deck|gs26-na-abysscraft|Departed Wasteland Abysscraft|Cemetery|2G|Grand Showdown 2026 North & Latin America|1st|2026-04-04
+leader:
+1 Urias
+main:
+2 Arcus, Spirited Manager
+3 Gold Rush Ghost
+3 Kagero, Swordbound Soul
+3 Cerberus, Hellfire Unleashed
+3 Chris, Beyond the Patch
+# article: "Iceschillendrig, GIlded Autocrat"
+3 Iceschillendrig, Gilded Autocrat
+2 Odile, Black Swan
+3 Ilganeau, Horror Astray
+3 Mukan, Shadowcrypt Ward
+3 Wretch
+3 Tartarus, the Tormentor
+1 Soulstrike
+2 Wretched Tryst
+3 Poltergeist
+3 Soul Conversion
+evolve:
+3 Mukan, Shadowcrypt Ward
+3 Wretch
+2 Iceschillendrig, Gilded Autocrat
+2 Tartarus, the Tormentor

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "shadowforge",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/serve.mjs", "8241"],
+      "port": 8241
+    }
+  ]
+}
