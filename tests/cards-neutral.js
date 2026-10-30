@@ -193,10 +193,14 @@
     eq(T.zone(s1, suk), 'cemetery'); eq(s1.players[0].pp, 8);
     let s2 = T.play(s, s.players[0].hand[0]);
     s2 = T.answer(s2, [1]);
+    eq(s2.ask.kind, 'yesno', 'the [cost02] is optional, asked on resolution (CR 10.4.7.5; Q532 by analogy)');
+    let s3 = T.answer(s2, false);
+    eq(T.zone(s3, ap), 'field'); eq(s3.players[0].pp, 8, 'declined: nothing more paid, nothing destroyed');
+    s2 = T.answer(s2, true);
     s2 = T.answer(s2, [ap]);
     eq(T.zone(s2, ap), 'cemetery'); eq(s2.players[0].pp, 6);
     const n = T.game({ p0: { hand: ['BP12-106EN'], pp: 3 }, p1: { field: [AP] } });
-    ok(!T.legal(n, { type: 'play', iid: n.players[0].hand[0] }), 'mode 2 needs 4 play points in all');
+    ok(T.legal(n, { type: 'play', iid: n.players[0].hand[0] }), 'playable for its own cost: the 2 extra is paid on resolution');
   });
 
   test('BP12-T11EN Repair Mode: gives your leader +1 defense', () => {

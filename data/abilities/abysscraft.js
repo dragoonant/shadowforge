@@ -683,7 +683,8 @@
   // BP20-T06EN Crest: Sham-Nacha, Heir to Entwining (crest token: valid in the EX area, CR 10.3.6)
   // If you would choose 1 or more options, choose any number instead.
   // x.choose reads `chooseAnyNumber` for every card (Q2451 at least 1, Q2450 each once, Q2452 printed order).
-  card('BP20-T06EN', { chooseAnyNumber: true });
+  card('BP20-T06EN', {
+    audit: '1: choose 1 or more is the min >= 1 check in x.choose (chooseAnyNumber)', chooseAnyNumber: true });
 
   // BP20-080EN Congregant of Entwining (evolved)
   // On Evolve - Choose 1. (1) Select an enemy follower on the field and deal it 5 damage. (2) Select an [abysscraft] Omen follower in your cemetery that costs 3 or less and summon it. (3) Give each [abysscraft] Omen follower on your field [attack]+1/[defense]+1.

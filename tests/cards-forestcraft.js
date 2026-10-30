@@ -443,4 +443,17 @@
     s2 = auto(T.act(s2, { type: 'evolve', iid: s2.players[0].field[1] }));
     eq(s2.players[0].defense, 22);
   });
+
+  test('review: BP17-T02EN Gale Arrow is not playable when the only enemy follower has Aura (CR 12.15, 10.6.2.3.3)', () => {
+    const s = T.game({ p0: { ex: ['BP17-T02EN'] }, p1: { field: ['BP19-114EN'] } });
+    ok(!T.legal(s, { type: 'play', iid: s.players[0].ex[0] }));
+  });
+
+  test('review: x.lookPick into a nearly full EX area offers only as many picks as there is room for', () => {
+    const s = T.game({ p0: { ex: ['BP17-T02EN', 'BP17-T02EN', 'BP17-T02EN', 'BP17-T02EN'], deck: ['BP19-011EN', 'BP19-011EN', AP, AP, AP] } });
+    const x = SV.makeCtx(s, { answers: [] });
+    let ask = null;
+    try { x.withSource(s.players[0].ex[0], () => x.lookPick({ n: 4, filter: (i) => x.hasTrait(i, 'Condemned'), max: 2, to: 'ex', prompt: 't' })); } catch (e) { ask = e.__ask; }
+    ok(ask, 'asked'); eq(ask.max, 1, 'one slot left in the EX area');
+  });
 })();

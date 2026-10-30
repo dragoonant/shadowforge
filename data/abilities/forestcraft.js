@@ -91,7 +91,7 @@
   // BP17-T02EN Gale Arrow (token spell)
   // Select an enemy follower on the field. Combo (3) - Deal it 2 damage.
   card('BP17-T02EN', {
-    canPlay: (s, iid) => SV.followers(s, 1 - s.cards[iid].owner).length > 0, // CR 10.6.2.3.3 a target is required
+    canPlay: hasEnemyTarget, // CR 10.6.2.3.3 / 12.15: a selectable (non-Aura) enemy follower is required
     spell(x) {
       const t = x.selectOne(x.followers(x.opp), 'Gale Arrow: select an enemy follower.');
       if (t && x.combo() >= 3) x.damage(t, 2); // Combo counts this card (CR 13.2.1.2)
@@ -166,7 +166,7 @@
   card('BP15-001EN', {
     fanfare(x) {
       const cand = x.cemetery().filter((i) => x.named(i, 'Izudia, Omen of Unkilling'));
-      if (!cand.length) return;
+      if (!cand.length || !hasEnemyTarget(x.s, x.me)) return; // Q1327/Q669: no target, nothing is played
       const pick = x.select({ from: cand, min: 0, max: 1, aura: false, prompt: 'Izudia: you may banish an Izudia, Omen of Unkilling from your cemetery to change an enemy follower\'s defense to 1.' });
       if (!pick.length) return;
       x.banish(pick[0]);
@@ -254,6 +254,7 @@
   // [evolve] [cost01]: Evolve this.            (engine-read)
   // [fanfare] Select an enemy follower on the field and, if there are at least 3 Hunter cards in your cemetery, change its defense to 1.
   card('BP15-014EN', {
+    audit: '1: setDefTo1() helper (change its defense to 1)',
     fanfare(x) {
       const t = x.selectOne(x.followers(x.opp), enemyFollowerPrompt('Hermit of Unkilling'));
       if (t && hunters(x) >= 3) setDefTo1(x, t);
@@ -438,6 +439,7 @@
   // BP20-010EN Supplicant of Unkilling (evolved)
   // On Evolve - If there's an enemy follower on the field with 1 defense, give your leader [defense]+2.
   card('BP20-010EN', {
+    audit: '1: an enemy follower with 1 defense is read through a shared helper',
     onEvolve(x) { if (enemyAt1(x)) x.heal(x.ctrl, 2); },
   });
 

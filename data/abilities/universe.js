@@ -119,6 +119,7 @@
   // ----------
   // Deal 7 damage to each follower on the field.
   card('CP02-062EN', {
+    audit: '1: one more per follower = the follower count added as-is',
     selfCost: (s) => SV.followers(s).length,
     spell(x) { x.damageMany(x.followers(), 7); },
   });

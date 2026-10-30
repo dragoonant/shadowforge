@@ -359,4 +359,19 @@
     eq(T.zone(s, d), 'cemetery');
     eq(names(s, s.players[0].ex).slice(1), ['Gilded Goblet', 'Gilded Boots']);
   });
+
+  test('review: BP20-T02EN Crest: Octrice counts a fused Loot card even when the fusing card is not Loot (CR 12.18.4.1, Q2449)', () => {
+    let s = T.game({ p0: { ex: ['BP20-T02EN'], hand: ['BP20-020EN', 'BP15-026EN'] } });
+    const crest = s.players[0].ex[0];
+    const sinciro = T.find(s, 0, 'BP20-020EN');
+    const idx = SV.chars(s, sinciro).activated.findIndex((a) => a.usable && a.zone === 'hand');
+    s = T.act(s, { type: 'activate', iid: sinciro, idx });
+    for (let g = 0; s.ask && g < 10; g++) s = T.answer(s, s.ask.kind === 'cards' ? s.ask.from.filter((i) => s.cards[i].id === 'BP15-026EN').slice(0, Math.max(1, s.ask.min)) : s.ask.kind === 'bag' ? s.ask.options[0].id : s.ask.kind === 'order' ? s.ask.from : false);
+    eq(s.cards[crest].counters.reversal, 1);
+  });
+
+  test('review: BP20-026EN Returning Slash is not playable when the only enemy follower has Aura (CR 12.15, 10.6.2.3.3)', () => {
+    const s = T.game({ p0: { hand: ['BP20-026EN'] }, p1: { field: ['BP19-114EN'] } });
+    ok(!T.legal(s, { type: 'play', iid: s.players[0].hand[0] }));
+  });
 })();

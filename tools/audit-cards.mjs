@@ -17,7 +17,7 @@ function audit(d, script) {
     if (/^You can put up to \d+ of this card|^Your main deck and evolve deck may only/.test(raw)) continue;
     let line = raw.replace(/\([^)]*\)/g, '').replace(/\s+/g, ' ').trim();
     if (!line || ENGINE_LINE.test(line)) continue;
-    line = line.replace(/\[cost(\d+)\]/g, (_, n) => ' ' + Number(n) + ' ');
+    line = line.replace(/\[cost00\]/g, ' ').replace(/\[cost(\d+)\]/g, (_, n) => ' ' + Number(n) + ' '); // [cost00]: nothing to pay
     for (const m of line.matchAll(/(?<![A-Za-z\d])(\d+)(?![\d])/g)) {
       const n = m[1];
       if (!new RegExp(`(?<![\\w.])${n}(?![\\w])`).test(code)) fails.push(`printed number ${n} absent ("${line.slice(Math.max(0, m.index - 30), m.index + 25).trim()}")`);
@@ -34,7 +34,7 @@ if (process.argv.includes('--selftest')) {
 }
 let F = 0, M = 0;
 for (const d of Object.values(SV.CARDS)) {
-  const script = SV.ABIL[d.no];
+  const script = SV.ABIL[d.no] && (SV.ABIL[d.no].__spec || SV.ABIL[d.no]);
   if (!script) {
     if (SV.needsScript(d.no) && !SV.DEFECTS[d.no]) { M++; if (process.argv.includes('--missing')) console.log(`MISSING ${d.no} ${d.name}`); }
     continue;

@@ -38,7 +38,7 @@
   // [act] Fuse a Loot card that costs 1 or more: Give this "This costs 1 less to play."
   const loot1 = (s) => (i) => SV.CARDS[s.cards[i].id].traits.includes('Loot') && (SV.CARDS[s.cards[i].id].cost || 0) >= 1;
   card('BP20-026EN', {
-    canPlay: (s, iid) => SV.followers(s, 1 - s.cards[iid].owner).length > 0,
+    canPlay: hasEnemyTarget, // CR 10.6.2.3.3 / 12.15
     spell(x) {
       const t = x.selectOne(x.followers(x.opp), 'Returning Slash: select an enemy follower. Deal it 4 damage.');
       if (!t) return;
@@ -69,7 +69,7 @@
     mainStart: octrice, mainStartZone: 'ex',
     triggers: [{
       name: 'Reversal counter', on: ['played', 'fused'], zone: 'ex',
-      when: (s, me, ev) => ev.p === s.cards[me].owner && SV.CARDS[s.cards[ev.iid].id].traits.includes('Loot'),
+      when: playedOrFusedLoot, // fusing a Loot card = a Loot card was fused (CR 12.18.4.1); one counter per fuse (Q2449)
       run: octrice,
     }],
   });
@@ -191,6 +191,7 @@
   // BP15-PR10EN Remnant of Hollowness (token spell)
   // Choose 1. If there are at least 10 cards in opponents' cemeteries, choose up to 2 instead. (1) Select an enemy follower on the field and deal it 3 damage. If there are at least 10 cards in opponents' cemeteries, deal 8 damage instead. (2) Look at the top 3 cards of your deck. You may reveal a Thief card from among them and add it to your hand. Put the rest on the bottom of your deck in any order.
   card('BP15-PR10EN', {
+    audit: '10: hollow() helper (10 cards in the opponents cemeteries)',
     spell(x) {
       const big = hollow(x);
       const pick = x.choose(big ? 'Remnant of Hollowness: choose up to 2.' : 'Remnant of Hollowness: choose 1.', [
@@ -239,6 +240,7 @@
   // [evolve] [cost01]: Evolve this.            (engine-read)
   // [fanfare] If there are at least 10 cards in opponents' cemeteries, evolve this.
   card('BP15-028EN', {
+    audit: '10: hollow() helper (10 cards in the opponents cemeteries)',
     fanfare(x) { if (hollow(x)) x.evolve(x.me); },
   });
   // BP15-029EN Adherent of Hollowness (evolved)
@@ -252,6 +254,7 @@
   // BP15-T01EN Gilded Blade (token spell)
   // Select an enemy follower on the field. Deal it 2 damage and, if there are at least 10 cards in opponents' cemeteries, deal 2 damage to its leader.
   card('BP15-T01EN', {
+    audit: '10: hollow() helper (10 cards in the opponents cemeteries)',
     canPlay: hasEnemyTarget,
     spell(x) {
       const t = x.selectOne(x.followers(x.opp), enemyFollowerPrompt('Gilded Blade', 'Deal it 2 damage.'));
@@ -264,11 +267,13 @@
   // BP15-T02EN Gilded Goblet (token spell)
   // Give your leader [defense]+1. If there are at least 10 cards in opponents' cemeteries, give [defense]+2 instead.
   card('BP15-T02EN', {
+    audit: '10: hollow() helper (10 cards in the opponents cemeteries)',
     spell(x) { x.heal(x.ctrl, hollow(x) ? 2 : 1); },
   });
   // BP15-T03EN Gilded Boots (token spell)
   // Select a Thief follower on your field and give it Rush. If there are at least 10 cards in opponents' cemeteries, give Storm instead.
   card('BP15-T03EN', {
+    audit: '10: hollow() helper (10 cards in the opponents cemeteries)',
     canPlay: (s, iid) => myThieves(s, s.cards[iid].owner).length > 0,
     spell(x) {
       const t = x.selectOne(myThieves(x.s, x.ctrl), 'Gilded Boots: select a Thief follower on your field.');

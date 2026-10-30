@@ -290,10 +290,14 @@
       const top = s.players[p].deck.slice(0, n);
       if (!top.length) return [];
       const cand = top.filter(filter);
-      const pick = cand.length ? x.ask({ kind: 'cards', who: p, from: cand, seen: top, min: 0, max: Math.min(max, cand.length), prompt }) : [];
+      // Room left in the destination caps the pick (CR 4.8.3.2 EX area, 4.4.4.2 field).
+      const P = s.players[p];
+      const room = to === 'ex' ? P.exLimit - P.ex.length : to === 'field' ? P.fieldLimit - P.field.length : Infinity;
+      const mx = Math.max(0, Math.min(max, cand.length, room));
+      const pick = cand.length && mx ? x.ask({ kind: 'cards', who: p, from: cand, seen: top, min: 0, max: mx, prompt }) : [];
       if (pick.length) x.reveal(pick, p);
       for (const i of pick) { if (to === 'hand') x.toHand(i); else if (to === 'ex') x.toEx(i); else if (to === 'field') x.summon(i); }
-      const rest = top.filter((i) => !pick.includes(i));
+      const rest = top.filter((i) => s.cards[i].zone === 'deck'); // anything that didn't move goes with the rest
       const ordered = x.order(rest, `Put the rest on the ${restTo} of your deck: choose their order (first = topmost of them).`);
       for (const i of ordered) SV.move(s, i, 'deck', { pos: restTo === 'top' ? undefined : 'bottom' });
       if (restTo === 'top') for (const i of ordered.slice().reverse()) { SV._removeFromZone(s, i); SV._placeIn(s, i, 'deck', { pos: 'top' }); }
@@ -337,6 +341,8 @@
     for (const f of list(spec.mainStart)) add('Start of main phase', 'mainStart', (s, me, ev) => ev.p === H.ctrl(s, me), (x, ev) => f(x, ev), spec.mainStartZone ? { zone: spec.mainStartZone } : {});
     for (const f of list(spec.endStart)) add('Start of end phase', 'endStart', (s, me, ev) => ev.p === H.ctrl(s, me), (x, ev) => f(x, ev), spec.endStartZone ? { zone: spec.endStartZone } : {});
     for (const k of ['fanfare', 'lastWords', 'onEvolve', 'onSuperEvolve', 'strike', 'followerStrike', 'leaderStrike', 'mainStart', 'endStart', 'mainStartZone', 'endStartZone']) delete a[k];
+    // Keep the authored spec so tools/audit-cards.mjs reads the real source (the sugar wraps it).
+    Object.defineProperty(a, '__spec', { value: spec, enumerable: false });
     SV.ABIL[id] = a;
     return a;
   };

@@ -201,19 +201,17 @@
   // Choose one. (1) Select an enemy card that costs 2 or less on the field and destroy it. (2) [cost02]: Select an enemy card that costs 6 or less on the field and destroy it.
   const enemyCards = (s, p, max) => selectable(s, p, SV.field(s, 1 - p)).filter((i) => costOf(s, i) <= max);
   card('BP12-106EN', {
-    canPlay: (s, iid) => {
-      const p = s.cards[iid].owner;
-      return enemyCards(s, p, 2).length > 0 || (enemyCards(s, p, 6).length > 0 && s.players[p].pp >= SV.costToPlay(s, iid) + 2);
-    },
+    // "(2) [cost02]: ..." is an optional cost paid on resolution (CR 10.4.7.2, 10.4.7.5; Q532 and
+    // Q665/Q666 rule the same wording that way), so it is not part of the cost of playing the spell.
+    canPlay: (s, iid) => enemyCards(s, s.cards[iid].owner, 6).length > 0,
     spell(x) {
       const low = enemyCards(x.s, x.ctrl, 2), high = enemyCards(x.s, x.ctrl, 6);
       const [m] = x.choose('Seraphic Blade: choose one.', [
         { label: 'Destroy an enemy card that costs 2 or less.', can: low.length > 0 },
-        { label: 'Pay 2 more play points: destroy an enemy card that costs 6 or less.', can: high.length > 0 && x.P().pp >= 2 },
+        { label: '[2 play points]: destroy an enemy card that costs 6 or less.', can: high.length > 0 },
       ]);
       if (m == null) return;
-      // The mode's [cost02] is part of the cost of playing the spell (CR 10.6.2.2, 10.6.2.5): not optional once chosen.
-      if (m === 1) SV.pay(x.s, x.ctrl, { pp: 2 });
+      if (m === 1 && !x.mayPay({ pp: 2 }, 'Seraphic Blade: pay 2 play points to destroy an enemy card that costs 6 or less?')) return;
       const t = x.selectOne(m === 0 ? low : high, `Seraphic Blade: select an enemy card that costs ${m === 0 ? 2 : 6} or less to destroy.`);
       if (t) x.destroy(t);
     },
