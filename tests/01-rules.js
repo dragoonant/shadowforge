@@ -271,4 +271,14 @@
     const bad = { ...d, main: [...d.main.slice(1), [d.main[0][0], 4]] };
     ok(SV.deckProblems(bad).some((m) => /copies/.test(m) || /cards; it needs/.test(m)));
   });
+
+  test("CR 12.3.3 a Quick activated ability ([q][act]) can be used in the opponent's attack window", () => {
+    // Temple of Repose BP20-103EN: [q][act] [cost01], [engage], bury this: next leader damage -2. Needs 3 crests.
+    const CREST = ['BP20-T09EN', 'BP20-T10EN', 'BP20-T11EN'];
+    let s = T.game({ active: 1, p0: { field: ['BP20-103EN'], ex: CREST }, p1: { field: [AP] } });
+    const temple = s.players[0].field[0];
+    s = T.act(s, { type: 'attack', iid: s.players[1].field[0], target: s.players[0].leader });
+    ok(s.window && s.window.who === 0, 'window open for the defender');
+    ok(T.legal(s, { type: 'activate', iid: temple, idx: 0 }), 'the Quick ability is offered in the window');
+  });
 })();

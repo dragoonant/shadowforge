@@ -1016,7 +1016,9 @@
     const zone = ab.zone || 'field';
     if (c.zone !== zone) return zone === 'field' ? 'Only on the field.' : `Only from your ${zone === 'ex' ? 'EX area' : zone}.`;
     if (s.winner !== null) return 'The game is over.';
-    if (s.ask || s.queue.length || s.bag.length) return 'Not now.';
+    // A Quick window sits inside the queue (the attack's damage step waits behind it), so the queue
+    // only blocks activation outside a window.
+    if (s.ask || (!s.window && (s.queue.length || s.bag.length))) return 'Not now.';
     if (s.window) { if (s.window.who !== p || !ab.quick) return 'Not now.'; }
     else if (s.phase !== 'main' || s.active !== p) return "It isn't your main phase.";
     if (r && r.flags.loseAbilities) return 'It has lost its abilities.';
