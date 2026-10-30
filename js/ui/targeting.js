@@ -18,7 +18,6 @@
   // ---- view-layer state (never game state) --------------------------------------------------
   let picks = [];          // iids (or option indices for 'modes') picked for the open ask
   let picksKey = null;     // the ask those picks belong to
-  let peekedKey = null;    // the ask currently hidden by Peek
 
   function askKey(ask) {
     return [ask.kind, ask.who, ask.src, ask.prompt, (ask.from || []).join(','), ask.min, ask.max,
@@ -74,7 +73,7 @@
       if (!SV.asks.isCandidate(s, iid)) return;
       const at = picks.indexOf(iid);
       if (at >= 0) { picks.splice(at, 1); SV.ui.render(); return; }
-      if (a.kind === 'cards' && a.max === 1 && a.min === 1) { picks = []; peekedKey = null; answer([iid]); return; }
+      if (a.kind === 'cards' && a.max === 1 && a.min === 1) { picks = []; forgetPeek(); answer([iid]); return; }
       const cap = a.kind === 'order' ? a.from.length : a.max;
       if (picks.length >= cap) {
         if (cap === 1) picks = [iid];      // swap the single pick rather than refuse
@@ -102,7 +101,7 @@
       if (s.window) return { text: SV.ui.windowText(s) + ' Play a Quick card or ability, or choose No response.', cls: 'asking' };
       return { text: 'Drag a hand or EX card onto your field to play it, drag a follower onto an enemy to attack, drag your evolve deck onto a follower to evolve — or tap any card for its options.', cls: '' };
     },
-    reset: function () { picks = []; picksKey = null; peekedKey = null; },
+    reset: function () { picks = []; picksKey = null; forgetPeek(); },
   };
 
   function flash(text) {
@@ -143,11 +142,10 @@
     if (p && p.classList.contains('open')) { const b = playBox(); if (b) { p.style.left = b.cx + 'px'; p.style.top = b.cy + 'px'; } }
   });
 
-  function setPeek(on) {
-    const modal = $('choice-modal');
-    if (!modal) return;
-    modal.classList.toggle('peek', on);
-    peekedKey = on ? modal.dataset.choiceKey : null;
+  // An answer forgets the hide, so the next question opens shown even if it asks the same thing.
+  function forgetPeek() { U.forgetPeek('choice-modal'); U.forgetPeek('choice-bar'); }
+  // While the panel is hidden its question echoes over the fields.
+  function echoPeek(on) {
     const echo = $('play-prompt');
     if (echo && echo.textContent) {
       const box = on ? playBox() : null;
@@ -161,7 +159,7 @@
     if (!modal || !modal.classList.contains('open')) return;
     if (SV.zoneBrowser.isOpen()) return;          // Esc closes the browser first
     e.preventDefault();
-    setPeek(!modal.classList.contains('peek'));
+    U.setPeek(modal, !U.isPeeked(modal));
   });
 
   // The centre echo: the question, said where the player is already looking.
@@ -181,7 +179,6 @@
     const modal = $('choice-modal');
     if (!modal) return;
     modal.classList.remove('open', 'peek');
-    modal.dataset.choiceKey = '';
     modal.textContent = '';
   }
   SV.asks.closeModal = closeModal;
@@ -189,21 +186,14 @@
   function openModal(key, nodes, restoreLabel) {
     const modal = $('choice-modal');
     modal.textContent = '';
-    modal.dataset.choiceKey = key;
-    const content = el('div', 'choice-modal-content');
+        const content = el('div', 'choice-modal-content');
     nodes.forEach(function (n) { content.appendChild(n); });
-    const hide = el('button', 'peek-btn', 'Hide — check the board');
-    hide.onclick = function () { setPeek(true); };
     const ctl = el('div', 'choice-modal-controls choice-peek-row');
-    ctl.appendChild(hide);
     content.appendChild(ctl);
     modal.appendChild(content);
-    const restore = el('button', 'choice-peek-restore', restoreLabel || 'Show the choices');
-    restore.onclick = function () { setPeek(false); };
-    modal.appendChild(restore);
+    U.peekable(modal, key, ctl, { restore: restoreLabel || 'Show the choices', onToggle: echoPeek });
     modal.classList.add('open');
     position(modal);
-    setPeek(peekedKey === key);
   }
 
   function faceFor(s, iid, size) {
@@ -250,7 +240,7 @@
       else if (!order && a.distinctNames && namesClash(s)) why = 'Choose cards with different names.';
       ok.disabled = !!why;
       if (why) ok.setAttribute('data-tip', why);
-      ok.onclick = function () { const v = picks.slice(); picks = []; peekedKey = null; answer(v); };
+      ok.onclick = function () { const v = picks.slice(); picks = []; forgetPeek(); answer(v); };
       if (!(a.min === 0 && picks.length === 0 && !order)) row.appendChild(ok);
       if (picks.length) {
         const clr = el('button', null, 'Clear');
@@ -261,7 +251,7 @@
     if (!order && a.min === 0 && picks.length === 0) {
       const none = el('button', 'action-btn', 'Choose none');
       none.setAttribute('data-tip', 'Answer with no cards.');
-      none.onclick = function () { picks = []; peekedKey = null; answer([]); };
+      none.onclick = function () { picks = []; forgetPeek(); answer([]); };
       row.appendChild(none);
     }
     return row;
@@ -274,7 +264,7 @@
     const bar = $('choice-bar');
     if (!a || acting !== viewer || SV.isTerminal(s)) {
       closeModal();
-      if (bar && bar.dataset.owner === 'ask') { bar.textContent = ''; bar.classList.remove('open'); bar.dataset.owner = ''; }
+      if (bar && bar.dataset.owner === 'ask') { bar.textContent = ''; bar.classList.remove('open', 'peek'); bar.dataset.owner = ''; }
       return false;
     }
     const key = syncPicks(a);
@@ -295,10 +285,11 @@
         (a.max > 1 ? ' Click the highlighted cards, then Confirm.' : ' Click a highlighted card.')));
       if (a.max > 1 || a.min === 0) bar.appendChild(pickControls(s, a, answer, true));
       bar.appendChild(el('span', 'choice-flash', '')).id = 'choice-flash';
+      U.peekable(bar, key, bar, { hide: 'Hide', restore: 'Show the prompt' });
       bar.classList.add('open');
       return false;
     }
-    if (bar && bar.dataset.owner === 'ask') { bar.textContent = ''; bar.classList.remove('open'); bar.dataset.owner = ''; }
+    if (bar && bar.dataset.owner === 'ask') { bar.textContent = ''; bar.classList.remove('open', 'peek'); bar.dataset.owner = ''; }
 
     const nodes = [];
     nodes.push(el('div', 'choice-modal-prompt', withSrc(src, a.prompt)));
@@ -309,16 +300,16 @@
       const btns = el('div', 'choice-modal-buttons');
       if (a.kind === 'yesno') {
         const y = el('button', 'action-btn', a.yes || 'Yes');
-        y.onclick = function () { peekedKey = null; answer(true); };
+        y.onclick = function () { forgetPeek(); answer(true); };
         const n = el('button', 'action-btn is-secondary', a.no || 'No');
-        n.onclick = function () { peekedKey = null; answer(false); };
+        n.onclick = function () { forgetPeek(); answer(false); };
         btns.appendChild(y); btns.appendChild(n);
       } else if (a.kind === 'mode') {
         (a.options || []).forEach(function (o, i) {
           const b = el('button', 'action-btn', o.label);
           b.disabled = o.enabled === false;
           if (b.disabled) b.setAttribute('data-tip', 'Not possible right now.');
-          b.onclick = function () { peekedKey = null; answer(i); };
+          b.onclick = function () { forgetPeek(); answer(i); };
           btns.appendChild(b);
         });
       } else if (a.kind === 'modes') {
@@ -346,7 +337,7 @@
         });
         const ok = el('button', 'action-btn choice-confirm', 'Confirm');
         ok.disabled = picks.length < a.min || picks.length > a.max;
-        ok.onclick = function () { const v = picks.slice().sort(function (x, y) { return x - y; }); picks = []; peekedKey = null; answer(v); };
+        ok.onclick = function () { const v = picks.slice().sort(function (x, y) { return x - y; }); picks = []; forgetPeek(); answer(v); };
         btns.appendChild(ok);
         const fl = el('div', 'choice-flash'); fl.id = 'choice-flash';
         btns.appendChild(fl);
@@ -356,7 +347,7 @@
           const row = el('div', 'number-row');
           for (let n = a.min; n <= a.max; n++) {
             const b = el('button', 'action-btn number-btn', String(n));
-            b.onclick = (function (k) { return function () { peekedKey = null; answer(k); }; })(n);
+            b.onclick = (function (k) { return function () { forgetPeek(); answer(k); }; })(n);
             row.appendChild(b);
           }
           btns.appendChild(row);
@@ -367,7 +358,7 @@
           ok.onclick = function () {
             const v = Math.round(Number(inp.value));
             if (!(v >= a.min && v <= a.max)) { flash('Choose a number from ' + a.min + ' to ' + a.max + '.'); return; }
-            peekedKey = null; answer(v);
+            forgetPeek(); answer(v);
           };
           btns.appendChild(inp); btns.appendChild(ok);
           const fl = el('div', 'choice-flash'); fl.id = 'choice-flash';
@@ -383,7 +374,7 @@
             row.appendChild(face);
           }
           const b = el('button', 'action-btn', 'Resolve first: ' + (o.src != null ? nameOf(s, o.src) + ' — ' : '') + (o.name || 'ability'));
-          b.onclick = function () { peekedKey = null; answer(o.id); };
+          b.onclick = function () { forgetPeek(); answer(o.id); };
           b.addEventListener('mouseenter', function () { SV.ui.hint(o.src); });
           b.addEventListener('mouseleave', function () { SV.ui.hint(null); });
           row.appendChild(b);
@@ -410,9 +401,9 @@
       nodes.push(cards);
       const row = el('div', 'choice-modal-controls');
       const keep = el('button', 'action-btn', a.no || 'Keep');
-      keep.onclick = function () { peekedKey = null; answer(false); };
+      keep.onclick = function () { forgetPeek(); answer(false); };
       const redraw = el('button', 'action-btn is-secondary', a.yes || 'Redraw');
-      redraw.onclick = function () { peekedKey = null; answer(true); };
+      redraw.onclick = function () { forgetPeek(); answer(true); };
       row.appendChild(keep); row.appendChild(redraw);
       nodes.push(row);
       openModal(key, nodes, 'Show the hand');

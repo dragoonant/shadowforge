@@ -931,7 +931,7 @@
   // The Quick window prompt: what is happening, what you can answer with, and No response.
   function renderWindow(s, acts, mine) {
     const node = $('window-prompt');
-    if (!s.window || s.ask || !mine || SV.isTerminal(s)) { node.classList.remove('open'); node.textContent = ''; return; }
+    if (!s.window || s.ask || !mine || SV.isTerminal(s)) { node.classList.remove('open', 'peek'); node.textContent = ''; return; }
     node.textContent = '';
     const box = el('div', 'window-box');
     const head = el('div', 'window-head');
@@ -953,6 +953,8 @@
     no.onclick = function () { UI.doAction(pass); };
     box.appendChild(no);
     node.appendChild(box);
+    // Hidden, the hand below stays live: a Quick card can still be dragged while reading the board.
+    U.peekable(node, [s.window.kind, s.window.who, s.log.length].join('#'), box, { restore: 'Show the Quick prompt' });
     node.classList.add('open');
     const b = SV.asks.playBox();
     if (b) { box.style.left = b.cx + 'px'; box.style.top = b.cy + 'px'; }

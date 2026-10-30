@@ -680,6 +680,8 @@ repo for every file restating a decision that moved."
    one behaviour test per card; the leak test for hidden zones in the sim.
 7. First playable: two starter decks vs a greedy bot in the real browser, with self-explaining
    prompts, keyword hover help, a lore tracker and a how-to-play panel from the first build.
+   Every pop-up box gets Hide + a restore pill from the shared helper on day one
+   (LESSONS-DIGEST §4.1), and the card inspector sits above every modal.
 8. Then the full pool, the arena (both seats, decisive results, empty-turn rate), art on the local
    Flux Studio (dry run, three samples, contact sheets), audio on the local Audio Studio, and the
    animation layer. Say "not verified by ear" until the owner listens.

@@ -21,6 +21,33 @@
     return e;
   };
 
+  // ---- Hide / Show: every box the game puts over the board (kb/LESSONS-DIGEST §4.1) ---------
+  // A box that asks or tells the player something is never the only thing they can look at:
+  // Hide collapses it to one restore pill, the pill brings back the SAME box. Hidden-ness is
+  // remembered per overlay against a key, so a re-render of the same question stays hidden and
+  // a new question opens shown. Boxes the player opened themselves (inspector, zone browser,
+  // action popover, How to play) only need Close: the gesture that opened them reopens them.
+  // The hot-seat curtain is the one box that must NOT hide (it guards a hand). CSS: `.peek`.
+  const peekedKey = {}, peekHooks = {};
+  U.peekable = function (overlay, key, into, opts) {
+    const hide = U.el('button', 'peek-btn', opts.hide || 'Hide — check the board');
+    hide.onclick = function (e) { e.stopPropagation(); U.setPeek(overlay, true); };
+    into.appendChild(hide);
+    const restore = U.el('button', 'peek-restore', opts.restore);
+    restore.onclick = function (e) { e.stopPropagation(); U.setPeek(overlay, false); };
+    overlay.appendChild(restore);
+    overlay.dataset.peekKey = key;
+    peekHooks[overlay.id] = opts.onToggle || null;
+    U.setPeek(overlay, peekedKey[overlay.id] === key);
+  };
+  U.setPeek = function (overlay, on) {
+    overlay.classList.toggle('peek', on);
+    peekedKey[overlay.id] = on ? overlay.dataset.peekKey : null;
+    if (peekHooks[overlay.id]) peekHooks[overlay.id](on);
+  };
+  U.isPeeked = function (overlay) { return overlay.classList.contains('peek'); };
+  U.forgetPeek = function (id) { peekedKey[id] = null; };
+
   // ---- URL flags (dev only; never on the default path) ----------------------------------
   //   ?lenient=1   SV.LENIENT: an unscripted spell resolves as nothing, and decks whose card
   //                scripts are still being written can be picked (they say "not ready yet").
