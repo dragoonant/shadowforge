@@ -14,6 +14,7 @@ card and board games on this machine (EVILAEGIS). Read this file first; follow l
 | [CROSS-PROJECT-LESSONS.md](CROSS-PROJECT-LESSONS.md) | Projects after Oct 3 (MythosForge, ChampionsForge, Mallet-42k, wh40k-murder-squad, Fell-in, …): project skeleton, owner feedback, overnight practice, IP posture, what changed since the card KB. |
 | [ASSET-PIPELINE.md](ASSET-PIPELINE.md) | Local image (Flux Studio / FLUX.2 klein, SDXL fallback) and audio (Audio Studio: Stable Audio Open + ACE-Step) generation: commands, scripts to copy, overnight budget, risks. |
 | [LORCANA-LESSONS.md](LORCANA-LESSONS.md) | What this project learned overnight: parallel agents, independent reviewers, CR 6.2.4/1.8.1/8.10.7/7.4.3 traps, rollout AI with common random numbers, the shared-GPU reservation lock. |
+| [SVE-LESSONS.md](SVE-LESSONS.md) | What shadowforge (Shadowverse: Evolve) added: the official site as card database, Decklog's API, Quick windows in the queue, parallel card agents with central engine doors, reviewers, auditor false positives. |
 | [PRESENTATION-REFERENCE.md](PRESENTATION-REFERENCE.md) | Teardown of Starbound Legions' UI (owner's favourite presentation) and how it maps onto Lorcana's board. |
 
 Canonical full-text originals: `../MANAFORGE/` (card KB, Oct 3), `../wh40k-murder-squad/docs/knowledge-base/` (newest cross-project digest, Oct 17).
