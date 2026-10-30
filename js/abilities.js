@@ -100,6 +100,8 @@
     x.damage = (t, n, o = {}) => SV.dealDamage(s, t, n, { src: src(), kind: 'ability', ...o });
     x.damageMany = (list, n) => { for (const t of list) SV.dealDamage(s, t, typeof n === 'function' ? n(t) : n, { src: src(), kind: 'ability' }); };
     x.heal = (p, n) => SV.heal(s, p, n, { src: src() }); // "give your leader [defense]+N"
+    // "give your leader [defense]-N" (CR 5.27.1: a decrease, not damage; counts as lost defense).
+    x.loseDefense = (p, n) => (n > 0 ? -SV.setDefense(s, p, s.players[p].defense - n, { src: src() }) : 0);
     x.setDefense = (p, v) => SV.setDefense(s, p, v, { src: src() }); // "change ... leader's defense to N"
     // CR 5.32 Maneuver: an amulet with printed attack and defense becomes a follower this turn.
     x.maneuver = (t) => { const d = def(s, t); if (d.atk == null || d.def == null) return false; s.cards[t].mods.push({ maneuver: true, end: { at: 'eot' }, src: x.me }); SV.log(s, x.ctrl, 'maneuver', { iid: t }); return true; };

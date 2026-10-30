@@ -74,6 +74,7 @@ card('BP16-080EN', {
   chooseAnyNumber: true,      // "If you would choose 1 or more options, choose any number instead" (x.choose honours it)
   effectTriggers: [{ name, on, when: (s, e, ev) => bool, run(x, ev) }],  // abilities an effect creates for a duration, hosted by x.addTrigger(idx, dur)
   stack: true,                // the amulet has Stack (CR 13.3.2): engine handles counters and leaving
+  // a mod {evolveCost: 0} on the card changes the engine-read evolve cost for the mod's duration
   evolveCost: 1, evolveIf: (s, iid) => bool,    // override / condition for the engine-read evolve line
 });
 ```
@@ -100,6 +101,7 @@ Put each script's printed text in a comment above it, **verbatim** from `data/ca
 | `banished` | `{iid, from, p}` | banished from a zone other than the field (the field case is `leave` verb banish) |
 | `toHand` / `toEx` | `{iid, from, p}` | |
 | `fused` | `{iid, fused, p}` | |
+| `deckToCemetery` | `{iid, p}` | a card went from p's deck to the cemetery (bury from the top, …) |
 | `raced` | `{iid, p, n}` | Umamusume |
 | `equipped` | `{iid, token, p}` | Princess Connect equipment |
 | `turnStart` | `{p}` | after the start-phase draw |
@@ -129,7 +131,7 @@ Who is "you": `s.cards[me].ctrl` on the field, `.owner` elsewhere (`SV.H.ctrl(s,
   `x.counter(t, 'reversal', +1)`, `x.summon(iid)`, `x.summonToken('Name', n)`, `x.tokenToEx('Name', n)`,
   `x.transform(t, 'Name')`, `x.evolve(t)` (free evolve; not the once-per-turn ability),
   `x.equip(t, 'Name')`, `x.serve(t)`, `x.race(t)`, `x.playFree(iid)`, `x.mayPay({pp})`.
-- **More doors (added during the build):** `x.setDefense(p, v)` ("change a leader's defense to N";
+- **More doors (added during the build):** `x.loseDefense(p, n)` ("give your leader [defense]-N"), `x.setDefense(p, v)` ("change a leader's defense to N";
   a decrease is lost defense), `x.maneuver(t)` (CR 5.32: an amulet with attack/defense is a follower
   this turn), `x.addTrigger(idx, dur, extra)` (host `effectTriggers[idx]` of this card in s.effects:
   "For the rest of this turn, whenever …"; its `when(s, e, ev)` receives the effect record `e`, which

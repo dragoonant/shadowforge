@@ -281,6 +281,8 @@
     if (d.token && !tokenMayExist(d, to)) { c.zone = 'gone'; log(s, c.owner, 'eliminate', { iid }); return from; }
     if (d.advanced && !['field', 'ex', 'resolution', 'evoDeck'].includes(to)) { placeIn(s, iid, 'evoDeck', { faceup: true }); return from; }
     placeIn(s, iid, to, opt);
+    // "whenever a card is put from a deck into the cemetery" (bury the top card, discard from the deck …)
+    if (from === 'deck' && to === 'cemetery') emit(s, { type: 'deckToCemetery', iid, p: c.owner });
     if (to === 'field' && from !== 'field') { c.ctrl = opt.ctrl == null ? (from === 'resolution' || from === 'hand' || from === 'ex' ? fromCtrl : c.owner) : opt.ctrl; }
     return from;
   }
@@ -924,8 +926,10 @@
     if (c.zone !== 'field' || c.evo) return null;
     const d = baseDef(s, iid);
     const a = ABIL(d.no);
-    const cost = a.evolveCost != null ? a.evolveCost : SV.parsed(d).evolveCost;
+    let cost = a.evolveCost != null ? a.evolveCost : SV.parsed(d).evolveCost;
     if (cost == null) return null;
+    // "change its [evolve] cost to N for the rest of the turn": a mod {evolveCost: N} (latest wins).
+    for (const m of c.mods) if (m.evolveCost != null && m.on !== false) cost = m.evolveCost;
     if (SV.chars(s, iid).flags.loseAbilities) return null;
     return { cost };
   }
