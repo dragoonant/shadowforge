@@ -294,9 +294,11 @@ window.
 
 ## 11. Status
 
-**2026-10-29, end of the first session.** Playable locally (`node tools/serve.mjs`,
-http://localhost:8241); **not deployed yet**: the push to `dragoonant/shadowforge` was refused by the
-session's permission check and waits for the owner (HANDOFF.md).
+**2026-10-29, end of the first session.** **Deployed for playtesting** at
+https://dragoonant.github.io/shadowforge/ (owner: "Push to pages for playtesting"; GitHub Pages from
+`main` of `dragoonant/shadowforge`, the repository's initial commit merged, no force push). Checked on
+the live URL: a real-deck game vs the AI through to the opponent's end-phase Quick window, card art
+loading, no console errors. Locally: `node tools/serve.mjs`, http://localhost:8241.
 
 - 15 decks, 348 cards, every card scripted with a behaviour test; 0 defects. `node tools/gate.mjs`
   green: 414 tests, audit 0 FAIL, check-art clean, replay selftest, random and AI games 0 errors.

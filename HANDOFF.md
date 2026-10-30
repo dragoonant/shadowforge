@@ -2,9 +2,9 @@
 
 ## Summary for the owner
 
-**Play it locally:** `node tools/serve.mjs`, then http://localhost:8241. **Not on the web yet:** the push to
-`dragoonant/shadowforge` (the public repository you created) was refused by the session's permission
-check, so nothing has left this machine. See "Deploying" below.
+**Play it:** https://dragoonant.github.io/shadowforge/ (GitHub Pages from `main` of
+`dragoonant/shadowforge`; pushing to `main` redeploys). Locally: `node tools/serve.mjs`, then
+http://localhost:8241.
 
 What was built on 2026-10-29 (one session, about 4 hours):
 
@@ -31,11 +31,10 @@ What was built on 2026-10-29 (one session, about 4 hours):
 
 **Questions for you (in priority order):**
 
-1. **Deploy?** Run the two commands under "Deploying", or allow the push and I'll do it.
-2. **Art style:** keep row B, or switch to C (full-proportion anime) or D (painterly)? A switch is one
+1. **Art style:** keep row B, or switch to C (full-proportion anime) or D (painterly)? A switch is one
    constant and a ~2-hour re-render (`tools/art/style.mjs`).
-3. **Listen** to the sound at http://localhost:8241/sounds.html and name the clips to redo.
-4. **Rights:** neither Cygames nor Bushiroad publishes a fan-content policy (`docs/rights.md`). Going
+2. **Listen** to the sound at http://localhost:8241/sounds.html and name the clips to redo.
+3. **Rights:** neither Cygames nor Bushiroad publishes a fan-content policy (`docs/rights.md`). Going
    public is the posture lorecannae took; the withdrawal commands are in `docs/takedown.md`.
 
 **Not done / known gaps:** the deck order after a mulligan and the order of several damage
@@ -44,23 +43,15 @@ modifiers are not asked (`DEVIATIONS.md`); phone-sized screens are small; sound 
 
 ## Deploying
 
-The repository already exists with one "Initial commit" (a one-line README). These keep that commit
-in history and publish from `main`:
+Done on 2026-10-29. To redeploy, run the stamp step (Pages caches each file for 10 minutes) and push:
 
 ```bash
-git remote add origin https://github.com/dragoonant/shadowforge.git
+node tools/stamp-assets.mjs
 ```
 
 ```bash
-git fetch origin && git merge origin/main --allow-unrelated-histories -X ours -m "Merge the repository's initial commit" && git push -u origin main
+git push origin main
 ```
-
-```bash
-gh api -X POST repos/dragoonant/shadowforge/pages -f "source[branch]=main" -f "source[path]=/"
-```
-
-The site is then https://dragoonant.github.io/shadowforge/ (Pages takes a minute; it caches each file
-for 10 minutes, which is why `tools/stamp-assets.mjs` stamps every script).
 
 ## Where things are
 
