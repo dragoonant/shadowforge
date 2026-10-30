@@ -5,7 +5,7 @@
 export const UI_EMPTY = 'an empty place with a calm open centre, soft muted tones, detail fading gently toward the edges';
 export const UI = {
   'title': { subject: 'a vast twilight sky over a floating island of ancient ruins, two great beams of light, one violet and one golden, spiralling upward and crossing high above', set: 'at dusk with the first stars', empty: true },
-  'deck-chooser': { subject: 'a grand arcane hall of tall arched windows and marble columns, floating motes of light in six colours drifting through the air', set: 'in warm lantern light', empty: true },
+  'deck-chooser': { subject: 'a grand arcane hall of tall arched windows and marble columns, floating motes of many-coloured light drifting through the air', set: 'in warm lantern light', empty: true },
   'board-1': { subject: 'an ancient forest arena of mossy standing stones around a broad open clearing of soft grass', set: 'at night under silver moonlight and drifting fireflies', empty: true },
   'board-2': { subject: 'a ruined sky-colosseum of pale stone arches around a wide smooth arena floor', set: 'under a sunset sky of orange and violet clouds', empty: true },
   'board-3': { subject: 'a crystal cavern with glowing violet gem clusters along the walls around a smooth still floor', set: 'lit by soft inner crystal light', empty: true },
