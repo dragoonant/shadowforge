@@ -36,11 +36,7 @@ What was built on 2026-10-29 (one session, about 4 hours):
 
 **Questions for you (in priority order):**
 
-1. **Art style:** keep row B, or switch to C (full-proportion anime) or D (painterly)? A switch is one
-   constant and a ~2-hour re-render (`tools/art/style.mjs`).
-2. **Listen** to the sound at http://localhost:8241/sounds.html and name the clips to redo.
-3. **Rights:** neither Cygames nor Bushiroad publishes a fan-content policy (`docs/rights.md`). Going
-   public is the posture lorecannae took; the withdrawal commands are in `docs/takedown.md`.
+1. **Listen** to the sound at http://localhost:8241/sounds.html and name the clips to redo.
 
 **Not done / known gaps:** the deck order after a mulligan and the order of several damage
 modifiers are not asked (`DEVIATIONS.md`); phone-sized screens are small; sound unheard;

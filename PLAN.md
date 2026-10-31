@@ -57,10 +57,10 @@ whether the leader portrait is a character or an emblem.
 | D9 | 2026-10-29 | **Choices use the replay model** (job throws `Ask`, partial state stays on screen, answer re-runs from the snapshot). Never assume a choice. | default (lorecannae D10) |
 | D10 | 2026-10-29 | **Engaged cards turn 90°** on the board in a slot that widens, the hover preview upright — lorecannae's D11 read, which is exactly Evolve's engage. | default |
 | D11 | 2026-10-29 | **Assets generated locally:** Flux Studio (FLUX.2 klein 4B) for art, Audio Studio (Stable Audio Open SFX, ACE-Step music), procedural Web Audio kit as the floor. Cloud keys are dead. GPU lock etiquette from `kb/`. | default (lorecannae D12) |
-| D12 | 2026-10-29 | **Deploy:** public GitHub Pages, `dragoonant/shadowforge`, served from `main` root, no build step. Dev server port **8241**. Owner: "Let's move" on the defaults. | owner |
+| D12 | 2026-10-29 | **Deploy:** public GitHub Pages, `dragoonant/shadowforge`, served from `main` root, no build step. Dev server port **8241**. Owner: "Let's move" on the defaults; reconfirmed 2026-10-30 after the rights summary: "keep the game public". | owner |
 | D13 | 2026-10-29 | **1v1 only.** CR 1.1.1: the rules do not support more than two players. | default |
 | D14 | 2026-10-29 | **Format: Standard.** Deck legality follows the official card list's Standard flag at fetch date; Gloryfinder cards are out of the pool. | default |
-| D16 | 2026-10-29 | **Art style (provisional, owner to confirm): audition row B** of `art/audition.jpg` (rows A-D x Arisa, Lishenna, Galmieux; FLUX.1 dev, name + description): MGSD chibi proportions with a Japanese fantasy card-game anime look, glossy cel shading. Chosen because it keeps the owner's lorecannae pick (MGSD chibi, recognisable characters, D17 there) and reads as Shadowverse; rows C (full-proportion anime key art) and D (painterly) are the alternatives. Official card images are viewed (scratch/ref) only to identify hair, costume and colours; never image inputs. | default (owner away) |
+| D16 | 2026-10-29 | **Art style: audition row B** of `art/audition.jpg` (rows A-D x Arisa, Lishenna, Galmieux; FLUX.1 dev, name + description): MGSD chibi proportions with a Japanese fantasy card-game anime look, glossy cel shading. Chosen because it keeps the owner's lorecannae pick (MGSD chibi, recognisable characters, D17 there) and reads as Shadowverse; rows A (Western feature-animation chibi), C (full-proportion anime key art) and D (painterly) were the alternatives. Official card images are viewed (scratch/ref) only to identify hair, costume and colours; never image inputs. | owner, 2026-10-30: "Keep B" |
 | D17 | 2026-10-30 | **Presentation concept: "the evolution rite"** (owner chose it from `docs/look/audition.jpg` over B "academy duel" and C "tournament table"). Owner, 2026-10-30: "The look and feel is too much like Lorecannae. I wanted it to be unique look and feel for each game"; Xross Forge is the model (tabletop-kb README rule 21). Two summoners duel on a floating stone dais under the moon: midnight indigo, moonlit silver, white-cyan evolution light; your side cyan, the opponent's rose; cut corners, hairlines and corner brackets instead of rounded frames; an engineered sans tracked wide instead of a book serif; original geometric wordmark; leader defense as a crystal; evolving as the signature effect (a turning circle of light, a flash, rays for super). Structure unchanged (layout, modules, rules). Gate: `tools/check-look.mjs` plus the side-by-side sheet `docs/look/compare.jpg`. | owner, 2026-10-30: "Let's keep it as is." |
 | D15 | 2026-10-29 | **Every file is an IIFE on `globalThis.SV`.** No build step, no dependencies. | default |
 
@@ -298,7 +298,8 @@ window.
 ## 11. Status
 
 **2026-10-30, look confirmed.** Owner, on the live re-skin: "Let's keep it as is." D17 is final;
-concepts B and C are retired.
+concepts B and C are retired. Then, shown the art sheet and the rights summary again: "Keep B, keep
+the game public." D16 (art row B) is final and D12 (public Pages) stands.
 
 **2026-10-30, re-skin.** Owner: the look is too much like lorecannae; make it unique (Xross Forge is
 the example), plan approved with "Go". Concept audition sent (`docs/look/audition.jpg`); concept A,

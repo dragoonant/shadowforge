@@ -32,6 +32,7 @@ rules as every other card (CLAUDE.md rule 9).
 
 **D12 (2026-10-29): public GitHub Pages**, the same posture as lorecannae. The concern above was
 stated in `PLAN.md` §1 before the owner chose. See `docs/takedown.md` for the withdrawal commands.
+Reconfirmed 2026-10-30 after this page was summarised to the owner: "keep the game public".
 
 ## This project's posture regardless
 
