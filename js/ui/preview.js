@@ -216,7 +216,8 @@
     }, LONG_PRESS_MS);
   }, true);
   document.addEventListener('contextmenu', function (e) {
-    if (e.target.closest && e.target.closest('.card') && e.pointerType && e.pointerType !== 'mouse') e.preventDefault();
+    // Every long-press target, not only .card: the menu would cover the inspector it opens.
+    if (cardTarget(e.target) && e.pointerType && e.pointerType !== 'mouse') e.preventDefault();
   });
 
   // ---- B. inspector -----------------------------------------------------------------------
