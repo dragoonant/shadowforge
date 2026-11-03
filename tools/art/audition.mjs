@@ -10,8 +10,8 @@ import { fileURLToPath } from 'node:url';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const TAIL = 'full-bleed scene edge to edge, purely pictorial, wordless and untitled, vertical portrait composition';
 export const STYLES = {
-  A: 'super-deformed chibi figure with MGSD proportions, about two and a half heads tall, oversized head with big expressive eyes, short stubby limbs, richly detailed costume and textures, classic feature-animation art direction, clean appealing shapes, bright saturated colours, polished soft cel shading, cinematic lighting, ' + TAIL,
-  B: 'super-deformed chibi figure with MGSD proportions, about two and a half heads tall, oversized head with big glossy anime eyes, short stubby limbs, richly detailed costume and textures, Japanese fantasy card game illustration, crisp anime line art, vivid colours, glossy cel shading with soft glow, dynamic lighting and sparkling effects, ' + TAIL,
+  A: 'detailed figure about 2.8 head-heights tall, head a third of its height, broad shoulders, short thick legs, expressive eyes, richly detailed costume and textures, classic feature-animation art direction, clean appealing shapes, bright saturated colours, polished soft cel shading, cinematic lighting, ' + TAIL,
+  B: 'detailed figure about 2.8 head-heights tall, head a third of its height, broad shoulders, short thick legs, expressive anime eyes, richly detailed costume and textures, Japanese fantasy card game illustration, crisp anime line art, vivid colours, glossy cel shading with soft glow, dynamic lighting and sparkling effects, ' + TAIL,
   C: 'full-figure Japanese fantasy card game key art, slender anime proportions, detailed expressive anime face, intricately detailed costume, painterly rendered background, dramatic lighting with glowing magical effects, rich colours, high-detail digital painting, ' + TAIL,
   D: 'dark-fantasy painterly illustration, realistic heroic proportions, moody atmospheric lighting, rich oil-paint texture, deep shadows with warm highlights, epic composition, ' + TAIL,
 };

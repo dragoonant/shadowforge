@@ -251,8 +251,8 @@ For reference, and because some of its process conventions are worth borrowing.
 - Terrain: "not in love with the terrain - it's too simple and not shiny, we need more war-torn
   and hurried construction builds, like in war time." Source: NEM HANDOFF.md "Owner feedback
   queue".
-- Proportions swung by project: "less SD, more detailed" and "we just need the proportions
-  correct for all models" (WarMechForge brief Part A), then MGSD back for StarCraft/Kill Team
+- Proportions swung by project: the owner asking for less stylised, more detailed figures and "we just need the proportions
+  correct for all models" (WarMechForge brief Part A), then the compact large-head style back for StarCraft/Kill Team
   (NEM KB §9.6). Lesson: **art direction is set once per project, by the owner, and not
   re-litigated**; do not carry one project's art rule into the next (NEM HANDOFF: "do NOT copy
   that rule into this project's CLAUDE.md").
@@ -263,7 +263,7 @@ For reference, and because some of its process conventions are worth borrowing.
 - "Anonymous prompts rejected" (GRAND LINE, per other-projects.md 8): each card's art prompt
   names its own subject and setting. MythosForge art-review-2026-10-17 shows why: template
   prompts produce template plates.
-- MANAFORGE art history: chibi (D10) -> "Grim Dark" master-grade SD fighters, "never cute" (D14)
+- MANAFORGE art history: the early large-head style (D10) -> "Grim Dark" compact armoured fighters, never soft or sweet (D14)
   -> a 15-style mix hashed per card "as Magic's art comes from many artists" (D17). The owner
   picked from a five-direction audition (`tools/art-style-audition.mjs`).
 
@@ -657,7 +657,7 @@ repo for every file restating a decision that moved."
 | Repo inside OneDrive; worktrees at `~/<proj>-worktrees/` | repos in `C:\Claude Code Projects\`, outside any synced folder | ChampionsForge D1 |
 | Lessons files at the repo root | `docs/lessons/` (scrubbed copies) | MythosForge, ChampionsForge CLAUDE.md |
 | "Private and local" as the reproduction default | owner usually flips to public Pages for playtesting, concern stated once | MythosForge D6, MANAFORGE D12, BreachForge PLAN |
-| Figure prompts in plain words, "MGSD" banned (3D only) | MGSD back for 40k/StarCraft; art rules are per project | NEM HANDOFF, KB §9.6 |
+| Figure prompts in plain words, the old figure-style label banned (3D only) | the compact large-head style back for 40k/StarCraft; art rules are per project | NEM HANDOFF, KB §9.6 |
 | HANDOFF.md accretes resume points | rewrite STATUS/HANDOFF each milestone | NEM KB §9.2 |
 
 ---

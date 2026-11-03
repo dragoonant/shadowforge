@@ -85,7 +85,7 @@ From 733 Flux Studio job logs (`3D Model Generation/flux-studio/outputs/*/job.js
    - negations: no, not, without, never
    - franchise, artist, studio or game names (the list already contains **"disney"** and **"pixar"**)
    - prompts over 900 characters
-   - cute words (MANAFORGE)
+   - soft-style words (MANAFORGE)
 6. **Front-load the proportion or style anchor** right after the subject. Creatures drift to realism otherwise. SDXL reads only 77 tokens per encoder, so `gen-art-sdxl.py` sends `short + subject` to encoder 1 and `short + subject + setting + style` to encoder 2.
 7. **Klein has no negative prompt.** Say it positively instead: "purely pictorial, wordless and untitled, full-bleed picture edge to edge". SDXL does have one: put text, watermark, frame and border there.
 8. **A proper noun invites lettering.** In MythosForge, the town's name was painted as a banner on 7 story cards, and "magazine cover" produced a title banner. Describe the character visually and **never put the character's or card's name in the prompt.**

@@ -28,7 +28,7 @@ What was built on 2026-10-29 (one session, about 4 hours):
   first skin was lorecannae re-coloured and the owner rejected it; `tools/check-look.mjs` keeps
   it from coming back. Side-by-side: `docs/look/compare.jpg`.
 - **Art:** 348 original card plates and 8 backdrops rendered on this PC (FLUX.1 dev), in a style picked
-  from a four-style audition (row B of `art/audition.jpg`: chibi figures with an anime card-game look).
+  from a four-style audition (row B of `art/audition.jpg`: large-head figures about two and a half heads tall with an anime card-game look).
   Every plate was reviewed; 19 were re-rendered (revealing costumes, neon signs with fake lettering).
 - **Sound:** 31 effects and 6 music tracks generated locally. **Nobody has listened to them.**
 - **Quality:** 414 behaviour tests; a printed-number auditor (0 FAIL); random and AI games with

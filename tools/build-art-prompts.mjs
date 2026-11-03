@@ -37,7 +37,7 @@ const COUNTS = ['three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
 const TITLES = ['shadowverse', 'cygames', 'bushiroad', 'evolve', 'umamusume', 'vanguard', 'cardfight', 'idolmaster', 'priconne', 'granblue', 'rage', 'artstation', 'pixiv', 'disney', 'pixar', 'ghibli', 'marvel', 'pokemon'];
 const TITLE_PHRASES = ['pretty derby', 'princess connect', 'cinderella girls', 'worlds beyond', 'card frame', 'three quarter'];
 // "card game illustration" in STYLE was auditioned (art/audition.jpg row B): no frames or lettering.
-const STYLE_ALLOW = ['card'];
+const STYLE_ALLOW = ['card', 'third', '8']; // 'third' and '8' are the style's own head-height measurement
 const norm = (s) => ' ' + s.toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9]+/g, ' ').trim() + ' ';
 const BANNED = new Map();
 for (const w of MAGNETS) BANNED.set(w, 'text magnet');
@@ -48,7 +48,7 @@ function lintText(what, text, problems, allow = []) {
   const n = norm(text);
   for (const w of n.trim().split(' ')) {
     if (BANNED.has(w) && !allow.includes(w)) problems.push(`${what}: "${w}" (${BANNED.get(w)})`);
-    if (/^\d+$/.test(w) && +w > 2) problems.push(`${what}: "${w}" (count above two)`);
+    if (/^\d+$/.test(w) && +w > 2 && !allow.includes(w)) problems.push(`${what}: "${w}" (count above two)`);
   }
   for (const p of TITLE_PHRASES) if (n.includes(' ' + p + ' ')) problems.push(`${what}: "${p}" (title phrase)`);
   if (/\bn['’]t\b/i.test(text)) problems.push(`${what}: contraction negation`);

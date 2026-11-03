@@ -31,9 +31,9 @@ Each has a default so a one-word answer ("go") is enough.
    carry third-party IP and their own rules (CR 14: Serve, Magical Item, Trigger Icons / Drive
    Check, Union Burst). *Default: class decks only; universe cards stay out of the pool and CR 14
    is not implemented.*
-4. **Art direction.** lorecannae ended on recognisable characters in MGSD chibi proportions with
+4. **Art direction.** lorecannae ended on recognisable characters in large-head figure proportions with
    an animation look (its D17). Shadowverse's own look is Cygames' painted anime illustration.
-   *Default: an audition — one card in four styles (MGSD chibi + anime cel, MGSD chibi + painted,
+   *Default: an audition — one card in four styles (large-head figures + anime cel, large-head figures + painted,
    full-proportion anime cel, painterly) — then the owner picks, recorded as D-art.* Never an
    official illustration, frame, logo, or img2img of one.
 
@@ -60,7 +60,7 @@ whether the leader portrait is a character or an emblem.
 | D12 | 2026-10-29 | **Deploy:** public GitHub Pages, `dragoonant/shadowforge`, served from `main` root, no build step. Dev server port **8241**. Owner: "Let's move" on the defaults; reconfirmed 2026-10-30 after the rights summary: "keep the game public". | owner |
 | D13 | 2026-10-29 | **1v1 only.** CR 1.1.1: the rules do not support more than two players. | default |
 | D14 | 2026-10-29 | **Format: Standard.** Deck legality follows the official card list's Standard flag at fetch date; Gloryfinder cards are out of the pool. | default |
-| D16 | 2026-10-29 | **Art style: audition row B** of `art/audition.jpg` (rows A-D x Arisa, Lishenna, Galmieux; FLUX.1 dev, name + description): MGSD chibi proportions with a Japanese fantasy card-game anime look, glossy cel shading. Chosen because it keeps the owner's lorecannae pick (MGSD chibi, recognisable characters, D17 there) and reads as Shadowverse; rows A (Western feature-animation chibi), C (full-proportion anime key art) and D (painterly) were the alternatives. Official card images are viewed (scratch/ref) only to identify hair, costume and colours; never image inputs. | owner, 2026-10-30: "Keep B" |
+| D16 | 2026-10-29 | **Art style: audition row B** of `art/audition.jpg` (rows A-D x Arisa, Lishenna, Galmieux; FLUX.1 dev, name + description): large-head figure proportions (about two and a half heads tall) with a Japanese fantasy card-game anime look, glossy cel shading. Chosen because it keeps the owner's lorecannae pick (large-head figures, recognisable characters, D17 there) and reads as Shadowverse; rows A (Western feature-animation large-head figures), C (full-proportion anime key art) and D (painterly) were the alternatives. Official card images are viewed (scratch/ref) only to identify hair, costume and colours; never image inputs. | owner, 2026-10-30: "Keep B" |
 | D17 | 2026-10-30 | **Presentation concept: "the evolution rite"** (owner chose it from `docs/look/audition.jpg` over B "academy duel" and C "tournament table"). Owner, 2026-10-30: "The look and feel is too much like Lorecannae. I wanted it to be unique look and feel for each game"; Xross Forge is the model (tabletop-kb README rule 21). Two summoners duel on a floating stone dais under the moon: midnight indigo, moonlit silver, white-cyan evolution light; your side cyan, the opponent's rose; cut corners, hairlines and corner brackets instead of rounded frames; an engineered sans tracked wide instead of a book serif; original geometric wordmark; leader defense as a crystal; evolving as the signature effect (a turning circle of light, a flash, rays for super). Structure unchanged (layout, modules, rules). Gate: `tools/check-look.mjs` plus the side-by-side sheet `docs/look/compare.jpg`. | owner, 2026-10-30: "Let's keep it as is." |
 | D15 | 2026-10-29 | **Every file is an IIFE on `globalThis.SV`.** No build step, no dependencies. | default |
 
